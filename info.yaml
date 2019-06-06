@@ -2,4 +2,6 @@
     (commands):
         build: !language/console |
             gem build atk_toolbox.gemspec
-            gem install ./atk_toolbox-0.0.2.gem
+            gem install ./atk_toolbox-0.0.1.gem
+        publish:
+            gem push atk_toolbox-0.0.1.gem
