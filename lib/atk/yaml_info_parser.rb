@@ -92,6 +92,11 @@ class Info
     @@valid_variables = ['context', 'os']
     @@valid_operators = ['is']
     
+    def self.init
+        # copy the default yaml to the current dir
+        FileUtils.cp(File.join(__dir__, "default_info.yaml"), Dir.pwd)
+    end
+    
     # TODO: write tests for this function
     def self.parse_when_statment(statement)
         # remove the 'when' and paraentheses
@@ -206,14 +211,17 @@ class Info
         
         # get the local yaml file
         # TODO: have this search the parent dir's to find it 
-        @@data = YAML.load_file("./info.yaml")
+        begin
+            @@data = YAML.load_file("./info.yaml")
+        rescue => exception
+            puts "Couldn't find an info.yaml file in #{Dir.pwd}"
+            exit
+        end
         @@project = @@data['(project)']
         if @@project == nil
             # TODO: maybe change this to be optional in the future and have default settings
             raise "\n\nThere is no (project): key in the info.yaml\n(so ATK is unable to parse the project settings)"
         end
-        # TODO: remove this
-        # @@project = Info.parse_language_evaluations(@@project)
         
         @@settings = @@project['(advanced_setup)']
         if @@settings == nil

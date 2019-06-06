@@ -1,0 +1,30 @@
+(using_atk_version): 1.0
+(project):
+    name: A Project
+    description: A new project
+    
+    commands: &commands
+        run: echo 'no run command written yet'
+    dependencies: &dependencies
+        atk: 0.0.1
+    
+    (advanced_setup):
+        (put_new_dependencies_under): [ '(project)', 'basic_info', 'dependencies' ]
+        # caveats for a specific OS
+        when(--os is 'mac'):
+            (project_commands):
+                <<: *commands
+            (dependencies):
+                <<: *dependencies
+            
+        when(--os is 'windows'):
+            (project_commands):
+                <<: *commands
+            (dependencies):
+                <<: *dependencies
+                
+        when(--os is 'linux'):
+            (project_commands):
+                <<: *commands
+            (dependencies):
+                <<: *dependencies
