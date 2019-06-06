@@ -1,0 +1,6 @@
+require_relative './atk/cmd'
+require_relative './atk/download'
+require_relative './atk/os'
+require_relative './atk/output'
+require_relative './atk/package_managers'
+require_relative './atk/yaml_info_parser'

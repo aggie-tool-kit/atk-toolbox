@@ -1,3 +1,9 @@
+.DS_Store
+*.nosync*
+node_modules/
+.cache
+**/.vscode/ipch
+
 *.gem
 *.rbc
 /.config

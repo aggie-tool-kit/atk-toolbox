@@ -1,0 +1,5 @@
+(project):
+    (commands):
+        build: !language/console |
+            gem build atk_toolbox.gemspec
+            gem install ./atk_toolbox-0.0.2.gem
