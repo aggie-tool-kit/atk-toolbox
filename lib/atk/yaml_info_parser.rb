@@ -2,6 +2,7 @@
 require "yaml"
 require_relative './cmd'
 require_relative './os'
+require 'fileutils'
 
 # 
 # Create loaders for ruby code literal and console code literal
@@ -94,7 +95,7 @@ class Info
     
     def self.init
         # copy the default yaml to the current dir
-        FileUtils.cp(File.join(__dir__, "default_info.yaml"), Dir.pwd)
+        FileUtils.cp(File.join(__dir__, "default_info.yaml"), File.join(Dir.pwd, "info.yaml"))
     end
     
     # TODO: write tests for this function
