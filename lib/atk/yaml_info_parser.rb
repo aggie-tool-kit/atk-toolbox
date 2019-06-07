@@ -7,15 +7,14 @@ require 'fileutils'
 # 
 # Create loaders for ruby code literal and console code literal
 # 
+    def register_tag(tag_name, class_value)
+        YAML.add_tag(tag_name, class_value)
+        Code.tags[tag_name] = class_value
+    end
     class Code
         @@tags = {}
         def self.tags
             return @@tags
-        end
-        
-        def self.register_as(yaml_tag_name)
-            YAML.add_tag(yaml_tag_name, self.class)
-            Code.tags[yaml_tag_name] = self.class
         end
         
         def init_with(coder)
@@ -40,7 +39,7 @@ require 'fileutils'
             eval(@value)
         end
     end
-    RubyCode.register_as('!language/ruby')
+    register_tag('!language/ruby', RubyCode)
     # add an evaluater for ruby code
     ruby_evaluation_tag = 'evaluate/ruby'
     Code.tags[ruby_evaluation_tag] = "evaluate"
@@ -61,7 +60,7 @@ require 'fileutils'
             -"#{@value}"
         end
     end
-    ConsoleCode.register_as('!language/console')
+    register_tag('!language/console', ConsoleCode)
 # 
 # project info (specific to operating sytem)
 # 

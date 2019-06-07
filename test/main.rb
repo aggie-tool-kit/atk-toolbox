@@ -1,4 +1,4 @@
-require 'atk_toolbox'
+require_relative '../lib/atk_toolbox'
 
 Dir.chdir __dir__
 

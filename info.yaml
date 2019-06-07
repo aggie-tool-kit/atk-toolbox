@@ -7,10 +7,11 @@
         run: ruby test/main.rb
         setup: |
             gem install gem-release
-        publish: |
-            gem bump
-            gem build atk_toolbox.gemspec
-            gem push
+        publish: !language/ruby |
+            require 'atk_toolbox'
+            -"gem bump"
+            -"gem build atk_toolbox.gemspec"
+            -"gem push #{Dir.glob("*.gem").sort[-1]}"
     dependencies: &dependencies
         atk: 0.0.1
         python3: 3.7.0
