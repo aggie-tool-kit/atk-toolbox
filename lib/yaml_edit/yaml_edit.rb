@@ -4,20 +4,20 @@ require 'open3'
 require 'json'
 
 def execute_with_local_python(python_file_path, *args)
+    # save the current directory
+    pwd = Dir.pwd
+    # change to where this file is
+    Dir.chdir __dir__
+    # run the python file with the virtual environment
     if OS.is?('unix')
-        # save the current directory
-        pwd = Dir.pwd
-        # change to where this file is
-        Dir.chdir __dir__
-        # run the python file with the virtual environment
         stdout_str, stderr_str, status = Open3.capture3('./env/bin/python3', python_file_path, *args)
-        # change back to the original dir
-        Dir.chdir pwd
-        return [stdout_str, stderr_str, status]
     else
-        # TODO: get this working on windows, see https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/
-        raise "Sorry your OS isn't supported at the moment"
+        # attempt to add support for windows
+        stdout_str, stderr_str, status = Open3.capture3('cmd', 'env\bin\python3', python_file_path, *args)
     end
+    # change back to the original dir
+    Dir.chdir pwd
+    return [stdout_str, stderr_str, status]
 end
 
 def set_key(yaml_string, key_list, new_value)
