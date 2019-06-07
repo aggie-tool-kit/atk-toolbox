@@ -66,7 +66,7 @@ module OS
             when 'linux'
                 return (not OS.is?(:windows)) && (not OS.is?(:mac))
             when 'unix'
-                return OS.is?(:windows) || OS.is?(:mac)
+                return not( OS.is?(:windows))
         end
     end
 end
