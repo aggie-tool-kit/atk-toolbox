@@ -7,11 +7,17 @@
         setup: |
             gem install gem-release
         run: ruby test/main.rb
-        publish: gem push atk_toolbox-0.0.4.gem
+        publish: |
+            gem bump
+            gem build atk_toolbox.gemspec
+            gem push4
         ping: echo pong
     dependencies: &dependencies
         atk: 0.0.1
-    
+        python3: 3.7.0
+        {pip3: 10.0.1}:
+            ruamel.yaml: 3.4.0
+            
     (advanced_setup):
         (put_new_dependencies_under): [ '(project)', 'basic_info', 'dependencies' ]
         # caveats for a specific OS

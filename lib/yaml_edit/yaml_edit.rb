@@ -9,12 +9,7 @@ def execute_with_local_python(python_file_path, *args)
     # change to where this file is
     Dir.chdir __dir__
     # run the python file with the virtual environment
-    if OS.is?('unix')
-        stdout_str, stderr_str, status = Open3.capture3('./env/bin/python3', python_file_path, *args)
-    else
-        # attempt to add support for windows
-        stdout_str, stderr_str, status = Open3.capture3('cmd', 'env\bin\python3', python_file_path, *args)
-    end
+    stdout_str, stderr_str, status = Open3.capture3('python3', python_file_path, *args)
     # change back to the original dir
     Dir.chdir pwd
     return [stdout_str, stderr_str, status]
