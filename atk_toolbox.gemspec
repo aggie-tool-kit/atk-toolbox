@@ -1,8 +1,8 @@
-$LOAD_PATH.unshift 'lib'
+require_relative './lib/atk_toolbox/version'
 
 Gem::Specification.new do |s|
   s.name              = "atk_toolbox"
-  s.version           = "0.0.4"
+  s.version           = AtkToolbox::VERSION
   s.date              = Time.now.strftime('%Y-%m-%d')
   s.summary           = "The Ruby gem for all the standard tools ATK uses internally"
   s.homepage          = "http://github.com//atk-toolbox"
