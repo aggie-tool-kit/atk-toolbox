@@ -10,7 +10,7 @@
         publish: |
             gem bump
             gem build atk_toolbox.gemspec
-            gem push4
+            gem push
     dependencies: &dependencies
         atk: 0.0.1
         python3: 3.7.0
