@@ -10,6 +10,8 @@ Gem::Specification.new do |s|
   s.authors           = [ "Jeff Hykin" ]
   s.has_rdoc          = false
   s.license           = "CC-BY-ND-4.0"
+  s.add_runtime_dependency 'zip', '>= 2.0.2'
+
   
   s.files            += Dir.glob("lib/*")
   s.files            += Dir.glob("lib/**/*")
