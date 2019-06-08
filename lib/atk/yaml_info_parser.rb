@@ -35,8 +35,11 @@ require 'fileutils'
     # Ruby Code/Evaluation
     # 
     class RubyCode < Code
-        def run
-            eval(@value)
+        def run(*args)
+            temp_file = ".info_language_runner_cache.rb"
+            IO.write(temp_file, @value)
+            Process.wait(Process.spawn("ruby", temp_file, *args))
+            File.delete(temp_file)
         end
     end
     register_tag('!language/ruby', RubyCode)
