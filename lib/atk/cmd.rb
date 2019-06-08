@@ -16,7 +16,7 @@ class String
     # but it shows stderr 
     def -@
         Process.wait(Process.spawn(self))
-        return $?
+        return $?.success?
     end
 end
 
