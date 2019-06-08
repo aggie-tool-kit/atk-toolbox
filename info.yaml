@@ -9,9 +9,9 @@
             gem install gem-release
         publish: !language/ruby |
             require 'atk_toolbox'
-            -"gem bump"
-            -"gem build atk_toolbox.gemspec"
-            -"gem push #{Dir.glob("*.gem").sort[-1]}"
+            (-"gem bump").success? or exit
+            (-"gem build atk_toolbox.gemspec".success?) or exit
+            (-"gem push #{Dir.glob("*.gem").sort[-1]}").success? or exit
     dependencies: &dependencies
         atk: 0.0.1
         python3: 3.7.0
