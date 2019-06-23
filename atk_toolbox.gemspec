@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.has_rdoc          = false
   s.license           = "CC-BY-ND-4.0"
   s.add_runtime_dependency 'zip', '~> 2.0', '>= 2.0.2'
+  s.add_runtime_dependency 'git', '~> 1.5.0', '>= 1.5.0'
 
   
   s.files            += Dir.glob("lib/*")
