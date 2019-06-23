@@ -1,4 +1,6 @@
 require 'etc'
+require 'set'
+
 HOME = Etc.getpwuid.dir
 
 class String
@@ -14,7 +16,8 @@ def in_dir(path_to_somewhere)
     # switch dirs
     Dir.chdir(path_to_somewhere)
     # do the thing
-    yield
+    output = yield
     # switch back
     Dir.chdir(current_dir)
+    return output
 end
