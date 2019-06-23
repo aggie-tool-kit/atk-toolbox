@@ -1,2 +1,2 @@
 require 'git'
-
+require 'logger'
