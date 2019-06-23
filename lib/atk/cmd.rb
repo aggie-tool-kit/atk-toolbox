@@ -10,6 +10,8 @@ def commandline_args()
     return the_args
 end
 
+# TODO: switch to using https://github.com/piotrmurach/tty-command#2-interface 
+
 # easy access to the commandline
 class String
     # add a - operator to strings that makes it behave like a system() call 
@@ -24,6 +26,7 @@ end
 # 
 # Q&A Functions
 # 
+# TODO: replace these with https://github.com/piotrmurach/tty-prompt
 def ask_yes_or_no(question)
     loop do 
         puts question

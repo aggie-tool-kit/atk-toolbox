@@ -42,6 +42,8 @@ os_heirarchy = {
     "android"    => {},
 }
 
+# TODO: look into using https://github.com/piotrmurach/tty-platform
+
 # 
 # Groups
 # 
