@@ -1,4 +1,5 @@
 require 'etc'
+require 'fileutils'
 require 'set'
 
 HOME = Etc.getpwuid.dir
