@@ -31,9 +31,6 @@ def download(input_1=nil, from:nil, url:nil, as:nil)
             raise message_
         end#if
     #end argument checking
-
     # actually download the file
-    open(file_name, 'wb') do |file|
-        file << open(the_url).read
-    end
+    IO.write(file_name, open(the_url).read)
 end
