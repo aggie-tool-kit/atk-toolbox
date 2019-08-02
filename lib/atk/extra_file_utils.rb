@@ -1,8 +1,13 @@
 require 'etc'
 require 'fileutils'
 require 'set'
+require_relative './os'
 
-HOME = Etc.getpwuid.dir
+if OS.is?("unix")
+    HOME = Etc.getpwuid.dir
+else
+    HOME = `echo C:\\%HOMEPATH%`
+end
 
 class String
     def /(next_string)
