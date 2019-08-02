@@ -2,6 +2,7 @@ require_relative '../atk/os'
 require_relative '../atk/remove_indent'
 require 'open3'
 require 'json'
+require 'yaml'
 
 def execute_with_local_python(python_file_path, *args)
     # save the current directory
@@ -15,22 +16,31 @@ def execute_with_local_python(python_file_path, *args)
     return [stdout_str, stderr_str, status]
 end
 
-def set_key(yaml_string, key_list, new_value)
-    # run the python file with the virtual environment
-    stdout_str, stderr_str, status = execute_with_local_python('set_key.py', yaml_string, key_list.to_json, new_value.to_json)
-    if not status.success?
-        raise "\n\nFailed to set key in yaml file:\n#{stderr_str}"
+module YAML
+    def set_key(yaml_string, key_list, new_value)
+        if not key_list.is_a?(Array)
+            raise "when using YAML.set_key, the second argument needs to be a list of keys"
+        end
+        # run the python file with the virtual environment
+        stdout_str, stderr_str, status = execute_with_local_python('set_key.py', yaml_string, key_list.to_json, new_value.to_json)
+        if not status.success?
+            raise "\n\nFailed to set key in yaml file:\n#{stderr_str}"
+        end
+        return stdout_str
     end
-    return stdout_str
-end
 
-def remove_key(yaml_string, key_list)
-    # run the python file with the virtual environment
-    stdout_str, stderr_str, status = execute_with_local_python('remove_key.py', yaml_string, key_list.to_json)
-    if not status.success?
-        raise "\n\nFailed to remove key in yaml file:\n#{stderr_str}"
+    def remove_key(yaml_string, key_list)
+        if not key_list.is_a?(Array)
+            raise "when using YAML.remove_key, the second argument needs to be a list of keys"
+        end
+        # run the python file with the virtual environment
+        stdout_str, stderr_str, status = execute_with_local_python('remove_key.py', yaml_string, key_list.to_json)
+        if not status.success?
+            raise "\n\nFailed to remove key in yaml file:\n#{stderr_str}"
+        end
+        return stdout_str
     end
-    return stdout_str
+    module_function :remove_key, :set_key
 end
 
 # yaml_test_string = <<-HEREDOC

@@ -3,6 +3,7 @@ require "yaml"
 require_relative './cmd'
 require_relative './os'
 require_relative './extra_file_utils'
+require_relative '../yaml_edit/yaml_edit.rb'
 require 'fileutils'
 
 # 
@@ -216,7 +217,7 @@ class Info
         # get the local yaml file
         # TODO: have this search the parent dir's to find it 
         begin
-            @@data = YAML.load_file("./info.yaml")
+            @@data = YAML.load_file(Info.source_path)
         rescue => exception
             puts "Couldn't find an info.yaml file in #{Dir.pwd}"
             exit
@@ -256,5 +257,19 @@ class Info
     def self.[](element)
         Info.load_if_needed
         return @@data[element.to_s]
+    end
+    
+    def self.source_path()
+        return "."/"info.yaml"
+    end
+    
+    def self.set_key(key_list, new_value)
+        path = Info.source_path
+        IO.write(path, YAML.set_key(IO.read(path), key_list, new_value))
+    end
+    
+    def self.remove_key(key_list, new_value)
+        path = Info.source_path
+        IO.write(path, YAML.remove_key(IO.read(path), key_list))
     end
 end
