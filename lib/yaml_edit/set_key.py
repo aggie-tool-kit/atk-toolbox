@@ -26,6 +26,8 @@ if indent_match == None:
 else:
     indent = len(indent_match[0])
 
+
+
 # parse the yaml
 data = ruamel.yaml.round_trip_load(yaml_string)
 # parse the path
@@ -35,4 +37,9 @@ new_value = json.loads(new_key_value)
 # set the value
 set_by_path(data, path_to_element, new_value)
 # output the data
-print(ruamel.yaml.round_trip_dump(data, indent=indent, block_seq_indent=indent, width=float("Infinity")))
+yaml = ruamel.yaml.YAML()
+yaml.indent(mapping=4, sequence=4, offset=2)
+yaml.width = float("Infinity")
+yaml.default_flow_style = False
+yaml.dump(data, sys.stdout)
+# print(ruamel.yaml.round_trip_dump(data, indent=indent, block_seq_indent=int(indent/2), width=, default_flow_style=False))
