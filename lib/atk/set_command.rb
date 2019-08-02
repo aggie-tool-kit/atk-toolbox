@@ -20,6 +20,6 @@ def set_command(name, code)
         # create the code
         IO.write(exec_path+".rb", code)
         # create an executable to call the code
-        IO.write(exec_path+".bat", "ruby \".\\#{name}\" %*")
+        IO.write(exec_path+".bat", "ruby \".\\#{name}.rb\" %*")
     end
 end
