@@ -72,3 +72,16 @@ test:
         - 3
         - alkdjfajdlkfjadsfljkadalkdjfajdlkfjadsfljkadalkdjfajdlkfjadsfljkadalkdjfajdlkfjadsfljkadalkdjfajdlkfjadsfljkadalkdjfajdlkfjadsfljkadalkdjfajdlkfjadsfljkadalkdjfajdlkfjadsfljkadalkdjfajdlkfjadsfljkadalkdjfajdlkfjadsfljkadalkdjfajdlkfjadsfljkadalkdjfajdlkfjadsfljkad
 
+challenges:
+    - A bit discouraging with how non-binary expressions are. Forcing them into categories feels inaccurate
+    - video contents:
+        - multiple faces (very hard to get one face with genuine expressions)
+        - people not directly facing the camera
+        - glasses, headphones, hats, microphones
+        - shaky video
+        - lighting
+        - |
+            single faces are generally people actively talking or interviewing, not being passive.
+            People who are passive are generally participating in something else, and usually that means other faces are on screen
+            This means very little
+        - face touching
