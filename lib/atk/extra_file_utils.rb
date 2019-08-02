@@ -11,7 +11,11 @@ end
 
 class String
     def /(next_string)
-        File.join(self, next_string)
+        if OS.is?("windows")
+            self + "\\" + next_string
+        else
+            File.join(self, next_string)
+        end
     end
 end
 
