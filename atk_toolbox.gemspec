@@ -13,7 +13,6 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'zip', '~> 2.0', '>= 2.0.2'
   s.add_runtime_dependency 'git', '~> 1.5.0', '>= 1.5.0'
   s.add_runtime_dependency 'method_source', '~> 0.9.2', '>= 0.9.2'
-  s.add_runtime_dependency 'ocra', '~> 1.3.10', '>= 1.3.10'
 
   
   s.files            += Dir.glob("lib/*")

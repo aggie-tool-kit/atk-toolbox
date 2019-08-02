@@ -15,14 +15,12 @@ def set_command(name, code)
         system("sudo", "chmod", "o+x", exec_path)
     elsif OS.is?("windows")
         username = `powershell -command "echo $env:UserName"`.chomp
-        exec_path = "C:\\Users\\#{username}\\AppData\\local\\Microsoft\\WindowsApps\\#{name}.exe"
+        exec_path = "C:\\Users\\#{username}\\AppData\\local\\Microsoft\\WindowsApps\\#{name}"
         local_place = HOME/"atk"/"temp"/name+".rb"
-        # 
-        # create an exe file
-        # 
-        IO.write(local_place, code)
-        system("orca", local_place ,"--no-dep-run")
-        temp_exe_file = local_place.gsub(/\.rb$/, "") + ".exe"
-        FileUtils.move(temp_exe_file, exec_path)
+        
+        # create the code
+        IO.write(exec_path+".rb", code)
+        # create an executable to call the code
+        IO.write(exec_path+".bat", "ruby \".\\#{name}\" %*")
     end
 end
