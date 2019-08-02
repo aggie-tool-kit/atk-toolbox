@@ -15,7 +15,7 @@ def set_command(name, code)
         system("sudo", "chmod", "o+x", exec_path)
     elsif OS.is?("windows")
         username = `powershell -command "echo $env:UserName"`.chomp
-        exec_path = "C:\\Users\\#{username}\\AppData\\local\\Microsoft\\WindowsApps"
+        exec_path = "C:\\Users\\#{username}\\AppData\\local\\Microsoft\\WindowsApps\\#{name}"
         IO.write(exec_path, "#!/usr/bin/ruby\n"+code)
     end
 end
