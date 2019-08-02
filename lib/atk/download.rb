@@ -1,5 +1,7 @@
+require 'open-uri'
+require 'fileutils'
+
 def download(input_1=nil, from:nil, url:nil, as:nil)
-    require 'open-uri'
     # argument checking 
         # if only one argument, either input_1 or url
         if ((input_1!=nil) != (url!=nil)) && (from==nil) && (as==nil)
@@ -31,6 +33,8 @@ def download(input_1=nil, from:nil, url:nil, as:nil)
             raise message_
         end#if
     #end argument checking
+    # make sure the containing folder exists
+    FileUtils.makedirs(File.dirname(file_name))
     # actually download the file
-    IO.write(file_name, open(the_url).read)
+    IO.write(file_name,  open(the_url).read)
 end
