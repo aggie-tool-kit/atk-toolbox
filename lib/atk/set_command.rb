@@ -16,7 +16,6 @@ def set_command(name, code)
     elsif OS.is?("windows")
         username = `powershell -command "echo $env:UserName"`.chomp
         exec_path = "C:\\Users\\#{username}\\AppData\\local\\Microsoft\\WindowsApps\\#{name}"
-        local_place = HOME/"atk"/"temp"/name+".rb"
         
         # create the code
         IO.write(exec_path+".rb", code)
