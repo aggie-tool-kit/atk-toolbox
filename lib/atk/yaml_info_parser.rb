@@ -2,6 +2,7 @@
 require "yaml"
 require_relative './cmd'
 require_relative './os'
+require_relative './extra_file_utils'
 require 'fileutils'
 
 # 
@@ -97,7 +98,7 @@ class Info
     
     def self.init
         # copy the default yaml to the current dir
-        FileUtils.cp(File.join(__dir__, "default_info.yaml"), File.join(Dir.pwd, "info.yaml"))
+        FileUtils.cp(__dir__/"default_info.yaml", Dir.pwd/"info.yaml")
     end
     
     # TODO: write tests for this function
