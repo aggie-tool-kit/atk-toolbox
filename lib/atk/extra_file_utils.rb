@@ -6,7 +6,7 @@ require_relative './os'
 if OS.is?("unix")
     HOME = Etc.getpwuid.dir
 else # windows
-    HOME = `echo C:%HOMEPATH%`
+    HOME = `echo %HOMEPATH%`
 end
 
 class String
