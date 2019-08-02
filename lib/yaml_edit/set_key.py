@@ -35,4 +35,4 @@ new_value = json.loads(new_key_value)
 # set the value
 set_by_path(data, path_to_element, new_value)
 # output the data
-print(ruamel.yaml.round_trip_dump(data, indent=indent, block_seq_indent=indent))
+print(ruamel.yaml.round_trip_dump(data, indent=indent, block_seq_indent=indent, width=float("Infinity")))
