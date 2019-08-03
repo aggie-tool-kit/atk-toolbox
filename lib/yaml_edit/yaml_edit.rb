@@ -4,6 +4,51 @@ require 'open3'
 require 'json'
 require 'yaml'
 
+# new parser plans:
+    # for each data type
+        # have formats
+        # have a detect format
+        # have an export format
+    # styles = {
+        #     0 => ANY 
+        #     1 => PLAIN 
+        #     2 => SINGLE_QUOTED 
+        #     3 => DOUBLE_QUOTED 
+        #     4 => LITERAL 
+        #     5 => FOLDED 
+        # }
+    # string formats
+        # newline joined (pipe)
+        # space joined (greater-than)
+        # keep one ending newline (pipe or greater-than with nothing)
+        # no ending newline (minus sign)
+        # all ending newlines (plus sign)
+    # types
+        # nil
+            # => nil
+        # boolean
+            # => true/false
+        # string
+            # if unquoted inline possible
+                # => unquoted inline
+            # else
+                # if contains newlines
+                # => indented multiline, with modifiers according to trailing newlines
+                # else if single quoted is possible
+                # => single quote inline
+                # else
+                # => double quote
+        # number
+            # 
+        # regex?
+        # array
+            # indented tick marks
+        # map
+            # indented 
+       
+        
+
+
 def execute_with_local_python(python_file_path, *args)
     # save the current directory
     pwd = Dir.pwd
