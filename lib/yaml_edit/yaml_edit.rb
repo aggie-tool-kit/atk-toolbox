@@ -4,6 +4,22 @@ require 'open3'
 require 'json'
 require 'yaml'
 
+
+# how the new parser should work
+    # turn every meaninful peice of the yaml file into data that is represented in ruby
+        # reference objects instead of actually replacing the reference with the value
+        # reference insertion keys instead of actually performing the <<:
+        # save the style data (like 0x00 vs 0) to every peice of data
+        # save whether or not the data must be single-line 
+    # tokenize the yaml recursively with the base case of scalar values
+        # HARD: detect when values must be single-line or multiline
+            # non-complex keys are single-line
+            # anything inside of a JSON-like list or array must be single line
+            # everything else I know of can be multiline
+    # have both an inline and multiline conversion function for every data type
+    # when changing data, convert the new data into a single-line or multiline form based on the parent token
+        # if multiline, add the correct amount of indentation
+
 # new parser plans:
     # for each data type
         # have formats
@@ -61,6 +77,9 @@ class Object
         return self.to_s
     end
 end
+
+# PROBLEMS
+    # challenges with JSON syntax, putting things inline after the commas 
 
 class Token
     @@types = [:map, :seq, :set, :scalar,]
@@ -150,6 +169,7 @@ class YamlEditor
     end
     
     def keys_for(*key_list)
+        
     end
 end
 
