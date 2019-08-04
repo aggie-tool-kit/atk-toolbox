@@ -20,45 +20,93 @@ require 'yaml'
     # when changing data, convert the new data into a single-line or multiline form based on the parent token
         # if multiline, add the correct amount of indentation
 
-class Reference
+# 
+# 
+# JSON method
+# 
+# 
+    # example:
+        # doc = <<-HEREDOC
+        # (dependencies):
+        #     python: 3.6.7
+        #     gcc: 8.0.0
+        # HEREDOC
+        # document = YamlEdit.new(string:doc)
+        # document["(dependencies)"]["python"].replace_value_with(value: "200")
+        # puts document.string
+        # # creates:
+        # doc = <<-HEREDOC
+        # (dependencies):
+        #     python: "200"
+        #     gcc: 8.0.0
+        # HEREDOC
+
+def inject_string(string, middle_part, start_line, start_column, end_line, end_column)
+    lines = string.split("\n")
+    untouched_begining_lines = lines[0...start_line]
+    untouched_ending_lines   = lines[end_line+1..-1]
+    middle_lines = []
+
+    before_part = lines[start_line][0...start_column]
+    after_part = lines[end_line][end_column..-1]
+
+    return (untouched_begining_lines + [ before_part + middle_part + after_part ] + untouched_ending_lines).join("\n")
 end
 
-class InjectionReference
-end
-
-class Object
-    def to_yaml_full_inline(previous_format_data, psych_node)
-        return  psych_node.anchor_and_tag + self.to_yaml_inline
+class YamlEdit
+    attr_accessor :string
+    
+    def initialize(string:nil, file:nil)
+        self.init(string:string, file: file)
     end
     
-    def to_yaml_inline
-        return self.inspect
+    def init(string:nil, file:nil)
+        if string == nil
+            string = IO.read(file)
+        end
+        @root_node = YAML.parse(string).children[0]
+        @string = string
+        self.attach_to_all_children(@root_node, self)
     end
     
-    def to_yaml
-        return self.to_s
+    def attach_to_all_children(node, original_document)
+        if node.respond_to?(:children)
+            if node.children.is_a?(Array)
+                for each in node.children
+                    self.attach_to_all_children(each, original_document)
+                end
+            end
+        end
+        node.document = original_document
     end
-end
-
-class Hash
-    def to_yaml_inline(inline: true, pysch_node: nil)
-        
+    
+    def [](key)
+        return @root_node[key]
+    end
+    
+    def save_to(file)
+        IO.write(file, @string)
     end
 end
 
 class Psych::Nodes::Node
-    def anchor_and_tag
+    attr_accessor :document
+    def anchor_and_tag(anchor:nil, tag:nil)
+        anchor = @anchor if anchor == nil 
+        tag = @tag if tag == nil 
+        
         string = ""
-        if self.anchor
-            string += "&#{self.anchor} "
+        if anchor
+            string += "&#{anchor} "
         end
         
-        if self.tag
-            string += "!#{self.tag} "
+        if tag
+            string += "!#{tag} "
         end
         return string
     end
     
+    # saving this for later once the JSON method can be replaced
     def indent_level
         if self.respond_to?(:children)
             if self.children.size > 0
@@ -82,100 +130,24 @@ class Psych::Nodes::Node
             previous = each
         end
     end
-end
-
-class Token
-    @@types = [:map, :seq, :set, :scalar,]
-    @is_key = nil
-    @is_element = nil
-    @is_set_element = nil
-    @type = nil
-    @style = {} # style as taken from the psych node
-    @contains = []
     
-    def to_s
-        if @contains.is_a?(Array)
-            string = ""
-            for each in @contains
-                string += each.to_s
-            end
-            return string
-        elsif @contains.is_a?(String)
-            return @contains
+    def replace_value_with(value:nil, literal:nil, anchor: nil, tag:nil)
+        if literal == nil
+            new_value = value.to_json
+        else
+            new_value = literal
         end
+        middle_part = self.anchor_and_tag(anchor:anchor, tag:tag) + new_value
+        new_string = inject_string(@document.string, middle_part, @start_line, @start_column, @end_line, @end_column)
+        @document.init( string: new_string )
     end
 end
 
-class YamlEditor
-    def initilize(from_string:"", from_filepath:nil)
-        if from_filepath != nil
-            from_string = IO.read(from_filepath)
-        end
-        @root_token = self.tokenize(from_string)
-        
-        # TODO: get the indent amount, or use default indent
-    end
-    
-    def tokenize()
-        @original_nodes = YAML.parse(from_string)
-        @lines = from_string.split(/\n/)
-        # TODO: tokenize the string based on the psych_nodes start and end locations
-            # for every psych_node create a token and parse the missing spaces that are not captured by the psych nodes
-                # check for complex mappings
-                # bundle up the trailing : with the key value
-                # bundle up comments with their trailing and/or precending whitespace
-                # copy over the psych node information, tags, anchors, styles, etc
-    end
-    
-    # TODO: convert this to a method on Psych::Node
-    def self.psych_node_to_value(psych_node)
-        # convert most everything normally
-            # but convert references into a special reference-object 
-            # convert injections <<: into special reference-injection keys
-        # allow for tags to be converted to a particular type
-    end
-    
-    def psych_node_for(key_list)
-        # TODO
-    end
-    
-    def []=(*args)
-        *location, new_value = args
-        # if theres an existing element
-            # get the token
-            # take the new_value, convert it using to_yaml_literal with the style/indent arguments
-            # tokenize the newly created yaml value
-            # offset each newline within the tokens so that the final indent will match
-            # replace the old token with the new token
-        # if theres not an existing element
-            # get the child-most token that does exist
-            # for every missing key
-                # if its a number
-                    # add nil-element tokens until getting the number value needed
-                        # then recurse if theres a subsequent missing key or value
-                # if it is anything else
-                    # see if to_yaml_key returns a string
-                        # if it does, then tokenize it and add the key token to the map token
-                        # then recurse if theres a subsequent missing key or value
-                    # if not, use to_yaml_literal and wrap it in the complex-mapping syntax
-                        # tokenize the complex mapping
-                        # offset each newline within the tokens so that the final indent will match
-                        # add the token
-                        # then recurse if theres a subsequent missing key or value
-    end
-    
-    def get_copy_of(key_list)
-        # TODO 
-    end
-    
-    def delete(*key_list)
-    end
-    
-    def keys_for(*key_list)
-        
-    end
-end
-
+# 
+# 
+# Old Python Method
+# 
+# 
 
 def execute_with_local_python(python_file_path, *args)
     # save the current directory
