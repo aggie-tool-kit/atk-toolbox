@@ -20,48 +20,6 @@ require 'yaml'
     # when changing data, convert the new data into a single-line or multiline form based on the parent token
         # if multiline, add the correct amount of indentation
 
-# new parser plans:
-    # for each data type
-        # have formats
-        # have a detect format
-        # have an export format
-    # styles = {
-        #     0 => ANY 
-        #     1 => PLAIN 
-        #     2 => SINGLE_QUOTED 
-        #     3 => DOUBLE_QUOTED 
-        #     4 => LITERAL 
-        #     5 => FOLDED 
-        # }
-    # string formats
-        # newline joined (pipe)
-        # space joined (greater-than)
-        # keep one ending newline (pipe or greater-than with nothing)
-        # no ending newline (minus sign)
-        # all ending newlines (plus sign)
-    # types
-        # nil
-            # => nil
-        # boolean
-            # => true/false
-        # string
-            # if unquoted inline possible
-                # => unquoted inline
-            # else
-                # if contains newlines
-                # => indented multiline, with modifiers according to trailing newlines
-                # else if single quoted is possible
-                # => single quote inline
-                # else
-                # => double quote
-        # number
-            # 
-        # regex?
-        # array
-            # indented tick marks
-        # map
-            # indented
-
 class Reference
 end
 
@@ -69,8 +27,12 @@ class InjectionReference
 end
 
 class Object
-    def to_yaml_literal(previous_format_data)
-        return  previous_format_data[:referece] + previous_format_data[:tag] + self.to_yaml
+    def to_yaml_full_inline(previous_format_data, psych_node)
+        return  psych_node.anchor_and_tag + self.to_yaml_inline
+    end
+    
+    def to_yaml_inline
+        return self.inspect
     end
     
     def to_yaml
@@ -78,8 +40,49 @@ class Object
     end
 end
 
-# PROBLEMS
-    # challenges with JSON syntax, putting things inline after the commas 
+class Hash
+    def to_yaml_inline(inline: true, pysch_node: nil)
+        
+    end
+end
+
+class Psych::Nodes::Node
+    def anchor_and_tag
+        string = ""
+        if self.anchor
+            string += "&#{self.anchor} "
+        end
+        
+        if self.tag
+            string += "!#{self.tag} "
+        end
+        return string
+    end
+    
+    def indent_level
+        if self.respond_to?(:children)
+            if self.children.size > 0
+                return self.children[0].start_column
+            end
+        end
+        return 4 + self.start_column
+    end
+    
+    def [](key)
+        previous = nil
+        # for seq
+        if key.is_a?(Integer)
+            return self.children[key]
+        end
+        # for maps
+        for each in self.children.reverse
+            if each.respond_to?(:value) && each.value == key
+                return previous
+            end
+            previous = each
+        end
+    end
+end
 
 class Token
     @@types = [:map, :seq, :set, :scalar,]
