@@ -9,9 +9,10 @@
         setup:
             gem install gem-release
         publish:
-            ruby scripts/publish
+            ruby scripts/publish.rb
         local-update:
             sudo /usr/bin/gem install atk_toolbox
+    
     dependencies: &dependencies
         atk: 0.0.1
             
