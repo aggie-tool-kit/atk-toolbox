@@ -1,9 +1,8 @@
-require_relative '../atk/os'
-require_relative '../atk/remove_indent'
-require 'open3'
+require_relative './os'
+require_relative './remove_indent'
+require_relative './version'
 require 'json'
 require 'yaml'
-
 
 # how the new parser should work
     # turn every meaninful peice of the yaml file into data that is represented in ruby
@@ -132,6 +131,11 @@ class Psych::Nodes::Node
     end
     
     def replace_value_with(value:nil, literal:nil, anchor: nil, tag:nil)
+        # check version
+        if VERSION_OF_RUBY < "2.5.0"
+            raise "\n\nSomewhere, replace_value_with() is being called, which is related to editing yaml\nthe problem is this function needs ruby >= 2.5.0\nbut the code is being run with ruby #{RUBY_VERSION}"
+        end
+        
         if literal == nil
             new_value = value.to_json
         else
@@ -143,61 +147,9 @@ class Psych::Nodes::Node
     end
 end
 
-# 
-# 
-# Old Python Method
-# 
-# 
 
-def execute_with_local_python(python_file_path, *args)
-    # save the current directory
-    pwd = Dir.pwd
-    # change to where this file is
-    Dir.chdir __dir__
-    # run the python file with the virtual environment
-    stdout_str, stderr_str, status = Open3.capture3('python3', python_file_path, *args)
-    # change back to the original dir
-    Dir.chdir pwd
-    return [stdout_str, stderr_str, status]
-end
-
-module YAML
-    def set_key(yaml_string, key_list, new_value)
-        if not key_list.is_a?(Array)
-            raise "when using YAML.set_key, the second argument needs to be a list of keys"
-        end
-        # run the python file with the virtual environment
-        stdout_str, stderr_str, status = execute_with_local_python('set_key.py', yaml_string, key_list.to_json, new_value.to_json)
-        if not status.success?
-            raise "\n\nFailed to set key in yaml file:\n#{stderr_str}"
-        end
-        return stdout_str
+class String
+    def yaml
+        return YAML.load(self)
     end
-
-    def remove_key(yaml_string, key_list)
-        if not key_list.is_a?(Array)
-            raise "when using YAML.remove_key, the second argument needs to be a list of keys"
-        end
-        # run the python file with the virtual environment
-        stdout_str, stderr_str, status = execute_with_local_python('remove_key.py', yaml_string, key_list.to_json)
-        if not status.success?
-            raise "\n\nFailed to remove key in yaml file:\n#{stderr_str}"
-        end
-        return stdout_str
-    end
-    module_function :remove_key, :set_key
 end
-
-# yaml_test_string = <<-HEREDOC
-# foo:
-#     a: 1
-#     b: 2
-#     list:
-#         - 1
-#         - 2
-#         - 3
-# thing:
-#     a: 10
-# HEREDOC
-# puts remove_key(yaml_test_string, ["foo", "list", 2])
-# puts set_key(yaml_test_string, ["foo", "c"], 3)

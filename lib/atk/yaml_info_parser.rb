@@ -3,7 +3,7 @@ require "yaml"
 require_relative './cmd'
 require_relative './os'
 require_relative './extra_file_utils'
-require_relative '../yaml_edit/yaml_edit.rb'
+require_relative './extra_yaml'
 require 'fileutils'
 
 # 
@@ -261,15 +261,5 @@ class Info
     
     def self.source_path()
         return "."/"info.yaml"
-    end
-    
-    def self.set_key(key_list, new_value)
-        path = Info.source_path
-        IO.write(path, YAML.set_key(IO.read(path), key_list, new_value))
-    end
-    
-    def self.remove_key(key_list, new_value)
-        path = Info.source_path
-        IO.write(path, YAML.remove_key(IO.read(path), key_list))
     end
 end

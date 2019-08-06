@@ -12,7 +12,6 @@ Gem::Specification.new do |s|
   s.license           = "CC-BY-ND-4.0"
   s.add_runtime_dependency 'zip', '~> 2.0', '>= 2.0.2'
   s.add_runtime_dependency 'git', '~> 1.5.0', '>= 1.5.0'
-  s.add_runtime_dependency 'method_source', '~> 0.9.2', '>= 0.9.2'
 
   
   s.files            += Dir.glob("lib/*")
