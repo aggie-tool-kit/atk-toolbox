@@ -25,5 +25,3 @@ def set_command(name, code)
         IO.write(exec_path+".bat", "@echo off\nruby \"#{exec_path}.rb\" %*")
     end
 end
-
-puts ATK.paths[:ruby]
