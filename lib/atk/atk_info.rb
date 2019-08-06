@@ -53,7 +53,6 @@ module ATK
             data = YAML.load_file(settings_path)
             if data.is_a?(Hash)
                 if data[atk_settings_key].is_a?(Hash)
-                    puts "data[atk_settings_key] is: #{data[atk_settings_key]} "
                     return data[atk_settings_key]
                 end
             else
