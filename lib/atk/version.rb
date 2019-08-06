@@ -32,7 +32,7 @@ class Version
     end
     
     def to_s
-        @as_string
+        return "#{@major}.#{@minor}.#{@patch}"
     end
 end
 
