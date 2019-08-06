@@ -17,9 +17,6 @@
             sudo /usr/bin/gem install atk_toolbox
     dependencies: &dependencies
         atk: 0.0.1
-        python3: 3.7.0
-        {pip3: 10.0.1}:
-            ruamel.yaml: 3.4.0
             
     (advanced_setup):
         (put_new_dependencies_under): [ '(project)', 'basic_info', 'dependencies' ]
