@@ -4,15 +4,12 @@
     description: A new project
     
     commands: &commands # if you dont know what the & means, see https://blog.daemonl.com/2016/02/yaml.html
-        run: ruby test/main.rb
-        setup: |
+        run:
+            ruby test/main.rb
+        setup:
             gem install gem-release
-        publish: !language/ruby |
-            require 'atk_toolbox'
-            -"gem bump" or exit
-            -"gem build atk_toolbox.gemspec" or exit
-            require_relative './lib/atk_toolbox/version.rb'
-            -"gem push \"atk_toolbox-#{AtkToolbox::VERSION}.gem\"" or exit
+        publish:
+            ruby scripts/publish
         local-update:
             sudo /usr/bin/gem install atk_toolbox
     dependencies: &dependencies
