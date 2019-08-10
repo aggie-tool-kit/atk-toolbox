@@ -25,6 +25,6 @@ def set_command(name, code)
         # create the code
         IO.write(exec_path+".rb", code)
         # create an executable to call the code
-        FS.write(exec_path+".bat", "@echo off\nruby \"#{exec_path}.rb\" %*")
+        IO.write(exec_path+".bat", "@echo off\nruby \"#{exec_path}.rb\" %*")
     end
 end
