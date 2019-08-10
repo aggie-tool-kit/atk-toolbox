@@ -16,6 +16,11 @@ def set_command(name, code)
         system("sudo", "cp", local_place, exec_path)
         system("sudo", "chmod", "ugo+x", exec_path)
     elsif OS.is?("windows")
+        # check for invalid file paths, see https://docs.microsoft.com/en-us/windows/win32/fileio/naming-a-file
+        if name =~ /[><:"\/\\|?*]/
+            puts "Sorry #{name} isn't a valid file path on windows"
+            return ""
+        end
         username = `powershell -command "echo $env:UserName"`.chomp
         exec_path = "C:\\Users\\#{username}\\AppData\\local\\Microsoft\\WindowsApps\\#{name}"
         
