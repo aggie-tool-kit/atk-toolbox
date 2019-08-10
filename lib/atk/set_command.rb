@@ -19,7 +19,7 @@ def set_command(name, code)
             puts "Sorry #{name} isn't a valid file path on windows"
             return ""
         end
-        username = `powershell -command "echo $env:UserName"`.chomp
+        username = FS.username
         exec_path = "C:\\Users\\#{username}\\AppData\\local\\Microsoft\\WindowsApps\\#{name}"
         
         # create the code
