@@ -36,9 +36,8 @@ module ATK
     def self.temp_path(filepath)
         new_path = ATK.paths[:temp]/filepath
         # make sure the path is empty
-        begin
-            File.delete(new_path)
-        end
+        FS.write("", to: new_path)
+        FS.delete(new_path)
         return new_path
     end
     
@@ -46,8 +45,8 @@ module ATK
         settings_path = ATK.paths[:info]
         atk_settings_key = "atk_settings"
         # if it doesn't exist then create it
-        if not File.exist?(settings_path)
-            IO.write(settings_path, "#{atk_settings_key}: {}")
+        if not FS.exist?(settings_path)
+            FS.write("#{atk_settings_key}: {}", to: settings_path)
             return {}
         else
             data = YAML.load_file(settings_path)

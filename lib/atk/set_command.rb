@@ -6,12 +6,10 @@ def set_command(name, code)
     if OS.is?("unix")
         exec_path = "/usr/local/bin/#{name}"
         local_place = ATK.temp_path(name)
-        # create temp if it doesn't exist
-        FileUtils.makedirs(File.dirname(local_place))
         # add the hash bang
         hash_bang = "#!#{ATK.paths[:ruby]}\n"
         # create the file
-        IO.write(local_place, hash_bang+code)
+        FS.write(hash_bang+code, to: local_place)
         # copy to command folder
         system("sudo", "cp", local_place, exec_path)
         system("sudo", "chmod", "ugo+x", exec_path)
@@ -25,8 +23,8 @@ def set_command(name, code)
         exec_path = "C:\\Users\\#{username}\\AppData\\local\\Microsoft\\WindowsApps\\#{name}"
         
         # create the code
-        IO.write(exec_path+".rb", code)
+        FS.write(code, to: exec_path+".rb")
         # create an executable to call the code
-        IO.write(exec_path+".bat", "@echo off\nruby \"#{exec_path}.rb\" %*")
+        FS.write("@echo off\nruby \"#{exec_path}.rb\" %*",  to: exec_path+".bat")
     end
 end
