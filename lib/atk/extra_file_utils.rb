@@ -69,7 +69,7 @@ class FileSys
         end
     end
     
-    def username
+    def self.username
         if OS.is?(:windows)
             return File.basename(ENV["userprofile"])
         else
@@ -157,22 +157,22 @@ class FileSys
     def self.glob(path)
         Dir.glob(path, File::FNM_DOTMATCH) - %w[. ..]
     end
-    def list_files(path=".")
+    def self.list_files(path=".")
         Dir.children(path).select {|each| FileSys.file?(each)}
     end
-    def list_folders(path=".")
+    def self.list_folders(path=".")
         Dir.children(path).select {|each| FileSys.directory?(each)}
     end
-    def ls(path)
+    def self.ls(path)
         Dir.children(path)
     end
-    def pwd
+    def self.pwd
         Dir.pwd
     end
-    def cd(path, verbose: false)
+    def self.cd(path, verbose: false)
         FileUtils.cd(path, verbose: verbose)
     end
-    def chdir(path, verbose: false)
+    def self.chdir(path, verbose: false)
         FileUtils.cd(path, verbose: verbose)
     end
     
@@ -260,7 +260,7 @@ class FileSys
         File.stat(*args)
     end
     
-    def download(input=nil, from:nil, url:nil, to:nil)
+    def self.download(input=nil, from:nil, url:nil, to:nil)
         # if only one argument, either input or url
         if ((input!=nil) != (url!=nil)) && (from==nil) && (to==nil)
             # this covers:
