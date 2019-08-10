@@ -177,87 +177,87 @@ class FileSys
     end
     
     # File aliases
-    def self.time_access(*args, **kwargs)
-        File.atime(*args, **kwargs)
+    def self.time_access(*args)
+        File.atime(*args)
     end
-    def self.time_created(*args, **kwargs)
-        File.birthtime(*args, **kwargs)
+    def self.time_created(*args)
+        File.birthtime(*args)
     end
-    def self.time_modified(*args, **kwargs)
+    def self.time_modified(*args)
     end
-    def self.dir?(*args, **kwargs)
-        File.directory?(*args, **kwargs)
+    def self.dir?(*args)
+        File.directory?(*args)
     end
-    def self.exists?(*args, **kwargs)
-        File.exist?(*args,**kwargs)
+    def self.exists?(*args)
+        File.exist?(*args)
     end
     
     # inherit from File
-    def self.absolute_path(*args, **kwargs)
-        File.absolute_path(*args,**kwargs)
+    def self.absolute_path(*args)
+        File.absolute_path(*args)
     end
-    def self.dirname(*args, **kwargs)
-        File.dirname(*args,**kwargs)
+    def self.dirname(*args)
+        File.dirname(*args)
     end
-    def self.basename(*args, **kwargs)
-        File.basename(*args,**kwargs)
+    def self.basename(*args)
+        File.basename(*args)
     end
-    def self.extname(*args, **kwargs)
-        File.extname(*args,**kwargs)
+    def self.extname(*args)
+        File.extname(*args)
     end
-    def self.directory?(*args, **kwargs)
-        File.directory?(*args,**kwargs)
+    def self.directory?(*args)
+        File.directory?(*args)
     end
-    def self.file?(*args, **kwargs)
-        File.file?(*args,**kwargs)
+    def self.file?(*args)
+        File.file?(*args)
     end
-    def self.empty?(*args, **kwargs)
-        File.empty?(*args,**kwargs)
+    def self.empty?(*args)
+        File.empty?(*args)
     end
-    def self.exist?(*args, **kwargs)
-        File.exist?(*args,**kwargs)
+    def self.exist?(*args)
+        File.exist?(*args)
     end
-    def self.executable?(*args, **kwargs)
-        File.executable?(*args,**kwargs)
+    def self.executable?(*args)
+        File.executable?(*args)
     end
-    def self.symlink?(*args, **kwargs)
-        File.symlink?(*args,**kwargs)
+    def self.symlink?(*args)
+        File.symlink?(*args)
     end
-    def self.owned?(*args, **kwargs)
-        File.owned?(*args,**kwargs)
+    def self.owned?(*args)
+        File.owned?(*args)
     end
-    def self.pipe?(*args, **kwargs)
-        File.pipe?(*args,**kwargs)
+    def self.pipe?(*args)
+        File.pipe?(*args)
     end
-    def self.readable?(*args, **kwargs)
-        File.readable?(*args,**kwargs)
+    def self.readable?(*args)
+        File.readable?(*args)
     end
-    def self.size?(*args, **kwargs)
-        File.size?(*args,**kwargs)
+    def self.size?(*args)
+        File.size?(*args)
     end
-    def self.socket?(*args, **kwargs)
-        File.socket?(*args,**kwargs)
+    def self.socket?(*args)
+        File.socket?(*args)
     end
-    def self.world_readable?(*args, **kwargs)
-        File.world_readable?(*args,**kwargs)
+    def self.world_readable?(*args)
+        File.world_readable?(*args)
     end
-    def self.world_writable?(*args, **kwargs)
-        File.world_writable?(*args,**kwargs)
+    def self.world_writable?(*args)
+        File.world_writable?(*args)
     end
-    def self.writable?(*args, **kwargs)
-        File.writable?(*args,**kwargs)
+    def self.writable?(*args)
+        File.writable?(*args)
     end
-    def self.writable_real?(*args, **kwargs)
-        File.writable_real?(*args,**kwargs)
+    def self.writable_real?(*args)
+        File.writable_real?(*args)
     end
-    def self.expand_path(*args, **kwargs)
-        File.expand_path(*args,**kwargs)
+    def self.expand_path(*args)
+        File.expand_path(*args)
     end
-    def self.mkfifo(*args, **kwargs)
-        File.mkfifo(*args,**kwargs)
+    def self.mkfifo(*args)
+        File.mkfifo(*args)
     end
-    def self.stat(*args, **kwargs)
-        File.stat(*args,**kwargs)
+    def self.stat(*args)
+        File.stat(*args)
     end
     
     def download(input=nil, from:nil, url:nil, to:nil)
