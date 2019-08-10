@@ -23,8 +23,8 @@ def set_command(name, code)
         exec_path = "C:\\Users\\#{username}\\AppData\\local\\Microsoft\\WindowsApps\\#{name}"
         
         # create the code
-        FS.write(code, to: exec_path+".rb")
+        IO.write(exec_path+".rb", code)
         # create an executable to call the code
-        FS.write("@echo off\nruby \"#{exec_path}.rb\" %*",  to: exec_path+".bat")
+        FS.write(exec_path+".bat", "@echo off\nruby \"#{exec_path}.rb\" %*")
     end
 end
