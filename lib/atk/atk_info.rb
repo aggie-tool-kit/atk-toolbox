@@ -24,6 +24,12 @@ class AtkPaths
                     ruby_path = ""
                 end
                 return ruby_path
+            when 'core_yaml'
+                return HOME/"atk"/"core.yaml"
+            when 'installed_yaml'
+                return HOME/"atk"/"installers.yaml"
+            when 'installers_folder'
+                return HOME/"atk"/"installers"
         end
     end
 end
@@ -33,8 +39,8 @@ module ATK
         return AtkPaths
     end
     
-    def self.temp_path(filepath)
-        new_path = ATK.paths[:temp]/filepath
+    def self.temp_path(filename)
+        new_path = ATK.paths[:temp]/filename
         # make sure the path is empty
         FS.write("", to: new_path)
         FS.delete(new_path)
