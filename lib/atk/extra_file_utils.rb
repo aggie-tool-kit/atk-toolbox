@@ -86,6 +86,8 @@ class FileSys
     def self.copy(from:nil, to:nil, new_name:"", force: true, preserve: false, dereference_root: false)
         if new_name == ""
             raise "\n\nFileSys.copy() needs a new_name: argument\nset new_name:nil if you wish the file/folder to keep the same name\ne.g. FileSys.copy(from:'place/thing', to:'place', new_name:nil)"
+        elsif new_name == nil
+            new_name = File.basename(from)
         end
         # make sure the "to" path exists
         FileSys.touch_dir(to)
@@ -96,6 +98,8 @@ class FileSys
     def self.move(from:nil, to:nil, new_name:"", force: true, noop: nil, verbose: nil, secure: nil)
         if new_name == ""
             raise "\n\nFileSys.move() needs a new_name: argument\nset new_name:nil if you wish the file/folder to keep the same name\ne.g. FileSys.move(from:'place/thing', to:'place', new_name:nil)"
+        elsif new_name == nil
+            new_name = File.basename(from)
         end
         # make sure the "to" path exists
         FileSys.touch_dir(to)
@@ -174,6 +178,9 @@ class FileSys
         File.birthtime(*args)
     end
     def self.time_modified(*args)
+    end
+    def self.folder?(*args)
+        File.directory?(*args)
     end
     def self.dir?(*args)
         File.directory?(*args)
