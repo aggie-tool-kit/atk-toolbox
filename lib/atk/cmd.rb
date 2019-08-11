@@ -20,6 +20,7 @@ end
 # TODO: look into https://piotrmurach.github.io/tty/  to animate the terminal
 # TODO: look at https://github.com/pazdera/catpix to add an ATK logo in the terminal
 class TTY::Prompt
+    attr_accessor :verbose
     def _save_args
         if @args == nil
             @args = []
@@ -48,3 +49,9 @@ class TTY::Prompt
 end
 
 Console = TTY::Prompt.new
+
+def log(*args)
+    if Console.verbose
+        puts(*args)
+    end
+end
