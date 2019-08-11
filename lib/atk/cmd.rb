@@ -14,9 +14,9 @@ end
 
 
 # 
-# Q&A Functions
+# Console 
 # 
-# TODO: replace these with https://github.com/piotrmurach/tty-prompt
+# see https://github.com/piotrmurach/tty-prompt
 # TODO: look into https://piotrmurach.github.io/tty/  to animate the terminal
 # TODO: look at https://github.com/pazdera/catpix to add an ATK logo in the terminal
 class TTY::Prompt
