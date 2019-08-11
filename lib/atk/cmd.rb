@@ -1,14 +1,4 @@
-# 
-# extract all the command line input so STDIN can be used 
-#
-def commandline_args() 
-    the_args = []
-    for each in ARGV
-        the_args << each
-    end
-    ARGV.clear
-    return the_args
-end
+require "tty-prompt"
 
 # TODO: switch to using https://github.com/piotrmurach/tty-command#2-interface 
 
@@ -27,19 +17,34 @@ end
 # Q&A Functions
 # 
 # TODO: replace these with https://github.com/piotrmurach/tty-prompt
-def ask_yes_or_no(question)
-    loop do 
-        puts question
-        case gets.chomp
-        when /\A\s*(yes|yeah|y)\z\s*/i
-            return true
-        when /\A\s*(no|nope|n)\z\s*/i
-            return false
-        when /\A\s*cancel\s*\z/i
-            raise 'user canceled yes or no question'
-        else
-            puts "Sorry, please answer 'yes', 'no', or 'cancel'"
-        end#case
-    end#loop 
-end#askYesOrNo
+# TODO: look into https://piotrmurach.github.io/tty/  to animate the terminal
+# TODO: look at https://github.com/pazdera/catpix to add an ATK logo in the terminal
+class TTY::Prompt
+    def _save_args
+        if @args == nil
+            @args = []
+            for each in ARGV
+                @args << each
+            end
+        end
+    end
+    
+    def args
+        self._save_args()
+        return @args
+    end
+    
+    def stdin
+        # save arguments before clearing them
+        self._save_args()
+        # must clear arguments in order to get stdin
+        ARGV.clear
+        # check if there is a stdin
+        if !(STDIN.tty?)
+            @stdin = $stdin.read
+        end
+        return @stdin
+    end
+end
 
+Console = TTY::Prompt.new
