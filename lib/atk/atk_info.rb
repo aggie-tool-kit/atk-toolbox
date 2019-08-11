@@ -36,12 +36,10 @@ end
 
 module ATK
     def self.paths
-        puts "ATK:: self.paths"
         return AtkPaths
     end
     
     def self.temp_path(filename)
-        puts "ATK:: self.temp_path"
         new_path = ATK.paths[:temp]/filename
         # make sure the path is empty
         FS.write("", to: new_path)
@@ -50,17 +48,13 @@ module ATK
     end
     
     def self.info
-        puts "ATK:: self.info"
         settings_path = ATK.paths[:info]
         atk_settings_key = "atk_settings"
         # if it doesn't exist then create it
         if not FS.exist?(settings_path)
-            puts "ATK:: self.info -- no settings_path"
-            puts "self.info"
             FS.write("#{atk_settings_key}: {}", to: settings_path)
             return {}
         else
-            puts "ATK:: self.info -- there is settings_path"
             data = YAML.load_file(settings_path)
             if data.is_a?(Hash)
                 if data[atk_settings_key].is_a?(Hash)

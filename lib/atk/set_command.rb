@@ -8,7 +8,6 @@ def set_command(name, code)
         local_place = ATK.temp_path(name)
         # add the hash bang
         hash_bang = "#!#{ATK.paths[:ruby]}\n"
-        puts "hash_bang is: #{hash_bang} "
         # create the file
         FS.write(hash_bang+code, to: local_place)
         # copy to command folder
