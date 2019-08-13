@@ -230,7 +230,12 @@ class FileSys
         File.readable?(*args)
     end
     def self.size?(*args)
-        File.size?(*args)
+        if File.directory?(args[0])
+            # recursively get the size of the folder
+            return Dir.glob(File.join(args[0], '**', '*')).map{ |f| File.size(f) }.inject(:+)
+        else
+            File.size?(*args)
+        end
     end
     def self.socket?(*args)
         File.socket?(*args)
