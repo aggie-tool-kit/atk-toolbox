@@ -1,3 +1,3 @@
 module AtkToolbox
-  VERSION = '0.0.57'
+  VERSION = '0.0.59'
 end
