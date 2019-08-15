@@ -2,6 +2,9 @@ require 'etc'
 require 'fileutils'
 require 'pathname'
 require 'open-uri'
+require 'json'
+require 'yaml'
+require 'csv'
 require_relative './os'
 require_relative './remove_indent'
 
@@ -41,6 +44,43 @@ class FileSys
         FileSys.makedirs(File.dirname(to))
         # actually download the file
         IO.write(to, data)
+    end
+    
+    def self.save(value, to:nil, as:nil)
+        # assume string if as was not given
+        if as == nil
+            as = :s
+        end
+        conversion_method_name = "to_#{as}"
+        if value.respond_to? conversion_method_name
+            # this is like calling `value.to_json`, `value.to_yaml`, or `value.to_csv` but programatically
+            string_value = value.public_send(conversion_method_name)
+            if not string_value.is_a?(String)
+                raise <<-HEREDOC.remove_indent
+                
+                
+                    The FileSys.save(value, to: #{to.inspect}, as: #{as.inspect}) had a problem.
+                    The as: #{as}, gets converted into value.to_#{as}
+                    Normally that returns a string that can be saved to a file
+                    However, the value.to_#{as} did not return a string.
+                    Value is of the #{value.class} class. Add a `to_#{as}` 
+                    method to that class that returns a string to get FileSys.save() working
+                HEREDOC
+            end
+            return FS.write(string_value, to:to)
+        else
+            raise <<-HEREDOC.remove_indent
+            
+            
+                The FileSys.save(value, to: #{to.inspect}, as: #{as.inspect}) had a problem.
+                
+                The as: #{as}, gets converted into value.to_#{as}
+                Normally that returns a string that can be saved to a file
+                However, the value.to_#{as} is not a method for value
+                Value is of the #{value.class} class. Add a `to_#{as}` 
+                method to that class that returns a string to get FileSys.save() working
+            HEREDOC
+        end
     end
     
     def self.read(filepath)
