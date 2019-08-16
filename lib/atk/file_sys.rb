@@ -204,7 +204,7 @@ class FileSys
     def self.list_folders(path=".")
         Dir.children(path).select {|each| FileSys.directory?(each)}
     end
-    def self.ls(path)
+    def self.ls(path=".")
         Dir.children(path)
     end
     def self.pwd
