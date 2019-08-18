@@ -17,6 +17,12 @@ class AtkPaths
                 atk_path_settings = ATK.info["paths"]
                 if atk_path_settings.is_a?(Hash) and atk_path_settings["ruby"].is_a?(String)
                     ruby_path = atk_path_settings["ruby"]
+                elsif OS.is?(:mac)
+                    if `which rbenv`.chomp.size > 0
+                        ruby_path = `rbenv which ruby`.chomp
+                    else
+                        ruby_path = "/usr/bin/ruby"
+                    end
                 elsif OS.is?(:unix)
                     ruby_path = "/usr/bin/ruby"
                 else
