@@ -210,11 +210,14 @@ class FileSys
     def self.pwd
         Dir.pwd
     end
-    def self.cd(path, verbose: false)
-        FileUtils.cd(path, verbose: verbose)
+    def self.cd(*args, verbose: false)
+        if args.size == 0
+            args[0] = FS.home
+        end
+        FileUtils.cd(args[0], verbose: verbose)
     end
-    def self.chdir(path, verbose: false)
-        FileUtils.cd(path, verbose: verbose)
+    def self.chdir(*args)
+        FS.cd(*args)
     end
     
     # File aliases
