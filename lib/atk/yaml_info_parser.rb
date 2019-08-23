@@ -76,6 +76,7 @@ class Info
         # (project)
         # (advanced_setup)
     # any-level project detail keys:
+        # (paths)
         # (dependencies)
         # (project_commands)
         # (structures)
@@ -240,6 +241,15 @@ class Info
         @@local_package_managers     = @@settings['(local_package_managers)']
         @@put_new_dependencies_under = @@settings['(put_new_dependencies_under)']
         @@environment_variables      = @@settings['(environment_variables)']
+        
+        @@paths = @@settings['(paths)']
+        # TODO: make this deeply recursive
+        for each_key, each_value in @@paths
+            if each_value.is_a?(String)
+                # convert the path into an absolute path
+                @@paths[each_key] = Info.source_path / each_value
+            end
+        end
     end
     
     # accessors
