@@ -252,7 +252,7 @@ class Info
                 # Dont add a source_path if its an absolute path
                 if not each_value.size > 0 && each_value[0] == '/'
                     # convert the path into an absolute path
-                    @@paths[each_key] = Info.source_path / each_value
+                    @@paths[each_key] = FS.dirname(Info.source_path) / each_value
                 end
             end
         end
