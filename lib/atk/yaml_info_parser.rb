@@ -234,7 +234,7 @@ class Info
             # TODO: maybe change this to be optional in the future and have default settings
             raise "\n\nThere is no (advanced_setup): key in the (project) of the info.yaml\n(so ATK is unable to parse the project settings)"
         end
-        Info.parse_advanced_setup(@@settings, @@settings)
+        Info.parse_advanced_setup(@@project, @@settings)
         @@dependencies               = @@settings['(dependencies)']
         @@project_commands           = @@settings['(project_commands)']
         @@structures                 = @@settings['(structures)']
@@ -242,7 +242,7 @@ class Info
         @@put_new_dependencies_under = @@settings['(put_new_dependencies_under)']
         @@environment_variables      = @@settings['(environment_variables)']
         
-        @@paths = @@settings['(paths)']
+        @@paths = @@settings['(paths)'] || {}
         # TODO: make this deeply recursive
         for each_key, each_value in @@paths
             if each_value.is_a?(String)
@@ -262,6 +262,7 @@ class Info
     def self.local_package_managers()     Info.load_if_needed; return @@local_package_managers      end
     def self.put_new_dependencies_under() Info.load_if_needed; return @@put_new_dependencies_under  end
     def self.environment_variables()      Info.load_if_needed; return @@environment_variables       end
+    def self.paths()                      Info.load_if_needed; return @@paths                       end
     
     # read access to the yaml file
     def self.[](element)
