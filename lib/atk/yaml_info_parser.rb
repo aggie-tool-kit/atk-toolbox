@@ -246,8 +246,15 @@ class Info
         # TODO: make this deeply recursive
         for each_key, each_value in @@paths
             if each_value.is_a?(String)
-                # convert the path into an absolute path
-                @@paths[each_key] = Info.source_path / each_value
+                # remove the ./ if it exists
+                if each_value =~ /\A\.\//
+                    each_value = each_value[2..-1]
+                end
+                # Dont add a source_path if its an absolute path
+                if not each_value.size > 0 && each_value[0] == '/'
+                    # convert the path into an absolute path
+                    @@paths[each_key] = Info.source_path / each_value
+                end
             end
         end
     end
