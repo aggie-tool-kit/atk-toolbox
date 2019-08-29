@@ -233,7 +233,7 @@ class Info
             # TODO: maybe change this to be optional in the future and have default settings
             raise "\n\nThere is no (advanced_setup): key in the (project) of the info.yaml\n(so ATK is unable to parse the project settings)"
         end
-        Info.parse_advanced_setup(@@project, @@settings)
+        Info.parse_advanced_setup(@@settings, @@settings)
         @@dependencies               = @@settings['(dependencies)']
         @@project_commands           = @@settings['(project_commands)']
         @@structures                 = @@settings['(structures)']
