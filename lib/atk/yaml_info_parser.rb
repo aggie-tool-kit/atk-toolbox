@@ -1,4 +1,3 @@
-#!/usr/bin/ruby
 require "yaml"
 require_relative './cmd'
 require_relative './os'
