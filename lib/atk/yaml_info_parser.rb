@@ -98,8 +98,14 @@ class Info
     @@valid_operators = ['is']
     
     def self.init
-        # copy the default yaml to the current dir
-        FileUtils.cp(__dir__/"default_info.yaml", Dir.pwd/"info.yaml")
+        current_dir = Dir.pwd/"info.yaml"
+        # if there isn't a info.yaml then create one
+        if not FS.file?(current_dir)
+            # copy the default yaml to the current dir
+            FileUtils.cp(__dir__/"default_info.yaml", current_dir)
+        else
+            puts "There appears to already be an info.yaml file\nThe init method is not yet able to merge the ATK init data with the current data\n(this will be fixed in the future)"
+        end
     end
     
     # TODO: write tests for this function
