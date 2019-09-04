@@ -222,10 +222,14 @@ class Info
             # @@environment_variables
         
         # get the local yaml file
-        # TODO: have this search the parent dir's to find it 
-        begin
-            @@data = YAML.load_file(Info.source_path)
-        rescue => exception
+        if FS.file?(Info.source_path)
+            begin
+                @@data = YAML.load_file(Info.source_path)
+            rescue => exception
+                puts "\n\nI'm having trouble loading the info.yaml file. Here's the error: #{exception}"
+                exit
+            end
+        else
             puts "Couldn't find an info.yaml file in #{Dir.pwd}"
             exit
         end
