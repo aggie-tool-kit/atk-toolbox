@@ -284,6 +284,6 @@ class Info
     end
     
     def self.source_path()
-        return "."/"info.yaml"
+        return Dir.pwd/"info.yaml"
     end
 end
