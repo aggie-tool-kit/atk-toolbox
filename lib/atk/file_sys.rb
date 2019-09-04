@@ -199,10 +199,10 @@ class FileSys
         Dir.glob(path, File::FNM_DOTMATCH) - %w[. ..]
     end
     def self.list_files(path=".")
-        Dir.children(path).map{|each| FS.dirname(path)/each }.select {|each| FileSys.file?(each)}
+        Dir.children(path).map{|each| path/each }.select {|each| FileSys.file?(each)}
     end
     def self.list_folders(path=".")
-        Dir.children(path).map{|each| FS.dirname(path)/each }.select {|each| FileSys.directory?(each)}
+        Dir.children(path).map{|each| path/each }.select {|each| FileSys.directory?(each)}
     end
     def self.ls(path=".")
         Dir.children(path)
