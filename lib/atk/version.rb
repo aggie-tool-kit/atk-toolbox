@@ -1,7 +1,7 @@
 # create a variable for the current ruby version
 
 class Version
-    attr_accessor :major, :minor, :patch, :levels
+    attr_accessor :levels
     
     def initialize(version_as_string)
         @levels = version_as_string.split('.')
@@ -15,6 +15,19 @@ class Version
             end
         end
         @major, @minor, @patch, *_ = @levels
+    end
+    
+    def patch() @patch end
+    def patch=(new_value)
+        @levels[2] = new_value
+    end
+    def minor() @minor end
+    def minor=(new_value)
+        @levels[1] = new_value
+    end
+    def major() @major end
+    def major=(new_value)
+        @levels[0] = new_value
     end
     
     def comparable?
