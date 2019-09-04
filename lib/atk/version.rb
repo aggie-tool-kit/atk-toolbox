@@ -1,38 +1,74 @@
 # create a variable for the current ruby version
 
 class Version
-    attr_accessor :major, :minor, :patch
+    attr_accessor :major, :minor, :patch, :levels
     
     def initialize(version_as_string)
-        # TODO: make this more safe/better error handling
-        @major, @minor, @patch = version_as_string.split('.').map{|each| each.to_i}
-        @as_string = version_as_string
+        @levels = version_as_string.split('.')
+        @comparable = @levels[0] =~ /\A\d+\z/
+        # convert values into integers where possible
+        index = -1
+        for each in @levels.dup
+            index += 1
+            if each =~ /\A\d+\z/
+                @levels[index] = each.to_i
+            end
+        end
+        @major, @minor, @patch, *_ = @levels
+    end
+    
+    def comparable?
+        return @comparable
     end
     
     def <=>(other_version)
         if not other_version.is_a?(Version)
             raise "When doing version comparision, both sides must be a version object"
         end
-        major_size = (@major <=> other_version.major * 100)
-        minor_size = (@minor <=> other_version.minor * 10 )
-        patch_size = (@patch <=> other_version.patch * 1 )
-        return (major_size + minor_size + patch_size) <=> 0
+        if other_version.to_s == self.to_s
+            return 0
+        end
+        
+        if other_version.comparable? && self.comparable?
+            self_levels = @levels.dup
+            other_levels = other_version.levels.dup
+            loop do
+                if self_levels.size == 0 || other_levels.size == 0
+                    if self_levels.size > other_levels.size
+                        return 1
+                    elsif self_levels.size < other_levels.size
+                        return -1
+                    else
+                        return 0
+                    end
+                end
+                comparision = self_levels.shift() <=> other_levels.shift()
+                if comparision != 0
+                    return comparision
+                end
+            end
+        else
+            return nil
+        end
     end
     
     def >(other_version)
-        return (self <=> other_version) == 1
+        value = (self <=> other_version)
+        return value && value == 1
     end
     
     def <(other_version)
-        return (self <=> other_version) == -1
+        value = (self <=> other_version)
+        return value && value == -1
     end
     
     def ==(other_version)
-        return (self <=> other_version) == 0
+        value = (self <=> other_version)
+        return value && value == 0
     end
     
     def to_s
-        return "#{@major}.#{@minor}.#{@patch}"
+        return @levels.map(&:to_s).join('.')
     end
 end
 
