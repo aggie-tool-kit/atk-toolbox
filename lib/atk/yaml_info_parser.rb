@@ -103,6 +103,7 @@ class Info
         if not FS.file?(current_dir)
             # copy the default yaml to the current dir
             FileUtils.cp(__dir__/"default_info.yaml", current_dir)
+            puts "info.yaml created successfully"
         else
             puts "There appears to already be an info.yaml file\nThe init method is not yet able to merge the ATK init data with the current data\n(this will be fixed in the future)"
         end
