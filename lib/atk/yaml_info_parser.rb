@@ -226,12 +226,11 @@ class Info
             begin
                 @@data = YAML.load_file(Info.source_path)
             rescue => exception
-                puts "\n\nI'm having trouble loading the info.yaml file. Here's the error: #{exception}"
-                exit
+                puts "\n\nI'm having trouble loading the info.yaml file. Here's the error:\n"
+                raise exception
             end
         else
-            puts "Couldn't find an info.yaml file in #{Dir.pwd}"
-            exit
+            raise "Couldn't find an info.yaml file in #{Dir.pwd}"
         end
         @@project = @@data['(project)']
         if @@project == nil
