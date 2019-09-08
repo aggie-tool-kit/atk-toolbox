@@ -190,6 +190,14 @@ class FileSys
     def self.rel?(path)
         Pathname.new(path).relative?
     end
+    def self.path_peices(path)
+        # use this function like this:
+        # *path, filename, extension = FS.path_peices('/Users/jeffhykin/Desktop/place1/file1.pdf')
+        pieces = Pathname(path).each_filename.to_a
+        extname = File.extname(pieces[-1])
+        basebasename = pieces[-1][0...(pieces[-1].size - extname.size)]
+        return [ *pieces[0...-1], basebasename, extname ]
+    end
     
     # dir aliases
     def self.home
