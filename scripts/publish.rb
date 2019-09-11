@@ -13,3 +13,4 @@ end
 version = bump()
 -"gem build atk_toolbox.gemspec" or exit
 -"gem push \"atk_toolbox-#{version}.gem\"" or exit
+-"git add -A && git commit -m 'version bump' && git push"

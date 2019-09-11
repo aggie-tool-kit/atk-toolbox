@@ -222,12 +222,15 @@ class Info
             # @@environment_variables
         
         # get the local yaml file
-        # TODO: have this search the parent dir's to find it 
-        begin
-            @@data = YAML.load_file(Info.source_path)
-        rescue => exception
-            puts "Couldn't find an info.yaml file in #{Dir.pwd}"
-            exit
+        if FS.file?(Info.source_path)
+            begin
+                @@data = YAML.load_file(Info.source_path)
+            rescue => exception
+                puts "\n\nI'm having trouble loading the info.yaml file. Here's the error:\n"
+                raise exception
+            end
+        else
+            raise "Couldn't find an info.yaml file in #{Dir.pwd}"
         end
         @@project = @@data['(project)']
         if @@project == nil
@@ -284,6 +287,6 @@ class Info
     end
     
     def self.source_path()
-        return "."/"info.yaml"
+        return Dir.pwd/"info.yaml"
     end
 end
