@@ -1,4 +1,3 @@
-require_relative './file_sys.rb'
 # every OS version is a perfect heirarchy of versions and sub verisons that may or may not be chronological
 # every OS gets it's own custom heirarchy since there are issues like x86 support and "student edition" etc
 # the plan is to release this heirarchy on its own repo, and to get pull requests for anyone who wants to add their own OS
@@ -71,7 +70,7 @@ module OS
             when 'unix'
                 return not( OS.is?(:windows))
             when 'debian'
-                return FS.file?('/etc/debian_version')
+                return File.file?('/etc/debian_version')
         end
     end
 end
