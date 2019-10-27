@@ -1,4 +1,5 @@
 require "tty-prompt"
+require "colorize"
 
 # TODO: switch to using https://github.com/piotrmurach/tty-command#2-interface 
 

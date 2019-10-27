@@ -13,6 +13,7 @@ Gem::Specification.new do |s|
     s.add_runtime_dependency 'zip', '~> 2.0', '>= 2.0.2'
     s.add_runtime_dependency 'git', '~> 1.5.0', '>= 1.5.0'
     s.add_runtime_dependency 'tty-prompt', '~> 0.19.0', '>= 0.19.0'
+    s.add_runtime_dependency 'colorize', '~> 0.8.1', '>= 0.8.1'
 
     
     s.files            += Dir.glob("lib/*")
