@@ -69,6 +69,8 @@ module OS
                 return (not OS.is?(:windows)) && (not OS.is?(:mac))
             when 'unix'
                 return not( OS.is?(:windows))
+            when 'debian'
+                return File.file?('/etc/debian_version')
         end
     end
 end
