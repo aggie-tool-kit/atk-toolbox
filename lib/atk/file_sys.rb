@@ -45,7 +45,7 @@ class FileSys
         # actually download the file
         IO.write(to, data)
     end
-    
+
     def self.save(value, to:nil, as:nil)
         # assume string if as was not given
         if as == nil

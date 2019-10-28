@@ -1,4 +1,5 @@
 require "tty-prompt"
+require_relative "./os.rb"
 
 # TODO: switch to using https://github.com/piotrmurach/tty-command#2-interface 
 
@@ -45,6 +46,18 @@ class TTY::Prompt
             @stdin = $stdin.read
         end
         return @stdin
+    end
+    
+    def path_for(name_of_executable)
+        if OS.is?(:windows)
+            return `where '#{name_of_executable}'`.strip
+        else
+            return `which '#{name_of_executable}'`.strip
+        end
+    end
+    
+    def has_command(name_of_executable)
+        return Console.path_for(name_of_executable) != ''
     end
 end
 
