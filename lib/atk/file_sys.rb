@@ -190,12 +190,19 @@ class FileSys
     def self.rel?(path)
         Pathname.new(path).relative?
     end
-    def self.path_peices(path)
+    def self.path_pieces(path)
         # use this function like this:
         # *path, filename, extension = FS.path_peices('/Users/jeffhykin/Desktop/place1/file1.pdf')
         pieces = Pathname(path).each_filename.to_a
         extname = File.extname(pieces[-1])
         basebasename = pieces[-1][0...(pieces[-1].size - extname.size)]
+        # add the root if the path is absolute
+        if FileSys.abs?(path)
+            if not OS.is?("windows")
+                pieces.shift('/')
+            end
+            # FIXME: fix this for windows
+        end
         return [ *pieces[0...-1], basebasename, extname ]
     end
     
@@ -245,6 +252,13 @@ class FileSys
     end
     def self.exists?(*args)
         File.exist?(*args)
+    end
+    def self.join(*args)
+        if OS.is?("windows")
+            self + "\\" + next_string
+        else
+            File.join(self, next_string)
+        end
     end
     
     # inherit from File
