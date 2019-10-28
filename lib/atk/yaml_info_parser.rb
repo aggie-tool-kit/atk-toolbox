@@ -4,6 +4,7 @@ require_relative './os'
 require_relative './file_sys'
 require_relative './extra_yaml'
 require 'fileutils'
+require_relative './remove_indent.rb'
 
 # 
 # Create loaders for ruby code literal and console code literal
@@ -225,6 +226,13 @@ class Info
         if FS.file?(Info.source_path)
             begin
                 @@data = YAML.load_file(Info.source_path)
+                if @@data['(using_atk_version)'] != 1.0
+                    raise <<-HEREDOC.remove_indent
+                        When opening the info.yaml file, the (using_atk_version) was listed as: #{@@data['(using_atk_version)']}
+                        The version of atk_toolbox you have installed is only capable of handling version 1.0
+                        either atk_toolbox needs to be updated, or the info.yaml version needs to be updated.
+                    HEREDOC
+                end
             rescue => exception
                 puts "\n\nI'm having trouble loading the info.yaml file. Here's the error:\n"
                 raise exception
