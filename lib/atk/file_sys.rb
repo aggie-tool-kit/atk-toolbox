@@ -19,7 +19,10 @@ class String
     # ex: "foldername"/"filename"
     def /(next_string)
         if OS.is?("windows")
-            self + "\\" + next_string
+            next_string_without_leading_or_trailing_slashes = next_string.gsub(/(^\\|^\/|\\$|\/$)/,"")
+            output = self + "\\" + next_string
+            # replace all forward slashes with backslashes
+            output.gsub(/\//,"\\")
         else
             File.join(self, next_string)
         end
@@ -170,26 +173,31 @@ class FileSys
     def self.touch(*args)
         return FileUtils.touch(*args)
     end
+    singleton_class.send(:alias_method, :touch_file, :touch)
+    singleton_class.send(:alias_method, :new_file, :touch)
     
     def self.touch_dir(path)
         if not FileSys.directory?(path)
             FileUtils.makedirs(path)
         end
     end
+    singleton_class.send(:alias_method, :new_folder, :touch_dir)
     
     # Pathname aliases
     def self.absolute_path?(path)
         Pathname.new(path).absolute?
     end
-    def self.abs?(path)
-        Pathname.new(path).absolute?
-    end
+    singleton_class.send(:alias_method, :is_absolute_path, :absolute_path?)
+    singleton_class.send(:alias_method, :abs?, :absolute_path?)
+    singleton_class.send(:alias_method, :is_abs, :abs?)
+    
     def self.relative_path?(path)
         Pathname.new(path).relative?
     end
-    def self.rel?(path)
-        Pathname.new(path).relative?
-    end
+    singleton_class.send(:alias_method, :is_relative_path, :relative_path?)
+    singleton_class.send(:alias_method, :rel?, :relative_path?)
+    singleton_class.send(:alias_method, :is_rel, :rel?)
+    
     def self.path_pieces(path)
         # use this function like this:
         # *path, filename, extension = FS.path_peices('/Users/jeffhykin/Desktop/place1/file1.pdf')
@@ -244,20 +252,19 @@ class FileSys
     end
     def self.time_modified(*args)
     end
-    def self.folder?(*args)
-        File.directory?(*args)
-    end
-    def self.dir?(*args)
-        File.directory?(*args)
-    end
-    def self.exists?(*args)
-        File.exist?(*args)
-    end
+    
     def self.join(*args)
         if OS.is?("windows")
-            self + "\\" + next_string
+            folders_without_leading_or_trailing_slashes = args.map do |each|
+                # replace all forward slashes with backslashes
+                backslashed_only = each.gsub(/\//,"\\")
+                # remove leading/trailing backslashes
+                backslashed_only.gsub(/(^\\|^\/|\\$|\/$)/,"")
+            end
+            # join all of them with backslashes
+            folders_without_leading_or_trailing_slashes.join("\\")
         else
-            File.join(self, next_string)
+            File.join(*args)
         end
     end
     
@@ -274,33 +281,56 @@ class FileSys
     def self.extname(*args)
         File.extname(*args)
     end
-    def self.directory?(*args)
+    def self.folder?(*args)
         File.directory?(*args)
     end
+    singleton_class.send(:alias_method, :is_folder, :folder?)
+    singleton_class.send(:alias_method, :dir?, :folder?)
+    singleton_class.send(:alias_method, :is_dir, :dir?)
+    singleton_class.send(:alias_method, :directory?, :folder?)
+    singleton_class.send(:alias_method, :is_directory, :directory?)
+    
+    def self.exists?(*args)
+        File.exist?(*args)
+    end
+    singleton_class.send(:alias_method, :does_exist, :exists?)
+    singleton_class.send(:alias_method, :exist?, :exists?)
+    
     def self.file?(*args)
         File.file?(*args)
     end
+    singleton_class.send(:alias_method, :is_file, :file?)
+    
     def self.empty?(*args)
         File.empty?(*args)
     end
-    def self.exist?(*args)
-        File.exist?(*args)
-    end
+    singleton_class.send(:alias_method, :is_empty, :empty?)
+    
     def self.executable?(*args)
         File.executable?(*args)
     end
+    singleton_class.send(:alias_method, :is_executable, :executable?)
+    
     def self.symlink?(*args)
         File.symlink?(*args)
     end
+    singleton_class.send(:alias_method, :is_symlink, :symlink?)
+    
     def self.owned?(*args)
         File.owned?(*args)
     end
+    singleton_class.send(:alias_method, :is_owned, :owned?) 
+    
     def self.pipe?(*args)
         File.pipe?(*args)
     end
+    singleton_class.send(:alias_method, :is_pipe, :pipe?) 
+    
     def self.readable?(*args)
         File.readable?(*args)
     end
+    singleton_class.send(:alias_method, :is_readable, :readable?) 
+    
     def self.size?(*args)
         if File.directory?(args[0])
             # recursively get the size of the folder
@@ -309,21 +339,33 @@ class FileSys
             File.size?(*args)
         end
     end
+    singleton_class.send(:alias_method, :is_size, :size?) 
+    
     def self.socket?(*args)
         File.socket?(*args)
     end
+    singleton_class.send(:alias_method, :is_socket, :socket?) 
+    
     def self.world_readable?(*args)
         File.world_readable?(*args)
     end
+    singleton_class.send(:alias_method, :is_world_readable, :world_readable?) 
+    
     def self.world_writable?(*args)
         File.world_writable?(*args)
     end
+    singleton_class.send(:alias_method, :is_world_writable, :world_writable?) 
+    
     def self.writable?(*args)
         File.writable?(*args)
     end
+    singleton_class.send(:alias_method, :is_writable, :writable?) 
+    
     def self.writable_real?(*args)
         File.writable_real?(*args)
     end
+    singleton_class.send(:alias_method, :is_writable_real, :writable_real?) 
+    
     def self.expand_path(*args)
         File.expand_path(*args)
     end
@@ -368,5 +410,5 @@ class FileSys
         FileSys.write(open(URI.encode(the_url)).read, to: file_name)
     end
 end
-# create an FS alias
+# create an FS singleton_class.send(:alias_method, :FS = :FileSys)
 FS = FileSys

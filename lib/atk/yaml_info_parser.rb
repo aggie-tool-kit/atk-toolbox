@@ -228,9 +228,11 @@ class Info
                 @@data = YAML.load_file(Info.source_path)
                 if @@data['(using_atk_version)'] != 1.0
                     raise <<-HEREDOC.remove_indent
+                    
+                    
                         When opening the info.yaml file, the (using_atk_version) was listed as: #{@@data['(using_atk_version)']}
                         The version of atk_toolbox you have installed is only capable of handling version 1.0
-                        either atk_toolbox needs to be updated, or the info.yaml version needs to be updated.
+                        either atk_toolbox needs to be changed, or the (using_atk_version) version needs to be changed.
                     HEREDOC
                 end
             rescue => exception
@@ -238,7 +240,7 @@ class Info
                 raise exception
             end
         else
-            raise "Couldn't find an info.yaml file in #{Dir.pwd}"
+            raise "\n\nCouldn't find an info.yaml file in #{Dir.pwd}"
         end
         @@project = @@data['(project)']
         if @@project == nil
@@ -262,6 +264,10 @@ class Info
         @@paths = @@settings['(paths)'] || {}
         # TODO: make this deeply recursive
         for each_key, each_value in @@paths
+            # if its an array, just join it together
+            if each_value.is_a?(Array)
+                each_value = FS.join(*each_value)
+            end
             if each_value.is_a?(String)
                 # remove the ./ if it exists
                 if each_value =~ /\A\.\//
