@@ -300,7 +300,28 @@ class Info
         return @@data[element.to_s]
     end
     
+    def self.folder()
+        first_location = Dir.pwd/"info.yaml"
+        *folders, name, ext = FS.path_pieces(first_location)
+        loop do
+            # if all folders exhausted
+            if folders.size == 0
+                raise <<-HEREDOC.remove_indent
+                    
+                    Couldn't find an info.yaml in the current directory or any parent directory
+                        #{Dir.pwd}
+                    Are you sure you're running the command from the correct directory?
+                HEREDOC
+            end
+            # if the info.yaml exists, then use it
+            path = FS.join(*folders, "info.yaml")
+            if FS.file?(path)
+                return FS.join(*folders)
+            end
+        end
+    end
+    
     def self.source_path()
-        return Dir.pwd/"info.yaml"
+        return self.folder()/"info.yaml"
     end
 end
