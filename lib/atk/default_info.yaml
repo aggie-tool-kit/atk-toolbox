@@ -8,6 +8,10 @@
         run_ruby: !language/ruby |
             puts 'this is just a default value'
             puts 'replace this with your own ruby code'
+    
+    paths: &paths
+        root: ./
+    
     dependencies: &dependencies
         atk: 0.0.1
     
@@ -19,15 +23,21 @@
                 <<: *commands
             (dependencies):
                 <<: *dependencies
-            
+            (paths):
+                <<: *paths
+                
         when(--os is 'windows'):
             (project_commands):
                 <<: *commands
             (dependencies):
                 <<: *dependencies
+            (paths):
+                <<: *paths
                 
         when(--os is 'linux'):
             (project_commands):
                 <<: *commands
             (dependencies):
                 <<: *dependencies
+            (paths):
+                <<: *paths
