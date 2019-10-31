@@ -29,7 +29,7 @@ class String
     end
 end
 
-class FileSys
+module FileSys
     # This is a combination of the FileUtils, File, Pathname, IO, Etc, and Dir classes,
     # along with some other helpful methods
     # It is by-default forceful (dangerous/overwriting)
@@ -341,7 +341,7 @@ class FileSys
             File.size?(*args)
         end
     end
-    singleton_class.send(:alias_method, :is_size, :size?) 
+    singleton_class.send(:alias_method, :size_of, :size?) 
     
     def self.socket?(*args)
         File.socket?(*args)
