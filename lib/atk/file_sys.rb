@@ -207,9 +207,11 @@ class FileSys
         # add the root if the path is absolute
         if FileSys.abs?(path)
             if not OS.is?("windows")
-                pieces.shift('/')
+                pieces.unshift('/')
+            else
+                # TODO: eventually make this work for any drive, not just the current drive
+                pieces.unshift('\\')
             end
-            # FIXME: fix this for windows
         end
         return [ *pieces[0...-1], basebasename, extname ]
     end
