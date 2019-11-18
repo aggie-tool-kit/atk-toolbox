@@ -1,5 +1,8 @@
 require_relative './file_sys'
+require_relative './console'
+require_relative './yaml_info_parser'
 require_relative './os'
+require_relative './git'
 require 'yaml'
 
 class AtkPaths
@@ -41,6 +44,7 @@ class AtkPaths
 end
 
 module ATK
+    @@atk_settings_key = "atk_settings"
     def self.paths
         return AtkPaths
     end
@@ -55,19 +59,95 @@ module ATK
     
     def self.info
         settings_path = ATK.paths[:info]
-        atk_settings_key = "atk_settings"
         # if it doesn't exist then create it
         if not FS.exist?(settings_path)
-            FS.write("#{atk_settings_key}: {}", to: settings_path)
+            FS.write("#{@@atk_settings_key}: {}", to: settings_path)
             return {}
         else
             data = YAML.load_file(settings_path)
             if data.is_a?(Hash)
-                if data[atk_settings_key].is_a?(Hash)
-                    return data[atk_settings_key]
+                if data[@@atk_settings_key].is_a?(Hash)
+                    return data[@@atk_settings_key]
                 end
             else
                 return {}
+            end
+        end
+    end
+    
+    def self.save_info(new_hash)
+        settings_path = ATK.paths[:info]
+        current_settings = ATK.info
+        updated_settings = current_settings.merge(new_hash)
+        
+        info_data = YAML.load_file(ATK.paths[:info])
+        if info_file.is_a?(Hash)
+            info_data[@@atk_settings_key] = updated_settings
+        else
+            info_data = { @@atk_settings_key => updated_settings }
+        end
+        
+        FS.save(info_data, to: ATK.paths[:info], as: :yaml )
+    end
+    
+    def self.simplify_package_name(source)
+        source = source.strip
+        # if its starts with "atk/", just remove that part
+        source = source.sub( /^atk\//, "" )
+        # if it starts with "https://github.com/", just remove that part
+        source = source.sub( /^https:\/\/github.com\//, "" )
+        return source
+    end
+    
+    def self.package_name_to_url(package_name)
+        # if its starts with "atk/", just remove that part
+        installer_name = ATK.simplify_package_name(package_name)
+        # if the package name does not have a slash in it, then assume it is a core / approved installer
+        if not (package_name =~ /.*\/.*/) 
+            # TODO: turn this into a check for is_core_repo?(package_name)
+            # path_to_core_listing = ATK.paths[:core_yaml]
+            # core = YAML.load_file(path_to_core_listing)
+            # if core[installer_name] == nil
+            #     puts "I don't see that package in the core, let me make sure I have the latest info"
+            #     download("https://raw.githubusercontent.com/aggie-tool-kit/atk/master/interface/core.yaml", as: path_to_core_listing)
+            #     core = YAML.load_file(path_to_core_listing)
+            # end
+            # if core[installer_name] != nil
+            #     repo_url = core[installer_name]["source"]
+            # else
+            #     raise "That package doesn't seem to be a core package"
+            # end
+        # if it does have a slash, then assume its a github repo
+        else
+            repo_url = "https://github.com/"+package_name
+        end
+        return repo_url
+    end
+    
+    def self.setup(package_name, arguments)
+        repo_url = Console.args[1]
+        project_folder = ATK.info["project_folder"]
+        # if there's a project folder
+        if not project_folder
+            # then use the Desktop folder
+            # TODO: improve this to ask the user for a defaul location for storing their project
+            project_folder = HOME/"Desktop"
+        end
+        project_name = Console.ask("What do you want to name the project?")
+        project_path = project_folder/project_name
+        Git.ensure_cloned_and_up_to_date(project_path, repo_url)
+        FS.in_dir(project_path) do
+            setup_command = Info.project_commands['(setup)']
+            if setup_command.is_a?(Code) || setup_command.is_a?(String)
+                puts "\n\nRunning (setup) command:\n".green
+                sleep 1
+                if setup_command.is_a?(Code)
+                    setup_command.run(arguments)
+                else 
+                    command_and_args = setup_command.split(/ */)
+                    console_args = command_and_args.concat(*arguments)
+                    system(*console_args)
+                end
             end
         end
     end

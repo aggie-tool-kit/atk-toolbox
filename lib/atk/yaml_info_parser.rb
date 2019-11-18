@@ -1,5 +1,5 @@
 require "yaml"
-require_relative './cmd'
+require_relative './console'
 require_relative './os'
 require_relative './file_sys'
 require_relative './extra_yaml'
