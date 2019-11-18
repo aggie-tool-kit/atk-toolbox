@@ -125,7 +125,7 @@ module ATK
     end
     
     def self.setup(package_name, arguments)
-        repo_url = Console.args[1]
+        repo_url = ATK.package_name_to_url(package_name)
         project_folder = ATK.info["project_folder"]
         # if there's a project folder
         if not project_folder
