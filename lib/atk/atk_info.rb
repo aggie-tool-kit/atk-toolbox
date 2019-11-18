@@ -143,10 +143,12 @@ module ATK
                 sleep 1
                 if setup_command.is_a?(Code)
                     setup_command.run(arguments)
-                else 
-                    command_and_args = setup_command.split(/ */)
-                    console_args = command_and_args.concat(*arguments)
-                    system(*console_args)
+                else
+                    safe_arguments = arguments.map do |each|
+                        "'"+Console.single_quote_escape(each)+"'"
+                    end
+                    console_line = setup_command+' '+(safe_arguments.join(' '))
+                    system(console_line)
                 end
             end
         end

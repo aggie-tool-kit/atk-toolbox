@@ -61,6 +61,10 @@ class TTY::Prompt
     def has_command(name_of_executable)
         return Console.path_for(name_of_executable) != ''
     end
+    
+    def single_quote_escape(string)
+        string.gsub(/'/, "'\"'\"'")
+    end
 end
 
 Console = TTY::Prompt.new
