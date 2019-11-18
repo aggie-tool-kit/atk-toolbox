@@ -101,7 +101,7 @@ module ATK
     
     def self.package_name_to_url(package_name)
         # if its starts with "atk/", just remove that part
-        installer_name = ATK.simplify_package_name(package_name)
+        package_name = ATK.simplify_package_name(package_name)
         # if the package name does not have a slash in it, then assume it is a core / approved installer
         if not (package_name =~ /.*\/.*/) 
             # TODO: turn this into a check for is_core_repo?(package_name)
@@ -115,7 +115,7 @@ module ATK
             # if core[installer_name] != nil
             #     repo_url = core[installer_name]["source"]
             # else
-            #     raise "That package doesn't seem to be a core package"
+                raise "That package doesn't seem to be a core package"
             # end
         # if it does have a slash, then assume its a github repo
         else
