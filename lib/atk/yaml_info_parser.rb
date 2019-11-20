@@ -230,7 +230,8 @@ class Info
                     raise <<-HEREDOC.remove_indent
                     
                     
-                        When opening the info.yaml file, the (using_atk_version) was listed as: #{@@data['(using_atk_version)']}
+                        When opening the info.yaml file in '#{self.folder}'
+                        the (using_atk_version) was listed as: #{@@data['(using_atk_version)'].inspect}
                         The version of atk_toolbox you have installed is only capable of handling version 1.0
                         either atk_toolbox needs to be changed, or the (using_atk_version) version needs to be changed.
                     HEREDOC
@@ -318,6 +319,8 @@ class Info
             if FS.file?(path)
                 return FS.join(*folders)
             end
+            # go up the folders
+            folders.pop()
         end
     end
     
