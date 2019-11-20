@@ -73,22 +73,20 @@ module OS
             when 'debian'
                 return File.file?('/etc/debian_version')
             when 'ubuntu'
-                return OS.has_command('lsb_release') && `lsb_release -a`.match(/Distributor ID: Ubuntu/)
+                return OS.has_command('lsb_release') && `lsb_release -a`.match(/Distributor ID:[\s\t]*Ubuntu/)
         end
     end
     
     def self.version
         # these statements need to be done in order from least to greatest
         if OS.is?("ubuntu")
-            if OS.has_command('lsb_release')
-                version_info = `lsb_release -a`
-                version = Version.extract_from(version_info)
-                name_area = version_info.match(/Codename: *(.+)/)
-                if name_area
-                    version.codename = name_area[1].strip
-                end
-                return version
+            version_info = `lsb_release -a`
+            version = Version.extract_from(version_info)
+            name_area = version_info.match(/Codename: *(.+)/)
+            if name_area
+                version.codename = name_area[1].strip
             end
+            return version
         elsif OS.is?("debian")
             # TODO: support debian version
             return nil
