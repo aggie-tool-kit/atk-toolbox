@@ -29,7 +29,7 @@ require_relative './remove_indent.rb'
         end
         
         def to_s
-            puts @value
+            return @value
         end
     end
     
