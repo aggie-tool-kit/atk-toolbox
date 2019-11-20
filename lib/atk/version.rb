@@ -1,7 +1,14 @@
 # create a variable for the current ruby version
 
 class Version
-    attr_accessor :levels
+    attr_accessor :levels, :codename
+    
+    def self.extract_from(string)
+        match = string.match(/\d+\.\d+(\.\d+)*/)
+        if match != nil
+            return Version.new(match[0])
+        end
+    end
     
     def initialize(version_as_string)
         @levels = version_as_string.split('.')

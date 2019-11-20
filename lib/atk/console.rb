@@ -51,15 +51,11 @@ class TTY::Prompt
     end
     
     def path_for(name_of_executable)
-        if OS.is?(:windows)
-            return `where '#{name_of_executable}'`.strip
-        else
-            return `which '#{name_of_executable}'`.strip
-        end
+        return OS.path_for_executable(name_of_executable)
     end
     
     def has_command(name_of_executable)
-        return Console.path_for(name_of_executable) != ''
+        return OS.has_command(name_of_executable)
     end
     
     def single_quote_escape(string)
