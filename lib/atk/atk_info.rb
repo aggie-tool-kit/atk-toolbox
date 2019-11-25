@@ -151,7 +151,8 @@ module ATK
                     system(console_line)
                 end
             end
-            puts "\n\nFinished running setup for: #{project_path.green}"
+            puts "\n\n============================================================"
+            puts "Finished running setup for: #{project_path.green}"
             puts "This project has these commands avalible:"
             system "project commands"
         end
