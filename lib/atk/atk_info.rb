@@ -127,14 +127,14 @@ module ATK
     def self.setup(package_name, arguments)
         repo_url = ATK.package_name_to_url(package_name)
         project_folder = ATK.info["project_folder"]
-        # if there's a project folder
+        # if there's no project folder
         if not project_folder
-            # then use the Desktop folder
-            # TODO: improve this to ask the user for a defaul location for storing their project
-            project_folder = HOME/"Desktop"
+            # then use the current folder
+            project_folder = FS.pwd
         end
         project_name = Console.ask("What do you want to name the project?")
         project_path = project_folder/project_name
+        puts "Downloading project to '#{project_path.green}'"
         Git.ensure_cloned_and_up_to_date(project_path, repo_url)
         FS.in_dir(project_path) do
             setup_command = Info.project_commands['(setup)']
@@ -151,6 +151,9 @@ module ATK
                     system(console_line)
                 end
             end
+            puts "\n\nFinished running setup for: #{project_path.green}"
+            puts "This project has these commands avalible:"
+            system "project commands"
         end
     end
 end
