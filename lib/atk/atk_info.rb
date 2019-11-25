@@ -155,6 +155,7 @@ module ATK
             puts "Finished running setup for: #{project_path.green}"
             puts "This project has these commands avalible:"
             system "project commands"
+            puts "\ndon't forget to do:\n#{"cd '#{project_path}'".blue}"
         end
     end
 end
