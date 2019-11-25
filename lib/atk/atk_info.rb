@@ -131,10 +131,10 @@ module ATK
         if not project_folder
             # then use the current folder
             project_folder = FS.pwd
+            puts "\nDefaulting to #{"your current directory".yellow}\nsince there's no #{"project_folder".blue} in the home settings\n"
         end
         project_name = Console.ask("What do you want to name the project?")
         project_path = project_folder/project_name
-        puts "Downloading project to '#{project_path.green}'"
         Git.ensure_cloned_and_up_to_date(project_path, repo_url)
         FS.in_dir(project_path) do
             setup_command = Info.project_commands['(setup)']
