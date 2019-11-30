@@ -29,8 +29,7 @@ class AtkPaths
                 elsif OS.is?(:unix)
                     ruby_path = "/usr/bin/ruby"
                 else
-                    # TODO: fix this case
-                    ruby_path = ""
+                    ruby_path = OS.path_for_executable("ruby")
                 end
                 return ruby_path
             when 'core_yaml'

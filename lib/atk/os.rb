@@ -106,7 +106,14 @@ module OS
     
     def self.path_for_executable(name_of_executable)
         if OS.is?(:windows)
-            return `where '#{name_of_executable}'`.strip
+            begin
+                # TODO: need to escape this value for both double quote and single quotes
+                output = `powershell -command "(Get-Command '#{name_of_executable}')"`.strip
+            # if the command doesn't exist it throws an error
+            rescue
+                output = ""
+            end
+            return output
         else
             return `which '#{name_of_executable}'`.strip
         end
