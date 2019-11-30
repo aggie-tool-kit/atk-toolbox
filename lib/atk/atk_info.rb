@@ -121,7 +121,7 @@ module ATK
         elsif not package_name.start_with?(/https?:\/\//)
             repo_url = "https://github.com/"+package_name
         else
-            return repo_url
+            repo_url = package_name
         end
         return repo_url
     end
