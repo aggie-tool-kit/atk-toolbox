@@ -117,9 +117,11 @@ module ATK
             # else
                 raise "That package doesn't seem to be a core package"
             # end
-        # if it does have a slash, then assume its a github repo
+         # if it does have a slash, and isn't a full url, then assume its a github repo
+        elsif not installer_name.start_with?(/https?:\/\//)
+            repo_url = "https://github.com/"+installer_name
         else
-            repo_url = "https://github.com/"+package_name
+            return repo_url
         end
         return repo_url
     end
