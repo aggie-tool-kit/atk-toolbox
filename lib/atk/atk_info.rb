@@ -107,19 +107,19 @@ module ATK
             # TODO: turn this into a check for is_core_repo?(package_name)
             # path_to_core_listing = ATK.paths[:core_yaml]
             # core = YAML.load_file(path_to_core_listing)
-            # if core[installer_name] == nil
+            # if core[package_name] == nil
             #     puts "I don't see that package in the core, let me make sure I have the latest info"
             #     download("https://raw.githubusercontent.com/aggie-tool-kit/atk/master/interface/core.yaml", as: path_to_core_listing)
             #     core = YAML.load_file(path_to_core_listing)
             # end
-            # if core[installer_name] != nil
-            #     repo_url = core[installer_name]["source"]
+            # if core[package_name] != nil
+            #     repo_url = core[package_name]["source"]
             # else
                 raise "That package doesn't seem to be a core package"
             # end
          # if it does have a slash, and isn't a full url, then assume its a github repo
-        elsif not installer_name.start_with?(/https?:\/\//)
-            repo_url = "https://github.com/"+installer_name
+        elsif not package_name.start_with?(/https?:\/\//)
+            repo_url = "https://github.com/"+package_name
         else
             return repo_url
         end
