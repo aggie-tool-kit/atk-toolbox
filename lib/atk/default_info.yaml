@@ -1,43 +1,25 @@
 (using_atk_version): 1.0
 (project):
-    name: A Project
-    description: A new project
+    name: Your Project Name Here
+    description: Describe your project here
     
     commands: &commands # if you dont know what the & means, see https://blog.daemonl.com/2016/02/yaml.html
         run: echo 'no run command written yet'
-        run_ruby: !language/ruby |
+        run_ruby_example: !language/ruby |
             puts 'this is just a default value'
             puts 'replace this with your own ruby code'
-    
-    paths: &paths
-        root: ./
-    
-    dependencies: &dependencies
-        atk: 0.0.1
+        (setup): echo 'setup command unset' 
     
     (advanced_setup):
-        (put_new_dependencies_under): [ '(project)', 'basic_info', 'dependencies' ]
+        (project_commands):
+            <<: *commands
         # caveats for a specific OS
         when(--os is 'mac'):
             (project_commands):
                 <<: *commands
-            (dependencies):
-                <<: *dependencies
-            (paths):
-                <<: *paths
-                
         when(--os is 'windows'):
             (project_commands):
                 <<: *commands
-            (dependencies):
-                <<: *dependencies
-            (paths):
-                <<: *paths
-                
         when(--os is 'linux'):
             (project_commands):
                 <<: *commands
-            (dependencies):
-                <<: *dependencies
-            (paths):
-                <<: *paths

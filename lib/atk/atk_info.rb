@@ -133,7 +133,9 @@ module ATK
         if not project_folder
             # then use the current folder
             project_folder = FS.pwd
-            puts "\nDefaulting to #{"your current directory".yellow}\nsince there's no #{"project_folder".blue} in the home settings\n"
+            puts "Project will be downloaded to #{project_folder.to_s.yellow}"
+            puts "(your current directory)"
+            puts ""
         end
         project_name = Console.ask("What do you want to name the project?")
         project_path = project_folder/project_name
