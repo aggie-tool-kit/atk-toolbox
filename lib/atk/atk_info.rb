@@ -161,4 +161,8 @@ module ATK
             puts "\ndon't forget to do:\n#{"cd '#{project_path}'".blue}"
         end
     end
+    
+    def not_yet_implemented()
+        puts "Sorry, this feature is still under development"
+    end
 end

@@ -6,6 +6,8 @@ require_relative './extra_yaml'
 require 'fileutils'
 require_relative './remove_indent.rb'
 
+# TODO: for efficiency, have the parser generate a parsed object, instead of only handling everything dynamically (allow for both)
+
 # 
 # Create loaders for ruby code literal and console code literal
 # 
