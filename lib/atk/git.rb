@@ -21,7 +21,7 @@ module Git
     
     def self.repo_name(url)
         require_relative './file_sys'
-        *folders, name, extension = FS.path_pieces('https://stackoverflow.com/questions/19072070/how-to-find-where-gem-files-are-installed')
+        *folders, name, extension = FS.path_pieces(url)
         return name
     end
 end
