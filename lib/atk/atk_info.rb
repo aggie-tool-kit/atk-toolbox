@@ -271,6 +271,3 @@ class AtkPackage
         end
     end
 end
-
-
-Atk.run("jeff-hykin/install-python")
