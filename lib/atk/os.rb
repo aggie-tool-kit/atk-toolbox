@@ -1,47 +1,4 @@
 require_relative './version.rb'
-# every OS version is a perfect heirarchy of versions and sub verisons that may or may not be chronological
-# every OS gets it's own custom heirarchy since there are issues like x86 support and "student edition" etc
-# the plan is to release this heirarchy on its own repo, and to get pull requests for anyone who wants to add their own OS
-os_heirarchy = {
-    "windows" => {
-        "10"    => {},
-        "8.1"   => {},
-        "8"     => {},
-        "7"     => {},
-        "vista" => {},
-        "xp"    => {},
-        "95"    => {},
-    },
-    "mac" => {
-        "mojave"         => {},
-        "high sierra"    => {},
-        "sierra"         => {},
-        "el capitan"     => {},
-        "yosemite"       => {},
-        "mavericks"      => {},
-        "mountain lion"  => {},
-        "lion"           => {},
-        "snow leopard"   => {},
-        "leopard"        => {},
-        "tiger"          => {},
-        "panther"        => {},
-        "jaguar"         => {},
-        "puma"           => {},
-        "cheetah"        => {},
-        "kodiak"         => {},
-    },
-    "ubuntu"     => {},
-    "arch"       => {},
-    "manjaro"    => {},
-    "deepin"     => {},
-    "centos"     => {},
-    "debian"     => {},
-    "fedora"     => {},
-    "elementary" => {},
-    "zorin"      => {},
-    "raspian"    => {},
-    "android"    => {},
-}
 
 # this statment was extracted from the ptools gem, credit should go to them
 # https://github.com/djberg96/ptools/blob/master/lib/ptools.rb

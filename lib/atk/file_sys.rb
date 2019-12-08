@@ -1,10 +1,6 @@
 require 'etc'
 require 'fileutils'
 require 'pathname'
-require 'open-uri'
-require 'json'
-require 'yaml'
-require 'csv'
 require_relative './os'
 require_relative './remove_indent'
 
@@ -29,7 +25,7 @@ class String
     end
 end
 
-module FileSys
+module FileSystem
     # This is a combination of the FileUtils, File, Pathname, IO, Etc, and Dir classes,
     # along with some other helpful methods
     # It is by-default forceful (dangerous/overwriting)
@@ -44,7 +40,7 @@ module FileSys
     
     def self.write(data, to:nil)
         # make sure the containing folder exists
-        FileSys.makedirs(File.dirname(to))
+        FileSystem.makedirs(File.dirname(to))
         # actually download the file
         IO.write(to, data)
     end
@@ -58,8 +54,11 @@ module FileSys
         # add a special exception for csv files
         case as
         when :csv
+            require 'csv'
             FS.write(value.map(&:to_csv).join, to: to)
         else
+            require 'json'
+            require 'yaml'
             conversion_method_name = "to_#{as}"
             if value.respond_to? conversion_method_name
                 # this is like calling `value.to_json`, `value.to_yaml`, or `value.to_csv` but programatically
@@ -68,12 +67,12 @@ module FileSys
                     raise <<-HEREDOC.remove_indent
                     
                     
-                        The FileSys.save(value, to: #{to.inspect}, as: #{as.inspect}) had a problem.
+                        The FileSystem.save(value, to: #{to.inspect}, as: #{as.inspect}) had a problem.
                         The as: #{as}, gets converted into value.to_#{as}
                         Normally that returns a string that can be saved to a file
                         However, the value.to_#{as} did not return a string.
                         Value is of the #{value.class} class. Add a `to_#{as}` 
-                        method to that class that returns a string to get FileSys.save() working
+                        method to that class that returns a string to get FileSystem.save() working
                     HEREDOC
                 end
                 FS.write(string_value, to:to)
@@ -81,13 +80,13 @@ module FileSys
                 raise <<-HEREDOC.remove_indent
                 
                 
-                    The FileSys.save(value, to: #{to.inspect}, as: #{as.inspect}) had a problem.
+                    The FileSystem.save(value, to: #{to.inspect}, as: #{as.inspect}) had a problem.
                     
                     The as: #{as}, gets converted into value.to_#{as}
                     Normally that returns a string that can be saved to a file
                     However, the value.to_#{as} is not a method for value
                     Value is of the #{value.class} class. Add a `to_#{as}` 
-                    method to that class that returns a string to get FileSys.save() working
+                    method to that class that returns a string to get FileSystem.save() working
                 HEREDOC
             end
         end
@@ -135,24 +134,24 @@ module FileSys
     
     def self.copy(from:nil, to:nil, new_name:"", force: true, preserve: false, dereference_root: false)
         if new_name == ""
-            raise "\n\nFileSys.copy() needs a new_name: argument\nset new_name:nil if you wish the file/folder to keep the same name\ne.g. FileSys.copy(from:'place/thing', to:'place', new_name:nil)"
+            raise "\n\nFileSystem.copy() needs a new_name: argument\nset new_name:nil if you wish the file/folder to keep the same name\ne.g. FileSystem.copy(from:'place/thing', to:'place', new_name:nil)"
         elsif new_name == nil
             new_name = File.basename(from)
         end
         # make sure the "to" path exists
-        FileSys.touch_dir(to)
+        FileSystem.touch_dir(to)
         # perform the copy
         FileUtils.copy_entry(from, to/new_name, preserve, dereference_root, force)
     end
 
     def self.move(from:nil, to:nil, new_name:"", force: true, noop: nil, verbose: nil, secure: nil)
         if new_name == ""
-            raise "\n\nFileSys.move() needs a new_name: argument\nset new_name:nil if you wish the file/folder to keep the same name\ne.g. FileSys.move(from:'place/thing', to:'place', new_name:nil)"
+            raise "\n\nFileSystem.move() needs a new_name: argument\nset new_name:nil if you wish the file/folder to keep the same name\ne.g. FileSystem.move(from:'place/thing', to:'place', new_name:nil)"
         elsif new_name == nil
             new_name = File.basename(from)
         end
         # make sure the "to" path exists
-        FileSys.touch_dir(to)
+        FileSystem.touch_dir(to)
         # perform the move
         FileUtils.move(from, to/new_name, force: force, noop: noop, verbose: verbose, secure: secure)
     end
@@ -160,11 +159,11 @@ module FileSys
     def self.rename(from:nil, to:nil, force: true)
         # if the directories are different, then throw an error
         if not File.identical?(File.dirname(from), File.dirname(to))
-            raise "\n\nFileSys.rename() requires that the the file stay in the same place and only change names.\nIf you want to move a file, use FileSys.move()"
+            raise "\n\nFileSystem.rename() requires that the the file stay in the same place and only change names.\nIf you want to move a file, use FileSystem.move()"
         end
         # make sure the path is clear
         if force
-            FileSys.delete(to)
+            FileSystem.delete(to)
         end
         # perform the copy
         File.rename(from, to)
@@ -177,7 +176,7 @@ module FileSys
     singleton_class.send(:alias_method, :new_file, :touch)
     
     def self.touch_dir(path)
-        if not FileSys.directory?(path)
+        if not FileSystem.directory?(path)
             FileUtils.makedirs(path)
         end
     end
@@ -205,7 +204,7 @@ module FileSys
         extname = File.extname(pieces[-1])
         basebasename = pieces[-1][0...(pieces[-1].size - extname.size)]
         # add the root if the path is absolute
-        if FileSys.abs?(path)
+        if FileSystem.abs?(path)
             if not OS.is?("windows")
                 pieces.unshift('/')
             else
@@ -224,10 +223,10 @@ module FileSys
         Dir.glob(path, File::FNM_DOTMATCH) - %w[. ..]
     end
     def self.list_files(path=".")
-        Dir.children(path).map{|each| path/each }.select {|each| FileSys.file?(each)}
+        Dir.children(path).map{|each| path/each }.select {|each| FileSystem.file?(each)}
     end
     def self.list_folders(path=".")
-        Dir.children(path).map{|each| path/each }.select {|each| FileSys.directory?(each)}
+        Dir.children(path).map{|each| path/each }.select {|each| FileSystem.directory?(each)}
     end
     def self.ls(path=".")
         Dir.children(path)
@@ -379,6 +378,7 @@ module FileSys
     end
     
     def self.download(input=nil, from:nil, url:nil, to:nil)
+        require 'open-uri'
         # if only one argument, either input or url
         if ((input!=nil) != (url!=nil)) && (from==nil) && (to==nil)
             # this covers:
@@ -409,8 +409,8 @@ module FileSys
                     download 'file',  url:'site.com/file'
             HEREDOC
         end
-        FileSys.write(open(URI.encode(the_url)).read, to: file_name)
+        FileSystem.write(open(URI.encode(the_url)).read, to: file_name)
     end
 end
-# create an FS singleton_class.send(:alias_method, :FS = :FileSys)
-FS = FileSys
+# create an FS singleton_class.send(:alias_method, :FS = :FileSystem)
+FS = FileSystem

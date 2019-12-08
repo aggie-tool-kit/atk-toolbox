@@ -1,10 +1,26 @@
 require "yaml"
-require_relative './console'
+require "colorize"
 require_relative './os'
-require_relative './file_sys'
-require_relative './extra_yaml'
 require 'fileutils'
 require_relative './remove_indent.rb'
+
+# duplicated for the sake of efficieny (so that the parser doesn't need to import all of FileSystem)
+module FileSystem
+    def self.join(*args)
+        if OS.is?("windows")
+            folders_without_leading_or_trailing_slashes = args.map do |each|
+                # replace all forward slashes with backslashes
+                backslashed_only = each.gsub(/\//,"\\")
+                # remove leading/trailing backslashes
+                backslashed_only.gsub(/(^\\|^\/|\\$|\/$)/,"")
+            end
+            # join all of them with backslashes
+            folders_without_leading_or_trailing_slashes.join("\\")
+        else
+            File.join(*args)
+        end
+    end
+end
 
 # TODO: for efficiency, have the parser generate a parsed object, instead of only handling everything dynamically (allow for both)
 
@@ -103,7 +119,7 @@ class Info
     def self.init
         current_dir = Dir.pwd/"info.yaml"
         # if there isn't a info.yaml then create one
-        if not FS.file?(current_dir)
+        if not File.file?(current_dir)
             # copy the default yaml to the current dir
             FileUtils.cp(__dir__/"default_info.yaml", current_dir)
             puts "info.yaml created successfully"
@@ -225,25 +241,27 @@ class Info
             # @@environment_variables
         
         # get the local yaml file
-        if FS.file?(Info.source_path)
-            begin
-                @@data = YAML.load_file(Info.source_path)
-                if @@data['(using_atk_version)'] != 1.0
-                    raise <<-HEREDOC.remove_indent
-                    
-                    
-                        When opening the info.yaml file in '#{self.folder}'
-                        the (using_atk_version) was listed as: #{@@data['(using_atk_version)'].inspect}
-                        The version of atk_toolbox you have installed is only capable of handling version 1.0
-                        either atk_toolbox needs to be changed, or the (using_atk_version) version needs to be changed.
-                    HEREDOC
-                end
-            rescue => exception
+        absolute_parent_path = File.absolute_path(Info.folder())
+        source = FileSystem.join(absolute_parent_path, "info.yaml")
+        begin
+            @@data = YAML.load_file(source)
+            if @@data['(using_atk_version)'] != 1.0
+                raise <<-HEREDOC.remove_indent
+                
+                
+                    When opening the info.yaml file in '#{self.folder}'
+                    the (using_atk_version) was listed as: #{@@data['(using_atk_version)'].inspect}
+                    The version of atk_toolbox you have installed is only capable of handling version 1.0
+                    either atk_toolbox needs to be changed, or the (using_atk_version) version needs to be changed.
+                HEREDOC
+            end
+        rescue
+            if File.file?(source)
                 puts "\n\nI'm having trouble loading the info.yaml file. Here's the error:\n".red
                 raise exception
+            else
+                raise "\n\nCouldn't find an info.yaml file in #{Dir.pwd}".red
             end
-        else
-            raise "\n\nCouldn't find an info.yaml file in #{Dir.pwd}".red
         end
         @@project = @@data['(project)']
         if @@project == nil
@@ -269,7 +287,7 @@ class Info
         for each_key, each_value in @@paths
             # if its an array, just join it together
             if each_value.is_a?(Array)
-                each_value = FS.join(*each_value)
+                each_value = FileSystem.join(*each_value)
             end
             if each_value.is_a?(String)
                 # remove the ./ if it exists
@@ -279,7 +297,7 @@ class Info
                 # Dont add a source_path if its an absolute path
                 if not each_value.size > 0 && each_value[0] == '/'
                     # convert the path into an absolute path
-                    @@paths[each_key] = FS.absolute_path(FS.dirname(Info.source_path)) / each_value
+                    @@paths[each_key] = FileSystem.join(absolute_parent_path , each_value)
                 end
             end
         end
@@ -304,29 +322,30 @@ class Info
     end
     
     def self.folder()
-        first_location = Dir.pwd/"info.yaml"
-        *folders, name, ext = FS.path_pieces(first_location)
+        folder = Dir.pwd
         loop do
+            # if the info.yaml exists in that folder
+            if FileSystem.join(folder, "info.yaml")
+                return folder
+            end
+
+            next_location = File.dirname(folder)
+            
             # if all folders exhausted
-            if folders.size == 0
+            if next_location == folder
                 raise <<-HEREDOC.remove_indent.red
                     
-                    Couldn't find an info.yaml in the current directory or any parent directory
+                    #{"Couldn't find an info.yaml in the current directory or any parent directory".red}
                         #{Dir.pwd}
                     Are you sure you're running the command from the correct directory?
                 HEREDOC
             end
-            # if the info.yaml exists, then use it
-            path = FS.join(*folders, "info.yaml")
-            if FS.file?(path)
-                return FS.join(*folders)
-            end
-            # go up the folders
-            folders.pop()
+            
+            folder = next_location
         end
     end
     
     def self.source_path()
-        return self.folder()/"info.yaml"
+        return FileSystem.join( self.folder(), "info.yaml")
     end
 end

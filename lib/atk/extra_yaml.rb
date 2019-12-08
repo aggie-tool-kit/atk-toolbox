@@ -1,4 +1,3 @@
-require_relative './os'
 require_relative './remove_indent'
 require_relative './version'
 require 'json'
@@ -144,12 +143,5 @@ class Psych::Nodes::Node
         middle_part = self.anchor_and_tag(anchor:anchor, tag:tag) + new_value
         new_string = inject_string(@document.string, middle_part, @start_line, @start_column, @end_line, @end_column)
         @document.init( string: new_string )
-    end
-end
-
-
-class String
-    def yaml
-        return YAML.load(self)
     end
 end
