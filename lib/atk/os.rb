@@ -119,6 +119,7 @@ module OS
     end
     
     def self.path_for_executable(name_of_executable)
+        program = name_of_executable
         # this method was extracted from the ptools gem, credit should go to them
         # https://github.com/djberg96/ptools/blob/master/lib/ptools.rb
         # this complex method is in favor of just calling the command line because command line calls are slow
