@@ -61,6 +61,14 @@ class TTY::Prompt
     def single_quote_escape(string)
         string.gsub(/'/, "'\"'\"'")
     end
+    
+    def make_arguments_appendable(arguments)
+        # TODO: make sure this works on windows
+        safe_arguments = arguments.map do |each|
+            " '"+Console.single_quote_escape(each)+"'"
+        end
+        return safe_arguments.join('')
+    end
 end
 
 Console = TTY::Prompt.new

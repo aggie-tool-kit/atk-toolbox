@@ -239,22 +239,22 @@ class Info
                     HEREDOC
                 end
             rescue => exception
-                puts "\n\nI'm having trouble loading the info.yaml file. Here's the error:\n"
+                puts "\n\nI'm having trouble loading the info.yaml file. Here's the error:\n".red
                 raise exception
             end
         else
-            raise "\n\nCouldn't find an info.yaml file in #{Dir.pwd}"
+            raise "\n\nCouldn't find an info.yaml file in #{Dir.pwd}".red
         end
         @@project = @@data['(project)']
         if @@project == nil
             # TODO: maybe change this to be optional in the future and have default settings
-            raise "\n\nThere is no (project): key in the info.yaml\n(so ATK is unable to parse the project settings)"
+            raise "\n\nThere is no (project): key in the info.yaml\n(so ATK is unable to parse the project settings)".red
         end
         
         @@settings = @@project['(advanced_setup)']
         if @@settings == nil
             # TODO: maybe change this to be optional in the future and have default settings
-            raise "\n\nThere is no (advanced_setup): key in the (project) of the info.yaml\n(so ATK is unable to parse the project settings)"
+            raise "\n\nThere is no (advanced_setup): key in the (project) of the info.yaml\n(so ATK is unable to parse the project settings)".red
         end
         Info.parse_advanced_setup(@@settings, @@settings)
         @@dependencies               = @@settings['(dependencies)']
@@ -309,7 +309,7 @@ class Info
         loop do
             # if all folders exhausted
             if folders.size == 0
-                raise <<-HEREDOC.remove_indent
+                raise <<-HEREDOC.remove_indent.red
                     
                     Couldn't find an info.yaml in the current directory or any parent directory
                         #{Dir.pwd}

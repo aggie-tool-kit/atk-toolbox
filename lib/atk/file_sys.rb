@@ -200,7 +200,7 @@ module FileSys
     
     def self.path_pieces(path)
         # use this function like this:
-        # *path, filename, extension = FS.path_peices('/Users/jeffhykin/Desktop/place1/file1.pdf')
+        # *path, filename, extension = FS.path_pieces('/Users/jeffhykin/Desktop/place1/file1.pdf')
         pieces = Pathname(path).each_filename.to_a
         extname = File.extname(pieces[-1])
         basebasename = pieces[-1][0...(pieces[-1].size - extname.size)]

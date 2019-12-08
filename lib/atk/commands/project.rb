@@ -1,6 +1,6 @@
 require_relative '../atk_info'
 
-module ATK
+module Atk
     def self.project(args)
         # TODO: check to make sure project exists
         if args.length == 0
@@ -159,7 +159,7 @@ module ATK
                     end
                 else
                     puts "I don't recognized that command\nhere's the `project --help` which might get you what you're looking for:"
-                    ATK.project(["help"])
+                    Atk.project(["help"])
             end
         end
     end

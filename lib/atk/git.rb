@@ -18,4 +18,10 @@ module Git
         # TODO: make this a force pull
         git_repo.pull
     end
+    
+    def self.repo_name(url)
+        require_relative './file_sys'
+        *folders, name, extension = FS.path_pieces('https://stackoverflow.com/questions/19072070/how-to-find-where-gem-files-are-installed')
+        return name
+    end
 end

@@ -12,9 +12,9 @@ class TTY::Prompt
     def set_command(name, code)
         if OS.is?("unix")
             exec_path = "/usr/local/bin/#{name}"
-            local_place = ATK.temp_path(name)
+            local_place = Atk.temp_path(name)
             # add the hash bang
-            hash_bang = "#!#{ATK.paths[:ruby]}\n"
+            hash_bang = "#!#{Atk.paths[:ruby]}\n"
             # create the file
             FS.write(hash_bang+code, to: local_place)
             # copy to command folder
