@@ -265,8 +265,7 @@ class Info
         end
         @@project = @@data['(project)']
         if @@project == nil
-            # TODO: maybe change this to be optional in the future and have default settings
-            raise "\n\nThere is no (project): key in the info.yaml\n(so ATK is unable to parse the project settings)".red
+            return
         end
         
         @@settings = @@project['(advanced_setup)']
