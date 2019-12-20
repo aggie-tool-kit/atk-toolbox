@@ -75,10 +75,9 @@ module Atk
                 if data[@@atk_settings_key].is_a?(Hash)
                     return data[@@atk_settings_key]
                 end
-            else
-                return {}
             end
         end
+        return {}
     end
     
     def self.save_info(new_hash)
@@ -244,7 +243,7 @@ class AtkPackage
                         if error_loading_yaml
                             custom_message = "✖ there was an issue loading the info.yaml for this package".red
                         else
-                            if run_command["(installer)"] == nil
+                            if run_command == nil
                                 custom_message = "✖ there wasn't an (installer) key with a run command".red
                             end
                         end
