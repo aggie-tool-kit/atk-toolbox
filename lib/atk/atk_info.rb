@@ -138,7 +138,7 @@ module Atk
         system(Atk.paths['gem'], 'install', "atk_toolbox")
     end
 end
-
+ATK = Atk
 
 
 class AtkPackage
