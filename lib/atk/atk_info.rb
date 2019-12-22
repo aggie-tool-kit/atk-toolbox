@@ -45,7 +45,8 @@ module Atk
     @@atk_settings_key = "atk_settings"
     def self.version
         require_relative '../atk_toolbox/version.rb'
-        return AtkToolbox::VERSION
+        require_relative './version.rb'
+        return Version.new(AtkToolbox::VERSION)
     end
     
     def self.paths
