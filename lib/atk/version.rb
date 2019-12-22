@@ -54,7 +54,8 @@ class Version
     
     def <=>(other_version)
         if not other_version.is_a?(Version)
-            raise "When doing version comparision, both sides must be a version object"
+            puts "When doing version comparision, both sides must be a version object"
+            return nil
         end
         if other_version.to_s == self.to_s
             return 0
