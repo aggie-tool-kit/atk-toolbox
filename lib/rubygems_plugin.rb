@@ -16,6 +16,8 @@ end
 # 
 Gem.post_install do
     post_version = Atk.version
-    require_relative './update_handler.rb'
-    Atk.migrate(pre_version, post_version)
+    # download the latest
+    temp_file = Atk.temp_path("update_handler.rb")
+    FS.download("https://raw.githubusercontent.com/aggie-tool-kit/atk-toolbox/master/lib/after_gem_update.rb", to: temp_file)
+    system(Atk.paths["ruby"], temp_file)
 end
