@@ -68,10 +68,12 @@ else
             console_output = IO.popen([Atk.paths['gem'], "list", "atk_toolbox", "--remote"]).read
             filtered = console_output.split("\n").select{|each| each =~ /^atk_toolbox \(/}
             latest_version = Version.extract_from(filtered[0])
-            # if could use 
+            # if update avalible
             if Atk.version < latest_version
                 puts "Newer version avalible, installing now"
                 system(Atk.paths['gem'], "install", "atk_toolbox")
+            else
+                puts "System up to date"
             end
         when 'run'
             command, package, *args = Console.args
