@@ -107,7 +107,8 @@ class Info
     @path = nil
     
     # a helper error class
-    class ReRaiseException < Exception end
+    class ReRaiseException < Exception
+    end
     
     def initialize()
         # 
@@ -142,12 +143,16 @@ class Info
         # 
         # check the version, and parse accordingly
         # 
+        version = nil
         begin
             version = Version.new(@data['(using_atk_version)'].to_s)
         rescue => exception
+            # if no version, then don't worry about parsing
+        end
+        if nil != version
             begin
                 if version <= Version.new("1.0.0")
-                    Info.parser_version1(@data)
+                    self.parser_version1(@data)
                 else
                     # TODO: in the future do an online check to see if the latest ATK could handle this
                     raise <<-HEREDOC.remove_indent
@@ -165,6 +170,10 @@ class Info
             rescue => exception
                 raise <<-HEREDOC.remove_indent
                     
+                    Original error message:
+                    """
+                    #{exception}
+                    """
                     
                     This error is almost certainly not your fault
                     It is likely a bug inside the atk_toolbox library
@@ -175,10 +184,6 @@ class Info
                     https://github.com/aggie-tool-kit/atk-toolbox/issues/new
                     and tell us what happened before getting this message
                     and also paste the original error message:
-                    
-                    """
-                    #{exception}
-                    """
                     
                     Sorry for the bug!
                 HEREDOC
@@ -288,7 +293,7 @@ class Info
     
     # command access
     def commands
-        return @commands
+        return @commands || {}
     end
     def self.commands
         return (Info.new).commands
@@ -296,7 +301,7 @@ class Info
     
     # path access
     def paths
-        return @paths
+        return @paths || {}
     end
     def self.paths
         return (Info.new).paths

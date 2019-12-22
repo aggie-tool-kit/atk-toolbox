@@ -98,6 +98,21 @@ class Version
         return value && value == 0
     end
     
+    def >=(other_version)
+        value = (self <=> other_version)
+        return value && value != -1
+    end
+    
+    def <=(other_version)
+        value = (self <=> other_version)
+        return value && value != 1
+    end
+    
+    def !=(other_version)
+        value = (self <=> other_version)
+        return value && value != 0
+    end
+    
     def to_s
         return @levels.map(&:to_s).join('.')
     end

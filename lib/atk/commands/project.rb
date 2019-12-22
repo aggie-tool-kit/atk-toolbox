@@ -7,13 +7,10 @@ module Atk
             puts "if you don't know how to use #{"project".blue} just run #{"project help".blue}"
             puts ""
             # if there are commands then show them
-            begin
-                commands = Info.commands
-                if commands.is_a?(Hash) && commands.keys.size > 0
-                    puts "commands for current project:"
-                    puts `project commands`
-                end
-            rescue => exception
+            commands = Info.commands
+            if commands.is_a?(Hash) && commands.keys.size > 0
+                puts "commands for current project:"
+                puts `project commands`
             end
         else
             # 
