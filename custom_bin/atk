@@ -1,0 +1,94 @@
+require 'atk_toolbox'
+require 'digest'
+
+def not_yet_implemented()
+    puts "Sorry, this feature is still under development"
+end
+
+def help_command()
+    puts <<-HEREDOC.remove_indent
+        #{"help".yellow}
+            #{"examples:".green} #{'atk help'.blue}
+            #{"info:".green} shows avalible commands
+
+        #{"version".yellow}
+            #{"examples:".green} #{'atk version'.blue}
+            #{"info:".green} shows the currently installed version
+            
+        #{"update".yellow}
+            #{"examples:".green} #{'atk update'.blue}
+            #{"info:".green} this will get you the latest version of the #{'atk'.blue}, #{'project'.blue}, and #{'_'.blue} commands            
+        
+        #{"run".yellow}
+            #{"examples:".green}
+                #{'atk run https://github.com/jeff-hykin/install-python'.blue}
+                #{'atk run jeff-hykin/install-python'.blue}
+            #{"info:".green}
+                This command is used execute a remote script (normally for setup)
+            #{"format:".green}
+                #{"atk".blue} #{"run".yellow} #{"<package>".cyan}
+            #{"arguments:".green}
+                #{"<package>".cyan} can be:
+                    - a URL to any online git repo such as:
+                        #{'https://github.com/jeff-hykin/install-python'.blue}
+                    - can also be just a github-username/repo-name such as:
+                        #{'jeff-hykin/install-python'.blue}
+
+            
+        #{"setup".yellow}
+            #{"examples:".green}
+                #{'atk setup jeff-hykin/atk-python'.blue}
+                #{'atk setup https://github.com/jeff-hykin/atk-python'.blue}
+            #{"info:".green}
+                A command for quickly setting up other people's projects
+                It downloads a github repo to the projects folder
+                and runs the project (setup) function
+            #{"format:".green}
+                #{"atk".blue} #{"setup".yellow} #{"<project-git-url>".cyan}
+        
+        #{"uninstall".yellow}
+            #{"examples:".green} #{'atk uninstall'.blue}
+            #{"info:".green} this command will uninstall atk itself
+    HEREDOC
+end
+
+
+if Console.args.length == 0
+    puts "This is the ATK command! I'm glad to see you're using it.\nRunning it with no arguments will just get you this message :)"
+# if one argument, then act like grep
+else
+    case Console.args[0]
+        when 'help', '--help', '-h'
+            help_command()
+        when 'version', '--version', '-v'
+            puts Atk.version
+        when 'update'
+            # just try updating the gem
+            system(Atk.paths['gem'], "install", "atk_toolbox")
+        when 'run'
+            command, package, *args = Console.args
+            Atk.run(package, args)
+        when 'setup'
+            command, repo_url, *arguments = Console.args
+            Atk.setup(repo_url, arguments)
+        when 'uninstall'
+            # remove the 3 commands and the home folder
+            if Console.yes?("Are you sure you want to uninstall ATK?\nnote: packages/languages install via ATK will still be avalible after ATK is removed")
+                puts "Deleting the _ command"
+                FS.delete(Console.path_for('_'))
+                puts "Deleting the project command"
+                FS.delete(Console.path_for('project'))
+                puts "Deleting the atk command"
+                FS.delete(Console.path_for('atk'))
+                puts "Deleting the atk directory"
+                FS.delete(Atk.paths[:atk])
+                puts "Uninstalling the atk_toolbox ruby gem"
+                system 'gem uninstall atk_toolbox'
+                puts "\n Uninstall complete"
+            end
+        else
+            puts "I don't recognized that command\nhere's the `atk --help` which might get you what you're looking for:"
+            help_command()
+    end
+    
+end

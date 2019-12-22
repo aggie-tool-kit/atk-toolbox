@@ -1,28 +1,34 @@
 require_relative './lib/atk_toolbox/version'
 
-Gem::Specification.new do |s|
-    s.name              = "atk_toolbox"
-    s.version           = AtkToolbox::VERSION
-    s.date              = Time.now.strftime('%Y-%m-%d')
-    s.summary           = "The Ruby gem for all the standard tools ATK uses internally"
-    s.homepage          = "http://github.com//atk-toolbox"
-    s.email             = "jeff.hykin@gmail.com"
-    s.authors           = [ "Jeff Hykin" ]
-    s.has_rdoc          = false
-    s.license           = "CC-BY-ND-4.0"
-    s.add_runtime_dependency 'zip', '~> 2.0', '>= 2.0.2'
-    s.add_runtime_dependency 'git', '~> 1.5.0', '>= 1.5.0'
-    s.add_runtime_dependency 'tty-prompt', '~> 0.19.0', '>= 0.19.0'
-    s.add_runtime_dependency 'colorize', '~> 0.8.1', '>= 0.8.1'
+Gem::Specification.new do |spec|
+    spec.name              = "atk_toolbox"
+    spec.version           = AtkToolbox::VERSION
+    spec.date              = Time.now.strftime('%Y-%m-%d')
+    spec.summary           = "The Ruby gem for all the standard tools ATK uses internally"
+    spec.homepage          = "http://github.com//atk-toolbox"
+    spec.email             = "jeff.hykin@gmail.com"
+    spec.authors           = [ "Jeff Hykin" ]
+    spec.has_rdoc          = false
+    spec.license           = "CC-BY-ND-4.0"
+    spec.add_runtime_dependency 'zip', '~> 2.0', '>= 2.0.2'
+    spec.add_runtime_dependency 'git', '~> 1.5.0', '>= 1.5.0'
+    spec.add_runtime_dependency 'tty-prompt', '~> 0.19.0', '>= 0.19.0'
+    spec.add_runtime_dependency 'colorize', '~> 0.8.1', '>= 0.8.1'
 
+    spec.require_paths = ['./lib']
     
-    s.files            += Dir.glob("lib/*")
-    s.files            += Dir.glob("lib/**/*")
-    s.files            += Dir.glob("bin/**/*")
-    s.files            += Dir.glob("man/**/*")
-    s.files            += Dir.glob("test/**/*")
-
-    #  s.executables       = %w( atk-toolbox )
-    s.description       = <<-desc
+    spec.files            += Dir.glob("lib/*")
+    spec.files            += Dir.glob("lib/**/*")
+    spec.files            += Dir.glob("bin/**/*")
+    spec.files            += Dir.glob("man/**/*")
+    spec.files            += Dir.glob("test/**/*")
+    
+    # bin files
+    for each in Dir.glob("bin/*")
+        system "chmod a+x '#{each}'"
+        spec.executables << File.basename(each)
+    end
+    
+    spec.description       = <<-desc
     desc
 end

@@ -6,6 +6,7 @@
 - add background colors to all colored text
 - improve the mac installer: add support for zsh and catalina
 - do version checking for 1.0
+- stablize the versioning of ruby and gem, and fix all path calls to them
 - create templates for websites, C++, python, and ruby
 - add support for installing sub dependencies
   - create hashes of package.json, requirements.txt, gemfile, and the atk-dependencies

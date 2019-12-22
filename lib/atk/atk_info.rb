@@ -32,12 +32,9 @@ class AtkPaths
                     ruby_path = OS.path_for_executable("ruby")
                 end
                 return ruby_path
-            when 'core_yaml'
-                return HOME/"atk"/"core.yaml"
-            when 'installed_yaml'
-                return HOME/"atk"/"installers.yaml"
-            when 'installers_folder'
-                return HOME/"atk"/"installers"
+            when 'gem'
+                # TODO: this eventually needs to link to a specific version of ruby
+                return OS.path_for_executable("gem")
             when 'repos'
                 return HOME/"atk"/"repos"
         end
@@ -137,51 +134,8 @@ module Atk
         puts "Sorry, this feature is still under development"
     end
     
-    def self.install(*args)
-        if args.size == 0
-            # 
-            # create the file structure if it doesnt exist
-            # 
-            FS.makedirs(HOME/"atk"/"installers")
-            # download the files
-            if not FS.exist?(HOME/"atk"/"core.yaml")
-                FS.download('https://raw.githubusercontent.com/aggie-tool-kit/atk/master/core.yaml'       , to: HOME/"atk"/"core.yaml")
-            end
-            if not FS.exist?(HOME/"atk"/"installers.yaml")
-                FS.download('https://raw.githubusercontent.com/aggie-tool-kit/atk/master/installers.yaml' , to: HOME/"atk"/"installers.yaml")
-            end
-
-            #
-            # overwrite the commands
-            # 
-
-            # atk
-            atk_command_download_path = Atk.temp_path("atk.rb")
-            FS.download('https://raw.githubusercontent.com/aggie-tool-kit/atk/master/atk'     , to: atk_command_download_path)
-            Console.set_command("atk", FS.read(atk_command_download_path))
-
-            # project
-            project_command_download_path = Atk.temp_path("project.rb")
-            FS.download('https://raw.githubusercontent.com/aggie-tool-kit/atk/master/project' , to: project_command_download_path)
-            Console.set_command("project", FS.read(project_command_download_path))
-
-            # the project run alias
-            local_command_download_path = Atk.temp_path("local_command.rb")
-            FS.download('https://raw.githubusercontent.com/aggie-tool-kit/atk/master/_'      , to: local_command_download_path)
-            Console.set_command("_", FS.read(local_command_download_path))
-
-            # 
-            # print success
-            # 
-            puts ""
-            puts ""
-            puts ""
-            puts "=============================="
-            puts "        ATK installed "
-            puts "=============================="
-        else
-            Atk.not_yet_implemented()
-        end
+    def self.update()
+        system(Atk.paths['gem'], 'install', "atk_toolbox")
     end
 end
 
@@ -206,21 +160,9 @@ class AtkPackage
     def url
         if @url == nil
             simple_name = self.simple_name()
-            # if the package name does not have a slash in it, then assume it is a core / approved installer
+            # if the package name does not have a slash in it, then assume it is a core / approved package
             if not (simple_name =~ /.*\/.*/) 
-                # TODO: turn this into a check for is_core_repo?(package_name)
-                # path_to_core_listing = Atk.paths[:core_yaml]
-                # core = YAML.load_file(path_to_core_listing)
-                # if core[package_name] == nil
-                #     puts "I don't see that package in the core, let me make sure I have the latest info"
-                #     download("https://raw.githubusercontent.com/aggie-tool-kit/atk/master/interface/core.yaml", as: path_to_core_listing)
-                #     core = YAML.load_file(path_to_core_listing)
-                # end
-                # if core[package_name] != nil
-                #     repo_url = core[package_name]["source"]
-                # else
-                    raise "That package #{@init_name} doesn't seem to be a core package"
-                # end
+                raise "That package #{@init_name} doesn't seem to be a core package"
             # if it does have a slash, and isn't a full url, then assume its a github repo
             elsif not simple_name.start_with?(/https?:\/\//)
                 repo_url = "https://github.com/"+simple_name
