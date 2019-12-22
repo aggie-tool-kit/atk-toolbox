@@ -8,7 +8,7 @@ module Atk
             puts ""
             # if there are commands then show them
             begin
-                commands = Info.project_commands
+                commands = Info.commands
                 if commands.is_a?(Hash) && commands.keys.size > 0
                     puts "commands for current project:"
                     puts `project commands`
@@ -71,12 +71,12 @@ module Atk
                     Info.init
                 when 'synchronize', 'sync'
                     # if there is an argument
-                    git_folder_path = FS.dirname(Info.source_path)/".git"
+                    git_folder_path = FS.dirname(Info.path)/".git"
                     if not FS.is_folder(git_folder_path)
                         raise <<-HEREDOC.remove_indent
                             
                             
-                            The `project sync` command was called inside of #{FS.dirname(Info.source_path)}
+                            The `project sync` command was called inside of #{FS.dirname(Info.path)}
                             However, there doesn't seem to be a git repository in this folder
                             (and changes can't be saved/synced without a git repository)
                         HEREDOC
@@ -136,7 +136,7 @@ module Atk
                     # then find the command with the same name as args[1] and run it
                     # TODO: use https://github.com/piotrmurach/tty-markdown#ttymarkdown- to highlight the ruby code 
                     _, command_name, *command_args = args
-                    command = Info.project_commands[command_name]
+                    command = Info.commands[command_name]
                     # temporairly set the dir to be the same as the info.yaml 
                     FS.in_dir(Info.folder()) do
                         if command.is_a?(String)
@@ -149,7 +149,7 @@ module Atk
                     end
                 when 'commands'
                     max_number_of_chars_to_show = 80
-                    commands = Info.project_commands
+                    commands = Info.commands
                     if commands.keys.size == 0
                         puts "0 avalible commands".cyan
                     else

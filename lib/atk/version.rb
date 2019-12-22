@@ -11,6 +11,17 @@ class Version
     end
     
     def initialize(version_as_string)
+        # if there are no digits
+        if !(version_as_string.to_s =~ /\d/)
+            raise <<-HEREDOC.remove_indent
+                
+                
+                When calling Version.new(arg1)
+                the `arg1.to_s` was #{version_as_string.to_s}
+                which does not contain any digits
+                so the Version class doesn't know what to do with it
+            HEREDOC
+        end
         @levels = version_as_string.split('.')
         @comparable = @levels[0] =~ /\A\d+\z/
         # convert values into integers where possible

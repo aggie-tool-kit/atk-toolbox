@@ -110,7 +110,7 @@ module Atk
         project_path = project_folder/project_name
         Git.ensure_cloned_and_up_to_date(project_path, repo_url)
         FS.in_dir(project_path) do
-            setup_command = Info.project_commands['(setup)']
+            setup_command = Info.commands['(setup)']
             if setup_command.is_a?(Code) || setup_command.is_a?(String)
                 puts "\n\nRunning (setup) command:\n".green
                 sleep 1

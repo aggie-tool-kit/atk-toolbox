@@ -3,7 +3,7 @@ module Atk
         if which_command == '_'
             require_relative './yaml_info_parser.rb'
             begin
-                puts Info.project_commands().keys.map { |each| each.gsub(' ', '\ ') }.join(' ')
+                puts Info.commands().keys.map { |each| each.gsub(' ', '\ ') }.join(' ')
             rescue => exception
                 puts ""
             end
