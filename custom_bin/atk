@@ -71,7 +71,12 @@ else
             # if update avalible
             if Atk.version < latest_version
                 puts "Newer version avalible, installing now"
+                # install the new gem
                 system(Atk.paths['gem'], "install", "atk_toolbox")
+                # run the update handler
+                temp_file = Atk.temp_path("after_gem_update.rb")
+                FS.download("https://raw.githubusercontent.com/aggie-tool-kit/atk-toolbox/master/lib/after_gem_update.rb", to: temp_file)
+                system(Atk.paths["ruby"], temp_file, Atk.version.to_s)
             else
                 puts "System up to date"
             end

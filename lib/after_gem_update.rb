@@ -1,5 +1,8 @@
 require 'atk_toolbox'
 
+previous_version = Console.args[0]
+puts "previous_version is: #{previous_version} "
+
 # helper function
 download_and_install_command = ->(command) do
     atk_command_download_path = Atk.temp_path("#{command}.rb")
