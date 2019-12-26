@@ -1,6 +1,6 @@
 require_relative './file_sys'
 require_relative './console'
-require_relative './yaml_info_parser'
+require_relative './info'
 require_relative './os'
 require_relative './git'
 require 'yaml'
@@ -145,6 +145,8 @@ ATK = Atk
 class AtkPackage
     def initialize(package_name)
         @init_name = package_name
+        @package_info_loaded = false
+        @dont_exist = {}
     end
     
     def simple_name
@@ -200,63 +202,156 @@ class AtkPackage
         end
     end
     
-    def run(arguments)
-        # make sure the repo is downloaded
-        self.ensure_cached()
-        FS.in_dir(self.cache_location) do
-            run_command = nil
-            begin
-                run_command = Info["(installer)"]["(commands)"]["(run)"]
-            rescue
-            end
-            if run_command.is_a?(String)
-                system(run_command + Console.make_arguments_appendable(arguments))
-            else
-                # 
-                # refine the error message
-                # 
-                custom_message = ""
-                if run_command != nil && ( !run_command.is_a?(String) )
-                    custom_message = "✖ the (run) command wasn't a string".red
-                else
-                    yaml_exists = File.exist?(self.cache_location()/"info.yaml")
-                    
-                    if not yaml_exists
-                        custom_message = "✖ there was no info.yaml for this package".red
-                    else
-                        error_loading_yaml = false
-                        begin
-                            YAML.load_file("./info.yaml")
-                        rescue
-                            error_loading_yaml = true
-                        end
-                        if error_loading_yaml
-                            custom_message = "✖ there was an issue loading the info.yaml for this package".red
-                        else
-                            if run_command == nil
-                                custom_message = "✖ there wasn't an (installer) key with a run command".red
-                            end
-                        end
-                    end
+    # 
+    # parse package
+    #     
+    def ensure_package_info()
+        if not @package_info_loaded
+            @package_info_loaded = true
+            self.ensure_cached()
+            FS.in_dir(self.cache_location) do
+                if not FS.file?("./info.yaml")
+                    @dont_exist[:yaml_file] = true
+                end
+                begin
+                    # must be in top most dir
+                    @info = YAML.load_file("./info.yaml")
+                rescue => exception
+                    @dont_exist[:correctly_formatted_yaml_file] = true
                 end
                 
-                # throw error for command not being runable
-                raise <<-HEREDOC.remove_indent
+                # attempt to load a version
+                begin
+                    version = Version.new(@info['(using_atk_version)'])
+                rescue => exception
+                    version = nil
+                    @dont_exist[:using_atk_version] = true
+                end
+                # if there is a version
+                if version.is_a?(Version)
+                    # if the version is really old
+                    if version <= Version.new("1.0.0")
+                        raise <<-HEREDOC.remove_indent
+                            
+                            
+                            It appears that the #{self.simple_name()} package is using
+                            the alpha version of ATK (1.0.0), which is no longer supported.
+                            This is probably just a simple versioning mistake.
+                            Please ask the maintainer of the #{self.simple_name()} package to
+                            update it to a newer ATK package format
+                        HEREDOC
+                    elsif version <= Version.new("1.1.0")
+                        self.parser_version_1_1(@info)
+                    else
+                        raise <<-HEREDOC.remove_indent
+                            
+                            
+                            The package #{self.simple_name()} has a (using_atk_version)
+                            that is newer than the currently installed ATK can handle:
+                            version: #{version}
+                            
+                            This means either
+                                1. ATK needs to be updated (which you can do with #{'atk update'.light_blue.on_black})
+                                2. The package has specified a version of ATK that doesn't exist
+                        HEREDOC
+                    end  
+                end
+            end
+        end
+    end
+    
+    # 
+    # (using_atk_version) 1.1.0
+    # 
+    # (package):
+    #     (actions):
+    #          (run): *run command as string*
+    def parser_version_1_1(info)
+        # 
+        # inits:
+        #    @package_info: nil
+        #    @actions: {}
+        #    @run: nil
+        # 
+        if @info.is_a?(Hash)
+            @package_info = @info['(package)']
+            if @package_info.is_a?(Hash)
+                @actions = @package_info['(actions)']
+            else 
+                @dont_exist[:package_info] = true
+            end
+            if not @actions.is_a?(Hash)
+                @actions = {}
+                @dont_exist[:actions] = true
+            end
+            
+            @run = @actions['(run)']
+            if not @run.is_a?(String)
+                @dont_exist[:run_action] = true
+            end
+        end
+    end
+    
+    def run(arguments)
+        self.ensure_package_info()
+        # if it exists, run it
+        if @run.is_a?(String)
+            FS.in_dir(self.cache_location) do
+                system(@run + Console.make_arguments_appendable(arguments))
+                return $?.success?
+            end
+        # if not, explain why not
+        else
+            custom_message = <<-HEREDOC.remove_indent
+            
+                When trying 
+                    to perform the #{"run".light_blue.on_black} action
+                    on the #{self.simple_name.to_s.light_yellow.on_black} module
+                    with these arguments: #{arguments.inspect.to_s.light_magenta.on_black}
+                
+                There was an issue because:
+            HEREDOC
+            # TODO: make a more standardized error reporting tool
+            good = ->(message) do
+                "    ✓ #{message.green}"
+            end
+            bad = ->(message) do
+                "    ✖ #{message.red}"
+            end
+            
+            if @dont_exist[:yaml_file]
+                custom_message += <<-HEREDOC.remove_indent
+                    #{bad("there was no info.yaml for that package")}
+                    and an info.yaml is the location for defining a run action 
                     
+                HEREDOC
+            elsif @dont_exist[:correctly_formatted_yaml_file]
+                custom_message += <<-HEREDOC.remove_indent
+                    #{good("there was a info.yaml for that package")}
+                    #{bad("the info.yaml is not parseable")}
+                    and an info.yaml is the location for defining a run action
                     
-                    #{custom_message}
-                    
-                    For the repository to be runnable
-                    1. There needs to be an #{"info.yaml".blue}
-                    2. The info.yaml needs to be in the root directory/folder
-                    3. It needs to contain:
-                    #{"
-                    (installer):
-                        (commands):
-                            (run): \"a commandline command\"
-                    ".blue}
+                HEREDOC
+            elsif @dont_exist[:using_atk_version]
+                custom_message += <<-HEREDOC.remove_indent
+                    #{good("there was a info.yaml for that package")}
+                    #{good("the info.yaml was parseable")}
+                    #{@dont_exist[:using_atk_version] && bad("the info.yaml didn't have a (using_atk_version) key")}
+                    #{@dont_exist[:package_info]      && bad("the info.yaml didn't have a (package_info) key")}
+                    #{@dont_exist[:actions]           && bad("the info.yaml didn't have a (package_info): (actions) key")}
+                    #{@dont_exist[:run_action]        && bad("the info.yaml didn't have a (package_info): (actions): (run) key")}
                 HEREDOC
             end
+            
+            raise <<-HEREDOC.remove_indent
+                
+                
+                #{custom_message}
+                
+                This is almost certainly a problem with the package
+                Please contact the maintainer of #{self.simple_name}
+                and let them know about the above issue
+            HEREDOC
         end
     end
 end

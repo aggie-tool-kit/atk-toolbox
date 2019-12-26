@@ -8,7 +8,7 @@ require "colorize"
 # easy access to the commandline
 class String
     # add a - operator to strings that makes it behave like a system() call 
-    # but it shows stderr and returns a success value
+    # but it returns a success value for chaining commands with || or &&
     def -@
         Process.wait(Process.spawn(self))
         return $?.success?

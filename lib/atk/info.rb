@@ -32,8 +32,6 @@ module FileSystem
     end
 end
 
-# TODO: for efficiency, have the parser generate a parsed object, instead of only handling everything dynamically (allow for both)
-
 # 
 # Create loaders for ruby code literal and console code literal
 # 
@@ -110,6 +108,9 @@ class Info
     class ReRaiseException < Exception
     end
     
+    class YamlFileDoesntExist < Exception
+    end
+    
     def initialize()
         # 
         # find the yaml file
@@ -143,16 +144,18 @@ class Info
         # 
         # check the version, and parse accordingly
         # 
-        version = nil
+        @version = nil
         begin
-            version = Version.new(@data['(using_atk_version)'].to_s)
+            @version = Version.new(@data['(using_atk_version)'].to_s)
         rescue => exception
             # if no version, then don't worry about parsing
         end
-        if version.is_a?(Version)
+        if @version.is_a?(Version)
             begin
-                if version <= Version.new("1.0.0")
-                    self.parser_version1(@data)
+                if @version <= Version.new("1.0.0")
+                    
+                elsif @version <= Version.new("1.1.0")
+                    self.parser_version_1_1(@data)
                 else
                     # TODO: in the future do an online check to see if the latest ATK could handle this
                     raise <<-HEREDOC.remove_indent
@@ -160,7 +163,7 @@ class Info
                         Hey I think you need to update atk:
                             `atk update`
                         Why?
-                            The (using_atk_version) in the info.yaml is: #{version}
+                            The (using_atk_version) in the info.yaml is: #{@version}
                             However, I (your current version of ATK) don't know
                             how to handle that version.
                     HEREDOC
@@ -183,7 +186,7 @@ class Info
                     please go here:
                     https://github.com/aggie-tool-kit/atk-toolbox/issues/new
                     and tell us what happened before getting this message
-                    and also paste the original error message:
+                    and also paste the original error message
                     
                     Sorry for the bug!
                 HEREDOC
@@ -219,7 +222,11 @@ class Info
         return FileSystem.join( self.folder(), "info.yaml")
     end
     
-    def parser_version1(data)
+    def version()
+        return @version
+    end
+    
+    def parser_version_1_1(data)
         # 
         # parse the commands
         #

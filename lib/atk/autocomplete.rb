@@ -1,7 +1,7 @@
 module Atk
     def self.autocomplete(which_command)
         if which_command == '_'
-            require_relative './yaml_info_parser.rb'
+            require_relative './info.rb'
             begin
                 puts Info.commands().keys.map { |each| each.gsub(' ', '\ ') }.join(' ')
             rescue => exception

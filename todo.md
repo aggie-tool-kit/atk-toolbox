@@ -1,22 +1,50 @@
 ### Current Plan
-- remove the mac/windows/linux option from the info.yaml, do it with ruby instead
-- create force push force pull on `project`
-- move everything inside of the ruby gem repo
-- change the update command to simply update the ruby gem, download/run a script, and perform saftey checks
 - add background colors to all colored text
+- have the update command perform saftey checks
+- create force push force pull on `project`
 - improve the mac installer: add support for zsh and catalina
-- do version checking for 1.0
 - stablize the versioning of ruby and gem, and fix all path calls to them
 - create templates for websites, C++, python, and ruby
 - add support for installing sub dependencies
   - create hashes of package.json, requirements.txt, gemfile, and the atk-dependencies
   - any time the hashes change, try to run their respective install commands
   - check the versions of the atk-dependencies
-- create tool for adding content to the bash profile/powershell profile
 - maybe create downloadable info.yaml templates
 - allow the commands key to be a script
 - add hooks into the project commands
 - allow ENV variables to be set in the info.yaml
+
+### ATK toolbox
+- create a standardized framework for good errors
+    - where did the error happen (context)
+    - why did the error happen (met/unmet requirements)
+    - why are the unmet requirements needed
+    - what to do (how to fix)
+- create a colorization framework
+    - package name
+    - command name
+    - command argument
+    - system command
+    - unimportant
+    - bad
+    - good
+    - example
+    - optional
+- create a standardized console-command function
+    - allow shell expansion
+    - allow TTY emultation
+    - allow raise error on nonzero exit code
+    - allow providing an ENV
+    - input/output
+        - non-blocking
+            - attach onstderr, onstdout
+            - return OBJ with writeable stdout and pid
+        - blocking
+            - no user output, and return OBJ with stdout, stderr, out (combined), success
+            - give full user output, return success
+            - give full user output, and return OBJ with stdout, stderr, out (combined), success
+            - allow setting streams for STDOUT, STDERR
+- create tool for adding content to the bash profile/zsh profile/powershell profile
 
 
 ### Major
@@ -151,3 +179,14 @@
 - create a javascript and python API of atk_toolkit 
 - standardize the ruby version that is used on mac and linux
 - figure out how to run a version.rb script without it modifying anything
+
+
+
+
+
+
+### Done
+- remove the mac/windows/linux option from the info.yaml, do it with ruby instead
+- move everything inside of the ruby gem repo
+- change the update command to simply update the ruby gem, download/run a script, and
+- do version checking for 1.0
