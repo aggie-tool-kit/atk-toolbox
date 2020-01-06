@@ -69,6 +69,52 @@ class TTY::Prompt
         end
         return safe_arguments.join('')
     end
+    
+    # returns the locations where commands are stored from highest to lowest priority
+    def command_sources()
+        if OS.is?('unix')
+            return ENV['PATH'].split(':')
+        else
+            return ENV['PATH'].split(';')
+        end
+    end
+    
+    def require_superuser()
+        if OS.is?('unix')
+            system("sudo echo 'permission aquired'")
+        else
+            # check if already admin
+            # $currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
+            # $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+            # TODO: add a check here and raise an error if not admin
+            puts "(in the future this will be an automatic check)"
+            puts "(if you're unsure, then the answer is probably no)"
+            if Console.yes?("Are you running this \"as an Administrator\"?\n(caution: incorrectly saying 'yes' can cause broken systems)")
+                puts "assuming permissions are aquired"
+            else
+                puts <<-HEREDOC.remove_indent
+                    
+                    You'll need to 
+                    - close the current program
+                    - reopen it "as Administrator"
+                    - redo whatever steps you did to get here
+                    
+                HEREDOC
+                Console.keypress("Press enter to end the current process", keys: [:return])
+                exit
+            end
+        end
+    end
+    
+    # note: this likely requires a terminal restart
+    # def command_sources=(new_locations)
+    #     if OS.is?('unix')
+    #         new_locations = new_locations.join(':')
+    #     else
+    #         new_locations = new_locations.join(';')
+            
+    #     end
+    # end
 end
 
 Console = TTY::Prompt.new
