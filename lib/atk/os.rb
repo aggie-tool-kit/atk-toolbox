@@ -26,6 +26,11 @@ module OS
         raise "not yet implemented"
     end
     
+    # create a singleton class
+    class << (OS::CACHE = Object.new)
+        attr_accessor :is_windows, :is_mac, :is_linux, :is_unix, :is_debian, :is_ubuntu
+    end
+    
     def self.is?(adjective)
         # summary:
             # this is a function created for convenience, so it doesn't have to be perfect
@@ -34,17 +39,35 @@ module OS
         adjective = adjective.to_s.downcase
         case adjective
             when 'windows'
-                return (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil
+                if OS::CACHE::is_windows == nil
+                    OS::CACHE::is_windows = (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil
+                end
+                return OS::CACHE::is_windows
             when 'mac'
-                return (/darwin/ =~ RUBY_PLATFORM) != nil
+                if OS::CACHE::is_mac == nil
+                    OS::CACHE::is_mac = (/darwin/ =~ RUBY_PLATFORM) != nil
+                end
+                return OS::CACHE::is_mac
             when 'linux'
-                return (not OS.is?(:windows)) && (not OS.is?(:mac))
+                if OS::CACHE::is_linux == nil
+                    OS::CACHE::is_linux = (not OS.is?(:windows)) && (not OS.is?(:mac))
+                end
+                return OS::CACHE::is_linux
             when 'unix'
-                return not( OS.is?(:windows))
+                if OS::CACHE::is_unix == nil
+                    OS::CACHE::is_unix = not(OS.is?(:windows))
+                end
+                return OS::CACHE::is_unix
             when 'debian'
-                return File.file?('/etc/debian_version')
+                if OS::CACHE::is_debian == nil
+                    OS::CACHE::is_debian = File.file?('/etc/debian_version')
+                end
+                return OS::CACHE::is_debian
             when 'ubuntu'
-                return OS.has_command('lsb_release') && `lsb_release -a`.match(/Distributor ID:[\s\t]*Ubuntu/)
+                if OS::CACHE::is_ubuntu == nil
+                    OS::CACHE::is_ubuntu = OS.has_command('lsb_release') && `lsb_release -a`.match(/Distributor ID:[\s\t]*Ubuntu/)
+                end
+                return OS::CACHE::is_ubuntu
         end
     end
     

@@ -1,4 +1,10 @@
 ### Current Plan
+- add exectuable path injection
+  - global_executables.sources
+  - global_executables.sources =
+  - global_executables.new_highest_priority_source()
+  - global_executables.new_lowest_priority_source()
+  - require superuser/admin tool
 - add background colors to all colored text
 - have the update command perform saftey checks
 - create force push force pull on `project`
