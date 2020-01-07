@@ -57,6 +57,7 @@ class TTY::Prompt
     def has_command(name_of_executable)
         return OS.has_command(name_of_executable)
     end
+    alias :has_command? :has_command
     
     def single_quote_escape(string)
         string.gsub(/'/, "'\"'\"'")
