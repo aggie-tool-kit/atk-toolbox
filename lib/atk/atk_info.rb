@@ -178,12 +178,37 @@ module Atk
         puts "Sorry, this feature is still under development"
     end
     
-    def self.update()
-        system(Atk.paths['gem'], 'install', "atk_toolbox")
+    def self.update(*args)
+        # 
+        # update a specific repo/package
+        # 
+        if args.size != 0
+            Atk.not_yet_implemented()
+            return
+        end
+        
+        # 
+        # update ATK itself
+        #
+        puts "Checking latest online version"
+        console_output = IO.popen([Atk.paths['gem'], "list", "atk_toolbox", "--remote"]).read
+        filtered = console_output.split("\n").select{|each| each =~ /^atk_toolbox \(/}
+        latest_version = Version.extract_from(filtered[0])
+        # if update avalible
+        if Atk.version < latest_version
+            puts "Newer version avalible, installing now"
+            # install the new gem
+            system(Atk.paths['gem'], "install", "atk_toolbox")
+            # run the update handler
+            temp_file = Atk.temp_path("after_gem_update.rb")
+            FS.download("https://raw.githubusercontent.com/aggie-tool-kit/atk-toolbox/master/lib/after_gem_update.rb", to: temp_file)
+            system(Atk.paths["ruby"], temp_file, Atk.version.to_s)
+        else
+            puts "System up to date"
+        end
     end
 end
 ATK = Atk
-
 
 class AtkPackage
     def initialize(package_name)
