@@ -385,39 +385,9 @@ module FileSystem
         File.stat(*args)
     end
     
-    def self.download(input=nil, from:nil, url:nil, to:nil)
+    def self.download(the_url, to:nil)
         require 'open-uri'
-        # if only one argument, either input or url
-        if ((input!=nil) != (url!=nil)) && (from==nil) && (to==nil)
-            # this covers:
-            #    download     'site.com/file'
-            the_url = url || input
-            file_name = the_url.match /(?<=\/)[^\/]+\z/ 
-            file_name = file_name[0]
-        elsif (to != nil) && ((input!=nil)!=(url!=nil))
-            # this covers:
-            #    download     'site.com/file' to:'file'
-            #    download url:'site.com/file' to:'file'
-            the_url = url || input
-            file_name = to
-        elsif ((from!=nil) != (url!=nil)) && input!=nil
-            # this covers:
-            #    download 'file' from:'site.com/file'
-            #    download 'file'  url:'site.com/file'
-            the_url = from || url
-            file_name = input
-        else
-            raise <<-HEREDOC.remove_indent
-                I'm not sure how you're using the download function.
-                Please use one of the following methods:
-                    download     'site.com/file'
-                    download     'site.com/file', to:'file'
-                    download url:'site.com/file', to:'file'
-                    download 'file', from:'site.com/file'
-                    download 'file',  url:'site.com/file'
-            HEREDOC
-        end
-        FileSystem.write(open(URI.encode(the_url)).read, to: file_name)
+        FileSystem.write(open(URI.encode(the_url)).read, to: to)
     end
 end
 # create an FS singleton_class.send(:alias_method, :FS = :FileSystem)
