@@ -389,6 +389,15 @@ module FileSystem
         require 'open-uri'
         FileSystem.write(open(URI.encode(the_url)).read, to: to)
     end
+    
+    def self.online?
+        require 'open-uri'
+        begin
+            true if open("http://www.google.com/")
+        rescue
+            false
+        end
+    end
 end
 # create an FS singleton_class.send(:alias_method, :FS = :FileSystem)
 FS = FileSystem
