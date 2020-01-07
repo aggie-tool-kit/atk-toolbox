@@ -19,7 +19,6 @@ end
 # 
 # Groups
 # 
-# the groups are the pratical side of the OS, they describe the OS rather than fit it prefectly into a heirarchy
 module OS
     
     # create a singleton class
