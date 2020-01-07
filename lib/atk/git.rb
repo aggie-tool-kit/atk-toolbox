@@ -20,7 +20,7 @@ module Git
     end
     
     def self.repo_name(url)
-        require_relative './file_sys'
+        require_relative './file_system'
         *folders, name, extension = FS.path_pieces(url)
         return name
     end
