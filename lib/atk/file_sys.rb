@@ -156,17 +156,25 @@ module FileSystem
         FileUtils.move(from, to/new_name, force: force, noop: noop, verbose: verbose, secure: secure)
     end
     
-    def self.rename(from:nil, to:nil, force: true)
-        # if the directories are different, then throw an error
-        if not File.identical?(File.dirname(from), File.dirname(to))
-            raise "\n\nFileSystem.rename() requires that the the file stay in the same place and only change names.\nIf you want to move a file, use FileSystem.move()"
+    def self.rename(path, new_name:nil, force: true)
+        if File.dirname(new_name) != "."
+            raise <<-HEREDOC.remove_indent
+                
+                
+                When using FileSystem.rename(path, new_name)
+                    The new_name needs to be a filename, not a file path
+                    e.g. "foo.txt" not "a_folder/foo.txt"
+                    
+                    If you want to move the file, use FileSystem.move(from:nil, to:nil, new_name:"")
+            HEREDOC
         end
+        to = path/new_name
         # make sure the path is clear
         if force
             FileSystem.delete(to)
         end
-        # perform the copy
-        File.rename(from, to)
+        # perform the rename
+        File.rename(path, to)
     end
     
     def self.touch(*args)
