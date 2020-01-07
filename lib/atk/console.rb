@@ -81,7 +81,7 @@ class TTY::Prompt
     
     def require_superuser()
         if OS.is?('unix')
-            system("sudo echo 'permission aquired'")
+            system("sudo echo 'permissions acquired'")
         else
             # check if already admin
             # $currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
@@ -90,7 +90,7 @@ class TTY::Prompt
             puts "(in the future this will be an automatic check)"
             puts "(if you're unsure, then the answer is probably no)"
             if Console.yes?("Are you running this \"as an Administrator\"?\n(caution: incorrectly saying 'yes' can cause broken systems)")
-                puts "assuming permissions are aquired"
+                puts "assuming permissions are acquired"
             else
                 puts <<-HEREDOC.remove_indent
                     
@@ -108,13 +108,21 @@ class TTY::Prompt
     
     # note: this likely requires a terminal restart
     # def command_sources=(new_locations)
+    #     # TODO: add saftey checks on new_locations, check for empty list and that all of them are strings
+    #     Console.require_superuser()
     #     if OS.is?('unix')
     #         new_locations = new_locations.join(':')
+    #         if OS.is?('mac')
+                
+    #             # IO.write('/etc/paths')
+    #         end
     #     else
     #         new_locations = new_locations.join(';')
-            
+    #         system("setx", "path", new_locations)
+    #         puts "Your command line will need to retart for path changes to take effect"
     #     end
     # end
+    
 end
 
 Console = TTY::Prompt.new

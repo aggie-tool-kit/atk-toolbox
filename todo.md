@@ -1,16 +1,70 @@
 ### Current Plan
-- add exectuable path injection
-  - global_executables.sources
-  - global_executables.sources =
-  - global_executables.new_highest_priority_source()
-  - global_executables.new_lowest_priority_source()
-  - require superuser/admin tool
+
+- clean up structure
+  - move the stager to the main repo
+  - have atk_toolbox be the API repo
+
 - add background colors to all colored text
-- have the update command perform saftey checks
-- create force push force pull on `project`
+
 - improve the mac installer: add support for zsh and catalina
-- stablize the versioning of ruby and gem, and fix all path calls to them
+
+- update the python installer
+  - have it provide and error message upon switching to python27 from python3 on windows
+  - have it use pyenv for version management on mac/linux
+  - add interface for python version management
+  - add a verification tool
+
+- atk new project from
+  - clones down the repo
+  - deletes the git
+  - runs git init
+  - ask if want to connect it upstream
+
+- have the update command perform saftey checks
+  - windows version && macOS version
+  - check ruby version
+  - send an error message to the user if the bin is not at the top
+  - explain how to fix it and set it to be at the top
+  - have the update command perform saftey checks
+
+- create a app
+  - check if atk is installed, if not, ask to install it (just spit out the output)
+  - new project button
+    - ask where to save it
+  - list out known projects based on info.yaml
+  - on open, ask what app to open it with
+  - recommend installing VS Code
+
+- create an tamu-engr-111_2020 installer
+  - installs and switches to python 3.6
+  - installs numpy, matplotlib
+  - downloads VS Code
+  - installs the python extension
+  - installs the material theme
+  - installs code runner
+
+- document
+  - installation
+  - usage for setting up a project
+  - usage for automating a project
+  - contributing guide
+  - remove FIXME's
+
+- change the windows setup
+  - create a highest_priority_commands folder
+  - add the folder to the path ENV (potencially admin needed)
+  - use this: ensure_in_path from: https://github.com/lukesampson/scoop/blob/08af9ff6e7f7b017701c0c9114294b13e1e83fb8/lib/core.ps1
+
+
+
+- make the run command faster on windows
+
 - create templates for websites, C++, python, and ruby
+
+- create force push force pull on `project`
+
+- stablize the versioning of ruby and gem, and fix all path calls to them
+
 - add support for installing sub dependencies
   - create hashes of package.json, requirements.txt, gemfile, and the atk-dependencies
   - any time the hashes change, try to run their respective install commands

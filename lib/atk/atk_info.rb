@@ -37,6 +37,12 @@ class AtkPaths
                 return OS.path_for_executable("gem")
             when 'repos'
                 return HOME/"atk"/"repos"
+            when 'commands'
+                if OS.is?("unix")
+                    return "/usr/local/bin"
+                else
+                    return "C:\\Users\\#{FS.username}\\AppData\\local\\Microsoft\\WindowsApps"
+                end
         end
     end
 end
@@ -91,6 +97,43 @@ module Atk
         end
         
         FS.save(info_data, to: Atk.paths[:info], as: :yaml )
+    end
+    
+    def self.checkup
+        errors = {}
+        # make sure ruby is the corrct version
+        if VERSION_OF_RUBY >= Version.new("3.0.0")
+            errors[:ruby_version_too_high] = true
+        elsif VERSION_OF_RUBY < Version.new("2.5")
+            errors[:ruby_version_too_low] = true
+        end
+        # make sure git is installed and up to date
+        if not Console.has_command("git")
+            errors[:doesnt_have_git] = true
+        else
+            git_version = Version.extract_from(`git --version`)
+            if git_version < Version.new("2.17")
+                errors[:git_version_too_low] = true
+            end
+        end
+        # TODO: make sure a package manager is installed
+        # TODO: verify that windows and unix paths are highest priority
+        if OS.is?("unix")
+            sources = Console.command_sources()
+            top_source = sources[0]
+            path_for_commands = Atk.paths[:commands]
+            if top_source != path_for_commands
+                errors[:commands_are_not_at_top_of_path] = true
+                if not sources.any?{ |each| each == path_for_commands }
+                    errors[:commands_are_not_in_path] = true
+                end
+            end
+        end
+        
+        # 
+        # talk about any found errors
+        # 
+        
     end
     
     def self.setup(package_name, arguments)

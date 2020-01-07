@@ -11,7 +11,7 @@ require_relative './atk_info'
 class TTY::Prompt
     def set_command(name, code)
         if OS.is?("unix")
-            exec_path = "/usr/local/bin/#{name}"
+            exec_path = "#{Atk.paths[:commands]}/#{name}"
             local_place = Atk.temp_path(name)
             # add the hash bang
             hash_bang = "#!#{Atk.paths[:ruby]}\n"
@@ -23,11 +23,16 @@ class TTY::Prompt
         elsif OS.is?("windows")
             # check for invalid file paths, see https://docs.microsoft.com/en-us/windows/win32/fileio/naming-a-file
             if name =~ /[><:"\/\\|?*]/
-                puts "Sorry #{name} isn't a valid file path on windows"
-                return ""
+                raise <<-HEREDOC.remove_indent
+                    
+                    
+                    When using the ATK Console.set_command(name)
+                    The name: #{name}
+                    is not a valid file path on windows
+                    which means it cannot be a command
+                HEREDOC
             end
-            username = FS.username
-            exec_path = "C:\\Users\\#{username}\\AppData\\local\\Microsoft\\WindowsApps\\#{name}"
+            exec_path = "#{Atk.paths[:commands]}\\#{name}"
             
             # create the code
             IO.write(exec_path+".rb", code)
