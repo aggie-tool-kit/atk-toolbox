@@ -21,10 +21,6 @@ end
 # 
 # the groups are the pratical side of the OS, they describe the OS rather than fit it prefectly into a heirarchy
 module OS
-    # TODO: have the version pick one of the verions in the os_heirarchy according to the current OS
-    def self.version
-        raise "not yet implemented"
-    end
     
     # create a singleton class
     class << (OS::CACHE = Object.new)
