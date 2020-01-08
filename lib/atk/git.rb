@@ -1,6 +1,8 @@
 require 'git'
 require 'logger'
 
+# pulled from https://github.com/ruby-git/ruby-git
+
 module Git
     def self.ensure_cloned_and_up_to_date(target_dir, git_repo_url)
         # check if it exists
