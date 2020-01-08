@@ -64,6 +64,7 @@ end
     # 
     class RubyCode < Code
         def run(*args)
+            # FUTURE: generate this name to ensure there are never name conflicts
             temp_file = ".info_language_runner_cache.rb"
             # a file needs to be created in the root dir so that things like __dir__ work properly
             # the first line of the temp file deletes itself so that it appears as if no file ever existed
