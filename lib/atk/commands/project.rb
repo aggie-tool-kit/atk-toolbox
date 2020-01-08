@@ -130,7 +130,7 @@ module Atk
                 when 'execute', 'exec'
                     # extract the (project_commands) section from the info.yaml, 
                     # then find the command with the same name as args[1] and run it
-                    # TODO: use https://github.com/piotrmurach/tty-markdown#ttymarkdown- to highlight the ruby code 
+                    # FUTURE: use https://github.com/piotrmurach/tty-markdown#ttymarkdown- to highlight the ruby code 
                     _, command_name, *command_args = args
                     command = Info.commands[command_name]
                     # temporairly set the dir to be the same as the info.yaml 

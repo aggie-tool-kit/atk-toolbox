@@ -65,9 +65,10 @@ end
     class RubyCode < Code
         def run(*args)
             temp_file = ".info_language_runner_cache.rb"
-            IO.write(temp_file, @value)
+            # a file needs to be created in the root dir so that things like __dir__ work properly
+            # the first line of the temp file deletes itself so that it appears as if no file ever existed
+            IO.write(temp_file, "File.delete('./.info_language_runner_cache.rb')\n#{@value}")
             Process.wait(Process.spawn("ruby", temp_file, *args))
-            File.delete(temp_file)
         end
     end
     register_tag('!language/ruby', RubyCode)
