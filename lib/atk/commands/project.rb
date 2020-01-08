@@ -2,23 +2,38 @@ require_relative '../atk_info'
 
 module Atk
     def self.project(args)
-        # TODO: check to make sure project exists
+        # 
+        # no arguments
+        # 
         if args.length == 0
-            puts "if you don't know how to use #{"project".color_as :code} just run #{"project help".color_as :code}"
+            begin
+                info = Info.new 
+            rescue Info::YamlFileDoesntExist => exception
+                puts <<-HEREDOC.remove_indent
+                    
+                    It appears there is no #{"info.yaml".color_as :code} file
+                    Meaning you're probably not in folder that contains a project
+                    
+                    To convert the current folder into a project folder run:
+                        #{"project init".color_as :code}
+                    
+                    If you don't know how to use #{"project".color_as :code} just run #{"project help".color_as :code}
+                HEREDOC
+                exit
+            end
+            puts "If you don't know how to use #{"project".color_as :code} just run #{"project help".color_as :code}"
             puts ""
             # if there are commands then show them
-            commands = Info.commands
+            commands = info.commands
             if commands.is_a?(Hash) && commands.keys.size > 0
                 puts "commands for current project:"
                 puts `project commands`
             end
         else
-            # 
-            # Check dependencies
-            # 
-                # if they're not met, then warn the user about that
-                # check a hash of the file to see if anything has changed
             case args[0]
+                # 
+                # help
+                # 
                 when 'help', '--help', '-h'
                     puts <<-HEREDOC.remove_indent
                         #{"help".color_as :key_term}
@@ -64,8 +79,14 @@ module Atk
                                 This will read the local info.yaml of your project to find commands
                                 then it will list out each command with a short preview of the contents of that command
                     HEREDOC
+                # 
+                # init
+                # 
                 when 'initialize', 'init'
                     Info.init
+                # 
+                # sync
+                # 
                 when 'synchronize', 'sync'
                     # if there is an argument
                     git_folder_path = FS.dirname(Info.path)/".git"
@@ -103,31 +124,9 @@ module Atk
                     system('git pull --no-edit')
                     # push up everything
                     system('git push')
-                    
-                when 'mix'
-                    not_yet_implemented()
-                    structure_name = args[1]
-                    # use this to mix a structure into the project
-                    # TODO:
-                    # get the context
-                        # if there is a --context='something' command line option, then use that
-                        # otherwise use the default(--context) speficied in the info.yaml
-                        # re-iterate through the info.yaml (advanced_setup) keys
-                        # find all of the "when(--context = 'something')" keys
-                        # find the (dependencies) sub-key for them, create one if the key doesn't exist
-                        # add the project and version to the 
-                when 'add'
-                    not_yet_implemented()
-                    package = args[1]
-                    # check if there is an info.yaml
-                    # check if there is an local_package_manager in the info.yaml
-                    # if there is only 1, then use it
-                    # if there is more than one, ask which one the user wants to use
-                when 'remove'
-                    not_yet_implemented()
-                    package = args[1]
-                    # check if there is an local_package_manager in the info.yaml
-                    # if it does use it to remove the package
+                # 
+                # execute
+                # 
                 when 'execute', 'exec'
                     # extract the (project_commands) section from the info.yaml, 
                     # then find the command with the same name as args[1] and run it
@@ -144,6 +143,9 @@ module Atk
                             puts "I don't think that command is in the info.yaml file"
                         end
                     end
+                # 
+                # commands
+                # 
                 when 'commands'
                     max_number_of_chars_to_show = 80
                     commands = Info.commands
@@ -154,6 +156,9 @@ module Atk
                             puts "    #{each_key.to_s.color_as :key_term}: #{each_value.to_s.strip[0..max_number_of_chars_to_show].sub(/(.*)[\s\S]*/,'\1')}"
                         end
                     end
+                # 
+                # unrecognized
+                # 
                 else
                     puts "I don't recognized that command\nhere's the `project --help` which might get you what you're looking for:"
                     Atk.project(["help"])

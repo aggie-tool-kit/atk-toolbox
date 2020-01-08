@@ -118,7 +118,7 @@ class Info
         begin
             @path = Info.path
         rescue
-            raise <<-HEREDOC.remove_indent
+            raise YamlFileDoesntExist, <<-HEREDOC.remove_indent
                 
                 
                 When calling Info.new
