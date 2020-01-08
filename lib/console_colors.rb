@@ -73,3 +73,30 @@ class String
         end
     end
 end
+
+
+# 
+# Theme
+#
+class String
+    def color_as(kind)
+        case kind
+            when :error
+                self.white.on_red
+            when :code
+                self.blue.on_light_black
+            when :key_term
+                self.yellow.on_black
+            when :title
+                self.green.on_black
+            when :argument, :message
+                self.cyan.on_black
+            when :optional
+                self.light_magenta.on_black
+            when :good
+                self.green.on_black
+            when :bad
+                self.red.on_black
+        end
+    end
+end

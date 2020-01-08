@@ -143,7 +143,7 @@ module Atk
         if not project_folder
             # then use the current folder
             project_folder = FS.pwd
-            puts "Project will be downloaded to #{project_folder.to_s.yellow}"
+            puts "Project will be downloaded to #{project_folder.to_s.color_as :key_term}"
             puts "(your current directory)"
             puts ""
         end
@@ -153,7 +153,7 @@ module Atk
         FS.in_dir(project_path) do
             setup_command = Info.commands['(setup)']
             if setup_command.is_a?(Code) || setup_command.is_a?(String)
-                puts "\n\nRunning (setup) command:\n".green
+                puts "\n\n#{"Running (setup) command:".color_as :title}\n"
                 sleep 1
                 if setup_command.is_a?(Code)
                     setup_command.run(arguments)
@@ -162,10 +162,10 @@ module Atk
                 end
             end
             puts "\n\n\n\n============================================================"
-            puts "Finished running setup for: #{project_path.green}"
+            puts "Finished running setup for: #{project_path.color_as :good}"
             puts "This project has these commands avalible:"
             system "project commands"
-            puts "\ndon't forget to do:\n#{"cd '#{project_path}'".blue}"
+            puts "\ndon't forget to do:\n#{"cd '#{project_path}'".color_as :code}"
         end
     end
     
@@ -319,7 +319,7 @@ class AtkPackage
                             version: #{version}
                             
                             This means either
-                                1. ATK needs to be updated (which you can do with #{'atk update'.light_blue.on_black})
+                                1. ATK needs to be updated (which you can do with #{'atk update'.color_as :code})
                                 2. The package has specified a version of ATK that doesn't exist
                         HEREDOC
                     end  
@@ -373,18 +373,18 @@ class AtkPackage
             custom_message = <<-HEREDOC.remove_indent
             
                 When trying 
-                    to perform the #{"run".light_blue.on_black} action
-                    on the #{self.simple_name.to_s.light_yellow.on_black} module
-                    with these arguments: #{arguments.inspect.to_s.light_magenta.on_black}
+                    to perform the #{"run".color_as :code} action
+                    on the #{self.simple_name.to_s.color_as :key_term} module
+                    with these arguments: #{arguments.inspect.to_s.color_as :argument}
                 
                 There was an issue because:
             HEREDOC
             # TODO: make a more standardized error reporting tool
             good = ->(message) do
-                "    ✓ #{message.green}"
+                "    ✓ #{message.color_as :good}"
             end
             bad = ->(message) do
-                "    ✖ #{message.red}"
+                "    ✖ #{message.color_as :bad}"
             end
             
             if @dont_exist[:yaml_file]

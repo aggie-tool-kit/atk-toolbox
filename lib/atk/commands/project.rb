@@ -4,7 +4,7 @@ module Atk
     def self.project(args)
         # TODO: check to make sure project exists
         if args.length == 0
-            puts "if you don't know how to use #{"project".blue} just run #{"project help".blue}"
+            puts "if you don't know how to use #{"project".color_as :code} just run #{"project help".color_as :code}"
             puts ""
             # if there are commands then show them
             commands = Info.commands
@@ -21,46 +21,46 @@ module Atk
             case args[0]
                 when 'help', '--help', '-h'
                     puts <<-HEREDOC.remove_indent
-                        #{"help".yellow}
-                            #{"info:".green} displays the avalible tools
-                            #{"examples:".green} #{'project help'.blue}
+                        #{"help".color_as :key_term}
+                            #{"info:".color_as :title} displays the avalible tools
+                            #{"examples:".color_as :title} #{'project help'.color_as :code}
                         
-                        #{"initialize".yellow}
-                            #{"examples:".green}
-                                #{'project init'.blue}
-                                #{'project initialize'.blue}
-                            #{"info:".green}
+                        #{"initialize".color_as :key_term}
+                            #{"examples:".color_as :title}
+                                #{'project init'.color_as :code}
+                                #{'project initialize'.color_as :code}
+                            #{"info:".color_as :title}
                                 This will create an info.yaml in your current directory
                                 The info.yaml will contain all the standard project managment tools
                                 In the future this command will be more interactive
 
-                        #{"synchronize".yellow}
-                            #{"examples:".green}
-                                #{'project sync'.blue}
-                                #{'project synchronize'.blue}
-                                #{'project synchronize --message=\'updated the readme\''.blue}
-                            #{"info:".green}
+                        #{"synchronize".color_as :key_term}
+                            #{"examples:".color_as :title}
+                                #{'project sync'.color_as :code}
+                                #{'project synchronize'.color_as :code}
+                                #{'project synchronize --message=\'updated the readme\''.color_as :code}
+                            #{"info:".color_as :title}
                                 Adds, commits, and then pulls/pushes all git changes
                                 If there is merge conflict, it will show up as normal
-                            #{"format:".green}
-                                #{"project".blue} #{"synchronize".yellow} #{"<package>".cyan} #{"--message='your message'".light_magenta}
+                            #{"format:".color_as :title}
+                                #{"project".color_as :code} #{"synchronize".color_as :key_term} #{"<package>".color_as :argument} #{"--message='your message'".color_as :optional}
                         
-                        #{"execute".yellow} 
-                            #{"examples:".green}
-                                #{'project execute compile'.blue}
-                                #{'project exec compile'.blue}
-                                #{'project exec main'.blue}
-                                #{'project exec server'.blue}
-                            #{"info:".green}
+                        #{"execute".color_as :key_term} 
+                            #{"examples:".color_as :title}
+                                #{'project execute compile'.color_as :code}
+                                #{'project exec compile'.color_as :code}
+                                #{'project exec main'.color_as :code}
+                                #{'project exec server'.color_as :code}
+                            #{"info:".color_as :title}
                                 This will look at the info.yaml file in your project to find commands
                                 You can use the `project init` command to generate an info.yaml which 
                                 has example commands. Commands can be CMD/terminal/console commands, or ruby code.
-                            #{"format:".green}
-                                #{"project".blue} #{"execute".yellow} #{"<name-of-command>".cyan} #{"<arg1-for-command>".light_magenta} #{"<arg2-for-command>".light_magenta} #{"<...etc>".light_magenta}
+                            #{"format:".color_as :title}
+                                #{"project".color_as :code} #{"execute".color_as :key_term} #{"<name-of-command>".color_as :argument} #{"<arg1-for-command>".color_as :optional} #{"<arg2-for-command>".color_as :optional} #{"<...etc>".color_as :optional}
 
-                        #{"commands".yellow}
-                            #{"examples:".green} #{'project commands'.blue}
-                            #{"info:".green}
+                        #{"commands".color_as :key_term}
+                            #{"examples:".color_as :title} #{'project commands'.color_as :code}
+                            #{"info:".color_as :title}
                                 This will read the local info.yaml of your project to find commands
                                 then it will list out each command with a short preview of the contents of that command
                     HEREDOC
@@ -148,10 +148,10 @@ module Atk
                     max_number_of_chars_to_show = 80
                     commands = Info.commands
                     if commands.keys.size == 0
-                        puts "0 avalible commands".cyan
+                        puts "0 avalible commands".color_as :message
                     else
                         for each_key, each_value in commands
-                            puts "    #{each_key.to_s.yellow}: #{each_value.to_s.strip[0..max_number_of_chars_to_show].sub(/(.*)[\s\S]*/,'\1')}"
+                            puts "    #{each_key.to_s.color_as :key_term}: #{each_value.to_s.strip[0..max_number_of_chars_to_show].sub(/(.*)[\s\S]*/,'\1')}"
                         end
                     end
                 else

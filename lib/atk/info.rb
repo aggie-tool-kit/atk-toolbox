@@ -206,9 +206,9 @@ class Info
             
             # if all folders exhausted
             if next_location == folder
-                raise <<-HEREDOC.remove_indent.red
+                raise <<-HEREDOC.remove_indent
                     
-                    #{"Couldn't find an info.yaml in the current directory or any parent directory".red}
+                    #{"Couldn't find an info.yaml in the current directory or any parent directory".color_as(:bad)}
                         #{Dir.pwd}
                     Are you sure you're running the command from the correct directory?
                 HEREDOC

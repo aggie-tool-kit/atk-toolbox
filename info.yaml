@@ -8,7 +8,7 @@
             ruby test/main.rb
         (setup):
             # a library that helps with publishing
-            gem install gem-release && _ test_changes
+            gem install gem-release
         publish:
             ruby scripts/publish.rb
         test_changes:

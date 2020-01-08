@@ -6,48 +6,48 @@ end
 
 def help_command()
     puts <<-HEREDOC.remove_indent
-        #{"help".yellow}
-            #{"examples:".green} #{'atk help'.blue}
-            #{"info:".green} shows avalible commands
+        #{"help".color_as :key_term}
+            #{"examples:".color_as :title} #{'atk help'.color_as :code}
+            #{"info:".color_as :title} shows avalible commands
 
-        #{"version".yellow}
-            #{"examples:".green} #{'atk version'.blue}
-            #{"info:".green} shows the currently installed version
+        #{"version".color_as :key_term}
+            #{"examples:".color_as :title} #{'atk version'.color_as :code}
+            #{"info:".color_as :title} shows the currently installed version
             
-        #{"update".yellow}
-            #{"examples:".green} #{'atk update'.blue}
-            #{"info:".green} this will get you the latest version of the #{'atk'.blue}, #{'project'.blue}, and #{'_'.blue} commands            
+        #{"update".color_as :key_term}
+            #{"examples:".color_as :title} #{'atk update'.color_as :code}
+            #{"info:".color_as :title} this will get you the latest version of the #{'atk'.color_as :code}, #{'project'.color_as :code}, and #{'_'.color_as :code} commands            
         
-        #{"run".yellow}
-            #{"examples:".green}
-                #{'atk run https://github.com/jeff-hykin/install-python'.blue}
-                #{'atk run jeff-hykin/install-python'.blue}
-            #{"info:".green}
+        #{"run".color_as :key_term}
+            #{"examples:".color_as :title}
+                #{'atk run https://github.com/jeff-hykin/install-python'.color_as :code}
+                #{'atk run jeff-hykin/install-python'.color_as :code}
+            #{"info:".color_as :title}
                 This command is used execute a remote script (normally for setup)
-            #{"format:".green}
-                #{"atk".blue} #{"run".yellow} #{"<package>".cyan}
-            #{"arguments:".green}
-                #{"<package>".cyan} can be:
+            #{"format:".color_as :title}
+                #{"atk".color_as :code} #{"run".color_as :key_term} #{"<package>".color_as :argument}
+            #{"arguments:".color_as :title}
+                #{"<package>".color_as :argument} can be:
                     - a URL to any online git repo such as:
-                        #{'https://github.com/jeff-hykin/install-python'.blue}
+                        #{'https://github.com/jeff-hykin/install-python'.color_as :code}
                     - can also be just a github-username/repo-name such as:
-                        #{'jeff-hykin/install-python'.blue}
+                        #{'jeff-hykin/install-python'.color_as :code}
 
             
-        #{"setup".yellow}
-            #{"examples:".green}
-                #{'atk setup jeff-hykin/atk-python'.blue}
-                #{'atk setup https://github.com/jeff-hykin/atk-python'.blue}
-            #{"info:".green}
+        #{"setup".color_as :key_term}
+            #{"examples:".color_as :title}
+                #{'atk setup jeff-hykin/atk-python'.color_as :code}
+                #{'atk setup https://github.com/jeff-hykin/atk-python'.color_as :code}
+            #{"info:".color_as :title}
                 A command for quickly setting up other people's projects
                 It downloads a github repo to the projects folder
                 and runs the project (setup) function
-            #{"format:".green}
-                #{"atk".blue} #{"setup".yellow} #{"<project-git-url>".cyan}
+            #{"format:".color_as :title}
+                #{"atk".color_as :code} #{"setup".color_as :key_term} #{"<project-git-url>".color_as :argument}
         
-        #{"uninstall".yellow}
-            #{"examples:".green} #{'atk uninstall'.blue}
-            #{"info:".green} this command will uninstall atk itself
+        #{"uninstall".color_as :key_term}
+            #{"examples:".color_as :title} #{'atk uninstall'.color_as :code}
+            #{"info:".color_as :title} this command will uninstall atk itself
     HEREDOC
 end
 

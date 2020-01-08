@@ -2,17 +2,32 @@
 
 - clean up structure
   - move the stager to the main repo
-  - have atk_toolbox be the API repo
-
-- add background colors to all colored text
+  - remove FIXME's
+  - add comments
+  - consider removing git object
+  - add documentation
+    - Features
+      - File Handling
+      - System Info
+        - Username
+        - OS
+        - Version
+      - Project Info
+        - Info
+      - User interactions
+        - Colors
+        - Heredoc
+        - Console questions  
 
 - improve the mac installer: add support for zsh and catalina
 
+- remove .info_language_runner_cache as first step of script
+
 - update the python installer
-  - have it provide and error message upon switching to python27 from python3 on windows
-  - have it use pyenv for version management on mac/linux
   - add interface for python version management
   - add a verification tool
+  - have it provide an error message upon switching to python27 from python3 on windows
+  - have it use pyenv for version management on mac/linux
 
 - atk new project from
   - clones down the repo
@@ -20,12 +35,35 @@
   - runs git init
   - ask if want to connect it upstream
 
+- create videos for
+  - installing ATK
+  - using ATK on a project
+  - creating an ATK module
+  - contributing to ATK toolbox
+
+# Saftey fixes
+- check the help commands in powershell
+
+- fix the windows press-enter hangup
+  - test it out through a non-console process like electron
+
+- add background colors to all colored text
+
 - have the update command perform saftey checks
   - windows version && macOS version
   - check ruby version
   - send an error message to the user if the bin is not at the top
   - explain how to fix it and set it to be at the top
   - have the update command perform saftey checks
+
+- change the windows setup
+  - create a highest_priority_commands folder
+  - add the folder to the path ENV (potencially admin needed)
+  - use this: ensure_in_path from: https://github.com/lukesampson/scoop/blob/08af9ff6e7f7b017701c0c9114294b13e1e83fb8/lib/core.ps1
+
+- stablize the versioning of ruby and gem, and fix all path calls to them
+
+# end Saftey fixes
 
 - create a app
   - check if atk is installed, if not, ask to install it (just spit out the output)
@@ -43,27 +81,11 @@
   - installs the material theme
   - installs code runner
 
-- document
-  - installation
-  - usage for setting up a project
-  - usage for automating a project
-  - contributing guide
-  - remove FIXME's
-
-- change the windows setup
-  - create a highest_priority_commands folder
-  - add the folder to the path ENV (potencially admin needed)
-  - use this: ensure_in_path from: https://github.com/lukesampson/scoop/blob/08af9ff6e7f7b017701c0c9114294b13e1e83fb8/lib/core.ps1
-
-
-
 - make the run command faster on windows
 
 - create templates for websites, C++, python, and ruby
 
 - create force push force pull on `project`
-
-- stablize the versioning of ruby and gem, and fix all path calls to them
 
 - add support for installing sub dependencies
   - create hashes of package.json, requirements.txt, gemfile, and the atk-dependencies
