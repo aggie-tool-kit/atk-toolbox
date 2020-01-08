@@ -50,8 +50,7 @@ end
         end
         
         def run
-            # TODO: improve this error message
-            raise "This needs to be overloaded"
+            raise "#{self.class}.run needs to be overloaded"
         end
         
         def to_s
@@ -84,13 +83,13 @@ end
         end
     end
 
-    # 
+    #
     # Console Code
-    # 
-    # TODO: add support for console code
+    #
     class ConsoleCode < Code
         def run
-            -"#{@value}"
+            system(@value)
+            return $?
         end
     end
     register_tag('!language/console', ConsoleCode)
@@ -159,7 +158,7 @@ class Info
                 elsif @version <= Version.new("1.1.0")
                     self.parser_version_1_1(@data)
                 else
-                    # TODO: in the future do an online check to see if the latest ATK could handle this
+                    # FUTURE: in the future do an online check to see if the latest ATK could handle this
                     raise <<-HEREDOC.remove_indent
                         
                         Hey I think you need to update atk:

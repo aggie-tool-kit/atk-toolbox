@@ -2,6 +2,7 @@ require 'git'
 require 'logger'
 
 # pulled from https://github.com/ruby-git/ruby-git
+# TODO: remove dependency on git gem
 
 module Git
     def self.ensure_cloned_and_up_to_date(target_dir, git_repo_url)

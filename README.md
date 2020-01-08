@@ -10,8 +10,6 @@ For example there are one-liners for:
 <br><code>puts 'hello'.blue + ' world'.green</code>
 - creating/deleting/compressing/downloading files
 <br><code>FileSystem.download("https://bit.ly/2tCtP2h", to: HOME/'Downloads')</code>
-- automating git actions
-<br><code>Git.clone(git_repo_url, target_dir)</code>
 
 
 # How do I install/use it?
@@ -135,22 +133,6 @@ FileSystem.list_folders(_optional_path_)
 ```
   </td>
   </tr>
-
-  <!-- Git -->
-  <tr>
-  <td>Git</td>
-  <td><br>
-
-```ruby
-Git.repo_name(_git_repo_url_)
-Git.open(working_dir).branches
-Git.open(working_dir).branches.local
-Git.open(working_dir).add(:all=>true)
-Git.ensure_cloned_and_up_to_date(_target_dir_, _git_repo_url_)
-```
-  </td>
-  </tr>
-  
   
   <!-- ATK -->
   <tr>

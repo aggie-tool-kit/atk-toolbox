@@ -31,12 +31,14 @@ module FileSystem
     # It is by-default forceful (dangerous/overwriting)
     # it is made to get things done in a no-nonsense error-free way and to have every pratical tool in one place
 
-    # TODO
+    # FUTURE add
         # change_owner
         # set_permissions
         # relative_path_between
         # relative_path_to
         # add a force: true option to most of the commands
+        # zip
+        # unzip
     
     def self.write(data, to:nil)
         # make sure the containing folder exists
@@ -216,7 +218,7 @@ module FileSystem
             if not OS.is?("windows")
                 pieces.unshift('/')
             else
-                # TODO: eventually make this work for any drive, not just the current drive
+                # FUTURE: eventually make this work for any drive, not just the current drive
                 pieces.unshift('\\')
             end
         end

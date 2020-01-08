@@ -77,7 +77,7 @@ module OS
             end
             return version
         elsif OS.is?("debian")
-            # TODO: support debian version
+            # FUTURE: support debian version
             return nil
         elsif OS.is?('mac')
             version = Version.extract_from(`system_profiler SPSoftwareDataType`)
