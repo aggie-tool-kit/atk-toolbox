@@ -12,7 +12,6 @@ Gem::Specification.new do |spec|
     spec.license           = "CC-BY-ND-4.0"
     spec.add_runtime_dependency 'git', '~> 1.5.0', '>= 1.5.0'
     spec.add_runtime_dependency 'tty-prompt', '~> 0.19.0', '>= 0.19.0'
-    spec.add_runtime_dependency 'colorize', '~> 0.8.1', '>= 0.8.1'
 
     spec.require_paths = ['./lib']
     
