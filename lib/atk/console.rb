@@ -1,6 +1,6 @@
 require "tty-prompt"
 require_relative "./os.rb"
-require "colorize"
+require_relative "../console_colors.rb"
 
 
 # TODO: switch to using https://github.com/piotrmurach/tty-command#2-interface 

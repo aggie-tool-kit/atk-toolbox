@@ -1,7 +1,7 @@
 require "yaml"
-require "colorize"
 require 'fileutils'
 require_relative './os'
+require_relative "../console_colors.rb"
 require_relative './remove_indent.rb'
 require_relative './version.rb'
 
