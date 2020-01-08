@@ -33,7 +33,7 @@ class AtkPaths
                 end
                 return ruby_path
             when 'gem'
-                # TODO: this eventually needs to link to a specific version of ruby
+                # FUTURE: this should eventually  link to a specific version of ruby instead of the global version
                 return OS.path_for_executable("gem")
             when 'repos'
                 return HOME/"atk"/"repos"
@@ -101,12 +101,14 @@ module Atk
     
     def self.checkup
         errors = {}
+        
         # make sure ruby is the corrct version
         if VERSION_OF_RUBY >= Version.new("3.0.0")
             errors[:ruby_version_too_high] = true
         elsif VERSION_OF_RUBY < Version.new("2.5")
             errors[:ruby_version_too_low] = true
         end
+        
         # make sure git is installed and up to date
         if not Console.has_command("git")
             errors[:doesnt_have_git] = true
@@ -116,8 +118,11 @@ module Atk
                 errors[:git_version_too_low] = true
             end
         end
-        # TODO: make sure a package manager is installed
-        # TODO: verify that windows and unix paths are highest priority
+        
+        # FUTURE: checkup on the package manager
+        
+        # FUTURE: verify that windows and unix paths are highest priority
+        
         if OS.is?("unix")
             sources = Console.command_sources()
             top_source = sources[0]
@@ -131,7 +136,7 @@ module Atk
         end
         
         # 
-        # talk about any found errors
+        # TODO: talk about any found errors
         # 
         
     end
@@ -379,7 +384,9 @@ class AtkPackage
                 
                 There was an issue because:
             HEREDOC
-            # TODO: make a more standardized error reporting tool
+            
+            # FUTURE: make a more standardized error reporting tool and it that here
+            
             good = ->(message) do
                 "    ✓ #{message.color_as :good}"
             end

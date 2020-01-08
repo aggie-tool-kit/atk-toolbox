@@ -21,13 +21,13 @@
 
 - improve the mac installer: add support for zsh and catalina
 
-- remove .info_language_runner_cache as first step of script
-
 - update the python installer
   - add interface for python version management
   - add a verification tool
   - have it provide an error message upon switching to python27 from python3 on windows
   - have it use pyenv for version management on mac/linux
+
+
 
 - atk new project from
   - clones down the repo
@@ -46,6 +46,7 @@
 
 - fix the windows press-enter hangup
   - test it out through a non-console process like electron
+  - look into https://superuser.com/questions/475958/cmd-exe-quoted-string-expansion 
 
 - add background colors to all colored text
 
@@ -113,6 +114,7 @@
     - example
     - optional
 - create a standardized console-command function
+    - look at: https://github.com/piotrmurach/tty-command#2-interface 
     - allow shell expansion
     - allow TTY emultation
     - allow raise error on nonzero exit code
