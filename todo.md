@@ -1,20 +1,15 @@
 ### Current Plan
 
-- clean up structure
-  - move the stager to the main repo
-  - remove FIXME's
-  - add comments
-  - consider removing git object
-  - add documentation
+- add YARD documentation
     - Features
-      - File Handling
-      - System Info
+    - File Handling
+    - System Info
         - Username
         - OS
         - Version
-      - Project Info
+    - Project Info
         - Info
-      - User interactions
+    - User interactions
         - Colors
         - Heredoc
         - Console questions  
@@ -26,8 +21,6 @@
   - add a verification tool
   - have it provide an error message upon switching to python27 from python3 on windows
   - have it use pyenv for version management on mac/linux
-
-
 
 - atk new project from
   - clones down the repo

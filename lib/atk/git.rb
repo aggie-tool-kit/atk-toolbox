@@ -1,25 +1,23 @@
-require 'git'
-require 'logger'
-
-# pulled from https://github.com/ruby-git/ruby-git
-# TODO: remove dependency on git gem
-
 module Git
     def self.ensure_cloned_and_up_to_date(target_dir, git_repo_url)
         # check if it exists
-        if FS.directory?(target_dir)
-            if Console.verbose
-                git_repo = Git.open(target_dir,  :log => Logger.new(STDOUT))
+        if FS.folder?(target_dir)
+            # check if its a git repo
+            if FS.folder?(target_dir/".git")
+                # fetch master
+                system("git fetch origin master")
+                if $?.success?
+                    # force pull
+                    system("git reset --hard origin/master")
+                end
+                return
             else
-                git_repo = Git.open(target_dir)
+                # clear the path
+                FS.delete(target_dir)
             end
-        # if it doesn't exist, then clone it
-        else
-            git_repo = Git.clone(git_repo_url, target_dir)
         end
-        # pull from origin master
-        # TODO: make this a force pull
-        git_repo.pull
+        # clone the directory if pulling didn't occur
+        system("git", "clone", git_repo_url, target_dir)
     end
     
     def self.repo_name(url)
