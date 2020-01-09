@@ -154,12 +154,21 @@ class Info
         if @version.is_a?(Version)
             begin
                 if @version <= Version.new("1.0.0")
-                    
+                    raise ReRaiseException, <<-HEREDOC.remove_indent
+                        
+                        So it looks like you're info.yaml file version is 1.0
+                        That was the alpha version of ATK, which is the only version that will not be supported
+                        
+                        #{"This is likely just an accident and the only thing that needs to be done is change:".color_as :message}
+                            (using_atk_version): 1.0
+                        #{"to:".color_as :message}
+                            (using_atk_version): 1.1.0
+                    HEREDOC
                 elsif @version <= Version.new("1.1.0")
                     self.parser_version_1_1(@data)
                 else
                     # FUTURE: in the future do an online check to see if the latest ATK could handle this
-                    raise <<-HEREDOC.remove_indent
+                    raise ReRaiseException, <<-HEREDOC.remove_indent
                         
                         Hey I think you need to update atk:
                             `atk update`

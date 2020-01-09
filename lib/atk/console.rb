@@ -85,7 +85,7 @@ class TTY::Prompt
             
             # users are going to have to manually escape things like ^, !, % etc depending on the context they're used in
             
-            simple_char = /[a-zA-Z0-9_.,;`=-*?\/\[\]]/
+            simple_char = "[a-zA-Z0-9_.,;`=-*?\\/\\[\\]]"
             
             # if its a simple argument just pass it on
             if argument =~ /\A(#{simple_char})*\z/

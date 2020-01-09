@@ -1,6 +1,27 @@
 ### Current Plan
 
+- create a path injector
+  - bash/zsh
+    - have it use a unique identifyer
+    - 
+
 - add YARD documentation
+
+- add better AtkPackage spec
+  - (install)
+  - (uninstall)
+  - (verify)
+
+- update the python installer
+  - (install)
+    - get pyenv
+    - install a specific version 
+  - add interface for python version management
+  - add a verification tool
+  - have it provide an error message upon switching to python27 from python3 on windows
+  - have it use pyenv for version management on mac/linux
+
+- fill out documentation.md
     - Features
     - File Handling
     - System Info
@@ -13,14 +34,6 @@
         - Colors
         - Heredoc
         - Console questions  
-
-- improve the mac installer: add support for zsh and catalina
-
-- update the python installer
-  - add interface for python version management
-  - add a verification tool
-  - have it provide an error message upon switching to python27 from python3 on windows
-  - have it use pyenv for version management on mac/linux
 
 - atk new project from
   - clones down the repo
@@ -35,6 +48,8 @@
   - contributing to ATK toolbox
 
 # Saftey fixes
+- check the mac installer on catalina
+
 - check the help commands in powershell
 
 - fix the windows press-enter hangup
