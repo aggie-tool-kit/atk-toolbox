@@ -7,8 +7,7 @@ module Atk
         # 
         if args.length == 0
             begin
-                info = Info.new 
-                puts "info is: #{info} "
+                info = Info.new
             rescue Info::YamlFileDoesntExist => exception
                 puts <<-HEREDOC.remove_indent
                     
