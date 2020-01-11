@@ -1,5 +1,3 @@
-# create a variable for the current ruby version
-
 class Version
     attr_accessor :levels, :codename
     
@@ -23,7 +21,7 @@ class Version
             HEREDOC
         end
         @levels = version_as_string.split('.')
-        @comparable = @levels[0] =~ /\A\d+\z/
+        @comparable = (@levels[0] =~ /\A\d+\z/) != nil
         # convert values into integers where possible
         index = -1
         for each in @levels.dup
@@ -64,15 +62,16 @@ class Version
         if other_version.comparable? && self.comparable?
             self_levels = @levels.dup
             other_levels = other_version.levels.dup
+            if self_levels.size >= other_levels.size
+                number_of_additional_levels = self_levels.size - other_levels.size
+                other_levels.concat([0]*number_of_additional_levels)
+            else
+                number_of_additional_levels = other_levels.size - self_levels.size
+                self_levels.concat([0]*number_of_additional_levels)
+            end
             loop do
                 if self_levels.size == 0 || other_levels.size == 0
-                    if self_levels.size > other_levels.size
-                        return 1
-                    elsif self_levels.size < other_levels.size
-                        return -1
-                    else
-                        return 0
-                    end
+                    return 0
                 end
                 comparision = self_levels.shift() <=> other_levels.shift()
                 if comparision != 0
@@ -100,6 +99,7 @@ class Version
     end
     
     def >=(other_version)
+        puts "self <=> other_version is: #{self <=> other_version} "
         value = (self <=> other_version)
         return value && value != -1
     end
