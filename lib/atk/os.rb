@@ -23,7 +23,7 @@ module OS
     
     # create a singleton class
     class << (OS::CACHE = Object.new)
-        attr_accessor :is_windows, :is_mac, :is_linux, :is_unix, :is_debian, :is_ubuntu
+        attr_accessor :is_windows, :is_mac, :is_linux, :is_unix, :is_debian, :is_ubuntu, :version
     end
     
     def self.is?(adjective)
@@ -67,6 +67,7 @@ module OS
     end
     
     def self.version
+        return OS::CACHE::version if OS::CACHE::version != nil
         # these statements need to be done in order from least to greatest
         if OS.is?("ubuntu")
             version_info = `lsb_release -a`
@@ -75,10 +76,9 @@ module OS
             if name_area
                 version.codename = name_area[1].strip
             end
-            return version
         elsif OS.is?("debian")
             # FUTURE: support debian version
-            return nil
+            version = nil
         elsif OS.is?('mac')
             version = Version.extract_from(`system_profiler SPSoftwareDataType`)
             agreement_file = `cat '/System/Library/CoreServices/Setup Assistant.app/Contents/Resources/en.lproj/OSXSoftwareLicense.rtf'`
@@ -86,11 +86,10 @@ module OS
             if codename_match
                 version.codename = codename_match[1].strip
             end
-            return version
         elsif OS.is?('windows')
-            # TODO: support windows version
-            return nil
+            version = nil
         end
+        OS::CACHE::version = version
     end
     
     def self.path_for_executable(name_of_executable)
