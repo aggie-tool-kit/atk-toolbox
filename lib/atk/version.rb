@@ -62,13 +62,6 @@ class Version
         if other_version.comparable? && self.comparable?
             self_levels = @levels.dup
             other_levels = other_version.levels.dup
-            if self_levels.size >= other_levels.size
-                number_of_additional_levels = self_levels.size - other_levels.size
-                other_levels.concat([0]*number_of_additional_levels)
-            else
-                number_of_additional_levels = other_levels.size - self_levels.size
-                self_levels.concat([0]*number_of_additional_levels)
-            end
             loop do
                 if self_levels.size == 0 || other_levels.size == 0
                     return 0
@@ -99,7 +92,6 @@ class Version
     end
     
     def >=(other_version)
-        puts "self <=> other_version is: #{self <=> other_version} "
         value = (self <=> other_version)
         return value && value != -1
     end
