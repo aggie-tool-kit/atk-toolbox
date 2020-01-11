@@ -46,6 +46,13 @@ module FileSystem
         # actually download the file
         IO.write(to, data)
     end
+    
+    def self.append(data, to:nil)
+        FileSystem.makedirs(File.dirname(to))
+        return open(to, 'a') do |file|
+            file << data
+        end
+    end
 
     def self.save(value, to:nil, as:nil)
         # assume string if as was not given
@@ -179,8 +186,11 @@ module FileSystem
         File.rename(path, to)
     end
     
-    def self.touch(*args)
-        return FileUtils.touch(*args)
+    def self.touch(path)
+        FileSystem.makedirs(File.dirname(path))
+        if not FileSystem.file?(path)
+            return IO.write(path, "")
+        end
     end
     singleton_class.send(:alias_method, :touch_file, :touch)
     singleton_class.send(:alias_method, :new_file, :touch)
