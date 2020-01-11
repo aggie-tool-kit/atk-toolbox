@@ -94,8 +94,8 @@ class TTY::Prompt
             else
                 # find any backslashes that come before a double quote or the ending of the argument
                 # then double the number of slashes
-                escaped = argument.gsub(/(?<slashes>\/+)(?="|\z)/) do |each_match|
-                    "\/" * (each_match['slashes'].size * 2)
+                escaped = argument.gsub(/(\/+)(?="|\z)/) do |each_match|
+                    "\/" * ($1.size * 2)
                 end
                 
                 # then find all the double quotes and escape them
