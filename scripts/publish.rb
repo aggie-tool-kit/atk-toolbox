@@ -1,4 +1,4 @@
-require 'atk_toolbox'
+require_relative '../lib/atk/version.rb'
 def bump
     version_filepath = "./lib/atk_toolbox/version.rb"
     version_text = IO.read(version_filepath)
@@ -11,8 +11,8 @@ def bump
     return version.to_s
 end
 version = bump()
--"gem build atk_toolbox.gemspec" or exit
--"gem push \"atk_toolbox-#{version}.gem\"" or exit
--"git add -A && git commit -m 'version bump' && git push"
+system("gem build atk_toolbox.gemspec") or exit
+system("gem push \"atk_toolbox-#{version}.gem\"") or exit
+system("git add -A && git commit -m 'version bump' && git push")
 # install it
--"gem install ./atk_toolbox-#{version}.gem"
+system("gem install ./atk_toolbox-#{version}.gem")
