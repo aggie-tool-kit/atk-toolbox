@@ -1,4 +1,3 @@
-require "tty-prompt"
 require_relative "./os.rb"
 require_relative "../console_colors.rb"
 
@@ -16,9 +15,39 @@ end
 # 
 # Console 
 # 
-# see https://github.com/piotrmurach/tty-prompt
-class TTY::Prompt
+Console = Class.new do
+    
+    CACHE = Class.new do
+        attr_accessor :prompt
+    end.new
+    
+    # 
+    # prompt properties
+    # 
+    # see https://github.com/piotrmurach/tty-prompt
+    def _load_prompt
+        require "tty-prompt"
+        CACHE::prompt = TTY::Prompt.new
+    end
+    # generate interface for TTY prompt with lazy require
+    for each in [ :ask, :keypress, :multiline, :mask, :yes?, :no?, :select, :multi_select, :enum_select, :expand, :collect, :suggest, :slider, :say, :ok, :warn, :error, :on ]
+        eval(<<-HEREDOC)
+            def #{each}(*args, **kwargs)
+                self._load_prompt() if CACHE::prompt == nil
+                if block_given?
+                    CACHE::prompt.#{each}(*args, **kwargs) do |*block_args, **block_kwargs|
+                        yield(*block_args, **block_kwargs)
+                    end
+                else
+                    CACHE::prompt.#{each}(*args, **kwargs)
+                end
+            end
+        HEREDOC
+    end
+    
+    
     attr_accessor :verbose
+    
     def _save_args
         if @args == nil
             @args = []
@@ -150,9 +179,7 @@ class TTY::Prompt
             end
         end
     end
-end
-
-Console = TTY::Prompt.new
+end.new
 
 def log(*args)
     if Console.verbose

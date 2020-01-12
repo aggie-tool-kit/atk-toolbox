@@ -22,9 +22,9 @@ end
 module OS
     
     # create a singleton class
-    class << (OS::CACHE = Object.new)
+    CACHE = Class.new do
         attr_accessor :is_windows, :is_mac, :is_linux, :is_unix, :is_debian, :is_ubuntu, :version
-    end
+    end.new
     
     def self.is?(adjective)
         # summary:
@@ -34,40 +34,40 @@ module OS
         adjective = adjective.to_s.downcase
         case adjective
             when 'windows'
-                if OS::CACHE::is_windows == nil
-                    OS::CACHE::is_windows = (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil
+                if CACHE::is_windows == nil
+                    CACHE::is_windows = (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil
                 end
-                return OS::CACHE::is_windows
+                return CACHE::is_windows
             when 'mac'
-                if OS::CACHE::is_mac == nil
-                    OS::CACHE::is_mac = (/darwin/ =~ RUBY_PLATFORM) != nil
+                if CACHE::is_mac == nil
+                    CACHE::is_mac = (/darwin/ =~ RUBY_PLATFORM) != nil
                 end
-                return OS::CACHE::is_mac
+                return CACHE::is_mac
             when 'linux'
-                if OS::CACHE::is_linux == nil
-                    OS::CACHE::is_linux = (not OS.is?(:windows)) && (not OS.is?(:mac))
+                if CACHE::is_linux == nil
+                    CACHE::is_linux = (not OS.is?(:windows)) && (not OS.is?(:mac))
                 end
-                return OS::CACHE::is_linux
+                return CACHE::is_linux
             when 'unix'
-                if OS::CACHE::is_unix == nil
-                    OS::CACHE::is_unix = not(OS.is?(:windows))
+                if CACHE::is_unix == nil
+                    CACHE::is_unix = not(OS.is?(:windows))
                 end
-                return OS::CACHE::is_unix
+                return CACHE::is_unix
             when 'debian'
-                if OS::CACHE::is_debian == nil
-                    OS::CACHE::is_debian = File.file?('/etc/debian_version')
+                if CACHE::is_debian == nil
+                    CACHE::is_debian = File.file?('/etc/debian_version')
                 end
-                return OS::CACHE::is_debian
+                return CACHE::is_debian
             when 'ubuntu'
-                if OS::CACHE::is_ubuntu == nil
-                    OS::CACHE::is_ubuntu = OS.has_command('lsb_release') && `lsb_release -a`.match(/Distributor ID:[\s\t]*Ubuntu/)
+                if CACHE::is_ubuntu == nil
+                    CACHE::is_ubuntu = OS.has_command('lsb_release') && `lsb_release -a`.match(/Distributor ID:[\s\t]*Ubuntu/)
                 end
-                return OS::CACHE::is_ubuntu
+                return CACHE::is_ubuntu
         end
     end
     
     def self.version
-        return OS::CACHE::version if OS::CACHE::version != nil
+        return CACHE::version if CACHE::version != nil
         # these statements need to be done in order from least to greatest
         if OS.is?("ubuntu")
             version_info = `lsb_release -a`
@@ -89,7 +89,7 @@ module OS
         elsif OS.is?('windows')
             version = nil
         end
-        OS::CACHE::version = version
+        CACHE::version = version
     end
     
     def self.path_for_executable(name_of_executable)
