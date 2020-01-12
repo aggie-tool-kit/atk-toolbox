@@ -25,8 +25,7 @@ class String
     end
 end
 
-
-FS = FileSystem = Class.new do
+module FileSystem
     # This is a combination of the FileUtils, File, Pathname, IO, Etc, and Dir classes,
     # along with some other helpful methods
     # It is by-default forceful (dangerous/overwriting)
@@ -41,21 +40,21 @@ FS = FileSystem = Class.new do
         # zip
         # unzip
     
-    def write(data, to:nil)
+    def self.write(data, to:nil)
         # make sure the containing folder exists
         FileSystem.makedirs(File.dirname(to))
         # actually download the file
         IO.write(to, data)
     end
     
-    def append(data, to:nil)
+    def self.append(data, to:nil)
         FileSystem.makedirs(File.dirname(to))
         return open(to, 'a') do |file|
             file << data
         end
     end
 
-    def save(value, to:nil, as:nil)
+    def self.save(value, to:nil, as:nil)
         # assume string if as was not given
         if as == nil
             as = :s
@@ -102,7 +101,7 @@ FS = FileSystem = Class.new do
         end
     end
     
-    def read(filepath)
+    def self.read(filepath)
         begin
             return IO.read(filepath)
         rescue Errno::ENOENT => exception
@@ -110,7 +109,7 @@ FS = FileSystem = Class.new do
         end
     end
     
-    def delete(path)
+    def self.delete(path)
         if File.file?(path)
             File.delete(path)
         elsif File.directory?(path)
@@ -118,7 +117,7 @@ FS = FileSystem = Class.new do
         end
     end
     
-    def username
+    def self.username
         if OS.is?(:windows)
             return File.basename(ENV["userprofile"])
         else
@@ -126,11 +125,11 @@ FS = FileSystem = Class.new do
         end
     end
     
-    def makedirs(path)
+    def self.makedirs(path)
         FileUtils.makedirs(path)
     end
     
-    def in_dir(path_to_somewhere)
+    def self.in_dir(path_to_somewhere)
         # save the current working dir
         current_dir = Dir.pwd
         # switch dirs
@@ -142,7 +141,7 @@ FS = FileSystem = Class.new do
         return output
     end
     
-    def copy(from:nil, to:nil, new_name:"", force: true, preserve: false, dereference_root: false)
+    def self.copy(from:nil, to:nil, new_name:"", force: true, preserve: false, dereference_root: false)
         if new_name == ""
             raise "\n\nFileSystem.copy() needs a new_name: argument\nset new_name:nil if you wish the file/folder to keep the same name\ne.g. FileSystem.copy(from:'place/thing', to:'place', new_name:nil)"
         elsif new_name == nil
@@ -154,7 +153,7 @@ FS = FileSystem = Class.new do
         FileUtils.copy_entry(from, to/new_name, preserve, dereference_root, force)
     end
 
-    def move(from:nil, to:nil, new_name:"", force: true, noop: nil, verbose: nil, secure: nil)
+    def self.move(from:nil, to:nil, new_name:"", force: true, noop: nil, verbose: nil, secure: nil)
         if new_name == ""
             raise "\n\nFileSystem.move() needs a new_name: argument\nset new_name:nil if you wish the file/folder to keep the same name\ne.g. FileSystem.move(from:'place/thing', to:'place', new_name:nil)"
         elsif new_name == nil
@@ -166,7 +165,7 @@ FS = FileSystem = Class.new do
         FileUtils.move(from, to/new_name, force: force, noop: noop, verbose: verbose, secure: secure)
     end
     
-    def rename(path, new_name:nil, force: true)
+    def self.rename(path, new_name:nil, force: true)
         if File.dirname(new_name) != "."
             raise <<-HEREDOC.remove_indent
                 
@@ -187,38 +186,38 @@ FS = FileSystem = Class.new do
         File.rename(path, to)
     end
     
-    def touch(path)
+    def self.touch(path)
         FileSystem.makedirs(File.dirname(path))
         if not FileSystem.file?(path)
             return IO.write(path, "")
         end
     end
-    alias :touch_file :touch
-    alias :new_file :touch
+    singleton_class.send(:alias_method, :touch_file, :touch)
+    singleton_class.send(:alias_method, :new_file, :touch)
     
-    def touch_dir(path)
+    def self.touch_dir(path)
         if not FileSystem.directory?(path)
             FileUtils.makedirs(path)
         end
     end
-    alias :new_folder :touch_dir
+    singleton_class.send(:alias_method, :new_folder, :touch_dir)
     
     # Pathname aliases
-    def absolute_path?(path)
+    def self.absolute_path?(path)
         Pathname.new(path).absolute?
     end
-    alias :is_absolute_path :absolute_path?
-    alias :abs? :absolute_path?
-    alias :is_abs :abs?
+    singleton_class.send(:alias_method, :is_absolute_path, :absolute_path?)
+    singleton_class.send(:alias_method, :abs?, :absolute_path?)
+    singleton_class.send(:alias_method, :is_abs, :abs?)
     
-    def relative_path?(path)
+    def self.relative_path?(path)
         Pathname.new(path).relative?
     end
-    alias :is_relative_path :relative_path?
-    alias :rel? :relative_path?
-    alias :is_rel :rel?
+    singleton_class.send(:alias_method, :is_relative_path, :relative_path?)
+    singleton_class.send(:alias_method, :rel?, :relative_path?)
+    singleton_class.send(:alias_method, :is_rel, :rel?)
     
-    def path_pieces(path)
+    def self.path_pieces(path)
         # use this function like this:
         # *path, filename, extension = FS.path_pieces('/Users/jeffhykin/Desktop/place1/file1.pdf')
         pieces = Pathname(path).each_filename.to_a
@@ -237,45 +236,45 @@ FS = FileSystem = Class.new do
     end
     
     # dir aliases
-    def home
+    def self.home
         HOME
     end
-    def glob(path)
+    def self.glob(path)
         Dir.glob(path, File::FNM_DOTMATCH) - %w[. ..]
     end
-    def list_files(path=".")
+    def self.list_files(path=".")
         Dir.children(path).map{|each| path/each }.select {|each| FileSystem.file?(each)}
     end
-    def list_folders(path=".")
+    def self.list_folders(path=".")
         Dir.children(path).map{|each| path/each }.select {|each| FileSystem.directory?(each)}
     end
-    def ls(path=".")
+    def self.ls(path=".")
         Dir.children(path)
     end
-    def pwd
+    def self.pwd
         Dir.pwd
     end
-    def cd(*args, verbose: false)
+    def self.cd(*args, verbose: false)
         if args.size == 0
             args[0] = FS.home
         end
         FileUtils.cd(args[0], verbose: verbose)
     end
-    def chdir(*args)
+    def self.chdir(*args)
         FS.cd(*args)
     end
     
     # File aliases
-    def time_access(*args)
+    def self.time_access(*args)
         File.atime(*args)
     end
-    def time_created(*args)
+    def self.time_created(*args)
         File.birthtime(*args)
     end
-    def time_modified(*args)
+    def self.time_modified(*args)
     end
     
-    def join(*args)
+    def self.join(*args)
         if OS.is?("windows")
             folders_without_leading_or_trailing_slashes = args.map do |each|
                 # replace all forward slashes with backslashes
@@ -291,69 +290,69 @@ FS = FileSystem = Class.new do
     end
     
     # inherit from File
-    def absolute_path(*args)
+    def self.absolute_path(*args)
         File.absolute_path(*args)
     end
-    def dirname(*args)
+    def self.dirname(*args)
         File.dirname(*args)
     end
-    def basename(*args)
+    def self.basename(*args)
         File.basename(*args)
     end
-    def extname(*args)
+    def self.extname(*args)
         File.extname(*args)
     end
-    def folder?(*args)
+    def self.folder?(*args)
         File.directory?(*args)
     end
-    alias :is_folder :folder?
-    alias :dir? :folder?
-    alias :is_dir :dir?
-    alias :directory? :folder?
-    alias :is_directory :directory?
+    singleton_class.send(:alias_method, :is_folder, :folder?)
+    singleton_class.send(:alias_method, :dir?, :folder?)
+    singleton_class.send(:alias_method, :is_dir, :dir?)
+    singleton_class.send(:alias_method, :directory?, :folder?)
+    singleton_class.send(:alias_method, :is_directory, :directory?)
     
-    def exists?(*args)
+    def self.exists?(*args)
         File.exist?(*args)
     end
-    alias :does_exist :exists?
-    alias :exist? :exists?
+    singleton_class.send(:alias_method, :does_exist, :exists?)
+    singleton_class.send(:alias_method, :exist?, :exists?)
     
-    def file?(*args)
+    def self.file?(*args)
         File.file?(*args)
     end
-    alias :is_file :file?
+    singleton_class.send(:alias_method, :is_file, :file?)
     
-    def empty?(*args)
+    def self.empty?(*args)
         File.empty?(*args)
     end
-    alias :is_empty :empty?
+    singleton_class.send(:alias_method, :is_empty, :empty?)
     
-    def executable?(*args)
+    def self.executable?(*args)
         File.executable?(*args)
     end
-    alias :is_executable :executable?
+    singleton_class.send(:alias_method, :is_executable, :executable?)
     
-    def symlink?(*args)
+    def self.symlink?(*args)
         File.symlink?(*args)
     end
-    alias :is_symlink :symlink?
+    singleton_class.send(:alias_method, :is_symlink, :symlink?)
     
-    def owned?(*args)
+    def self.owned?(*args)
         File.owned?(*args)
     end
-    alias :is_owned :owned?
+    singleton_class.send(:alias_method, :is_owned, :owned?) 
     
-    def pipe?(*args)
+    def self.pipe?(*args)
         File.pipe?(*args)
     end
-    alias :is_pipe :pipe?
+    singleton_class.send(:alias_method, :is_pipe, :pipe?) 
     
-    def readable?(*args)
+    def self.readable?(*args)
         File.readable?(*args)
     end
-    alias :is_readable :readable?
+    singleton_class.send(:alias_method, :is_readable, :readable?) 
     
-    def size?(*args)
+    def self.size?(*args)
         if File.directory?(args[0])
             # recursively get the size of the folder
             return Dir.glob(File.join(args[0], '**', '*')).map{ |f| File.size(f) }.inject(:+)
@@ -361,49 +360,49 @@ FS = FileSystem = Class.new do
             File.size?(*args)
         end
     end
-    alias :size_of :size?
+    singleton_class.send(:alias_method, :size_of, :size?) 
     
-    def socket?(*args)
+    def self.socket?(*args)
         File.socket?(*args)
     end
-    alias :is_socket :socket?
+    singleton_class.send(:alias_method, :is_socket, :socket?) 
     
-    def world_readable?(*args)
+    def self.world_readable?(*args)
         File.world_readable?(*args)
     end
-    alias :is_world_readable :world_readable?
+    singleton_class.send(:alias_method, :is_world_readable, :world_readable?) 
     
-    def world_writable?(*args)
+    def self.world_writable?(*args)
         File.world_writable?(*args)
     end
-    alias :is_world_writable :world_writable?
+    singleton_class.send(:alias_method, :is_world_writable, :world_writable?) 
     
-    def writable?(*args)
+    def self.writable?(*args)
         File.writable?(*args)
     end
-    alias :is_writable :writable?
+    singleton_class.send(:alias_method, :is_writable, :writable?) 
     
-    def writable_real?(*args)
+    def self.writable_real?(*args)
         File.writable_real?(*args)
     end
-    alias :is_writable_real :writable_real?
+    singleton_class.send(:alias_method, :is_writable_real, :writable_real?) 
     
-    def expand_path(*args)
+    def self.expand_path(*args)
         File.expand_path(*args)
     end
-    def mkfifo(*args)
+    def self.mkfifo(*args)
         File.mkfifo(*args)
     end
-    def stat(*args)
+    def self.stat(*args)
         File.stat(*args)
     end
     
-    def download(the_url, to:nil)
+    def self.download(the_url, to:nil)
         require 'open-uri'
         FileSystem.write(open(URI.encode(the_url)).read, to: to)
     end
     
-    def online?
+    def self.online?
         require 'open-uri'
         begin
             true if open("http://www.google.com/")
@@ -411,7 +410,86 @@ FS = FileSystem = Class.new do
             false
         end
     end
-end.new
+    
+    class ProfileHelper
+        def initialize(unqiue_id)
+            function_def = "ProfileHelper.new(unqiue_id)"
+            if unqiue_id =~ /\n/
+                raise <<-HEREDOC.remove_indent
+                    
+                    
+                    Inside the #{function_def.color_as :code}
+                    the unqiue_id contains a newline (\\n)
+                    
+                    unqiue_id: #{"#{unqiue_id}".inspect}
+                    
+                    Sadly newlines are not allowed in the unqiue_id due to how they are searched for.
+                    Please provide a unqiue_id that doesn't have newlines.
+                HEREDOC
+            end
+            if "#{unqiue_id}".size < 5 
+                raise <<-HEREDOC.remove_indent
+                    
+                    
+                    Inside the #{function_def.color_as :code}
+                    the unqiue_id is: #{"#{unqiue_id}".inspect}
+                    
+                    That's not even 5 characters. Come on man, there's going to be problems if the unqiue_id isn't unqiue
+                    generate a random number (once), then put the name of the service at the front of that random number
+                HEREDOC
+            end
+            @unqiue_id = unqiue_id
+        end
+        
+        @bash_comment_out = comment_out_line = ->(code) do
+            "### #{code}"
+        end
+        
+        def add_to_bash_profile(code)
+            uniquely_append(code, HOME/".bash_profile", @bash_comment_out)
+        end
+        
+        def add_to_zsh_profile(code)
+            uniquely_append(code, HOME/".zprofile", @bash_comment_out)
+        end
+        
+        def add_to_bash_rc(code)
+            uniquely_append(code, HOME/".bashrc", @bash_comment_out)
+        end
+        
+        def add_to_zsh_rc(code)
+            uniquely_append(code, HOME/".zshrc", @bash_comment_out)
+        end
+        
+        def uniquely_append(string_to_add, location_of_file, comment_out_line)
+            _UNQIUE_HELPER = 'fj03498hglkasjdgoghu2904' # dont change this, its a 1-time randomly generated string
+            final_string = "\n"
+            final_string += comment_out_line["start of ID: #{@unqiue_id} #{_UNQIUE_HELPER}"] + "\n"
+            final_string += comment_out_line["NOTE! if you remove this, remove the whole thing (don't leave a dangling start/end comment)"] + "\n"
+            final_string += string_to_add + "\n"
+            final_string += comment_out_line["end of ID: #{@unqiue_id} #{_UNQIUE_HELPER}"]
+            
+            # open the existing file if there is one
+            file = FS.read(location_of_file) || ""
+            # remove any previous versions
+            file.gsub!(/### start of ID: (.+) #{_UNQIUE_HELPER}[\s\S]*### end of ID: \1 #{_UNQIUE_HELPER}/) do |match|
+                if $1 == @unqiue_id
+                    ""
+                else
+                    match
+                end
+            end
+            # append the the new code at the bottom (highest priority)
+            file += final_string
+            # overwrite the file
+            FS.write(file, to: location_of_file)
+        end
+    end
+end
+# create an FS singleton_class.send(:alias_method, :FS = :FileSystem)
+FS = FileSystem
+
+
 
 
 # TODO: add zip/unzip functionality
