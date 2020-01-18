@@ -270,6 +270,8 @@ class AtkPackage
     
     def ensure_cached()
         if @is_cached == nil
+            puts "self.cache_location is: #{self.cache_location} "
+            puts "self.url is: #{self.url} "
             Git.ensure_cloned_and_up_to_date(self.cache_location, self.url)
             @is_cached = true
         end

@@ -259,6 +259,7 @@ class Info
         rescue
             @paths = {}
         end
+        @root = FileSystem.dirname(@path)
         for each_key, each_value in @paths
             # if its an array, just join it together
             if each_value.is_a?(Array)
@@ -273,7 +274,7 @@ class Info
                 # Dont add a source_path if its an absolute path
                 if not each_value.size > 0 && each_value[0] == '/'
                     # convert the path into an absolute path
-                    @paths[each_key] = FileSystem.join(@path, each_value)
+                    @paths[each_key] = FileSystem.join(@root, each_value)
                 end
             end
         end

@@ -441,24 +441,26 @@ module FileSystem
             @unqiue_id = unqiue_id
         end
         
-        @bash_comment_out = comment_out_line = ->(code) do
-            "### #{code}"
+        def bash_comment_out
+            ->(code) do
+                "### #{code}"
+            end
         end
         
         def add_to_bash_profile(code)
-            uniquely_append(code, HOME/".bash_profile", @bash_comment_out)
+            uniquely_append(code, HOME/".bash_profile", bash_comment_out)
         end
         
         def add_to_zsh_profile(code)
-            uniquely_append(code, HOME/".zprofile", @bash_comment_out)
+            uniquely_append(code, HOME/".zprofile", bash_comment_out)
         end
         
         def add_to_bash_rc(code)
-            uniquely_append(code, HOME/".bashrc", @bash_comment_out)
+            uniquely_append(code, HOME/".bashrc", bash_comment_out)
         end
         
         def add_to_zsh_rc(code)
-            uniquely_append(code, HOME/".zshrc", @bash_comment_out)
+            uniquely_append(code, HOME/".zshrc", bash_comment_out)
         end
         
         def uniquely_append(string_to_add, location_of_file, comment_out_line)

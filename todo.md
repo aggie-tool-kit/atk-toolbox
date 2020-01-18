@@ -1,9 +1,6 @@
 ### Current Plan
 
-- create a path injector
-  - bash/zsh
-    - have it use a unique identifyer
-    - 
+- switch stager to use chocolaty instead of scoop
 
 - add YARD documentation
 
@@ -14,12 +11,10 @@
 
 - update the python installer
   - (install)
-    - get pyenv
     - install a specific version 
   - add interface for python version management
   - add a verification tool
   - have it provide an error message upon switching to python27 from python3 on windows
-  - have it use pyenv for version management on mac/linux
 
 - fill out documentation.md
     - Features

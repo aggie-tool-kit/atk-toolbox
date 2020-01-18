@@ -5,10 +5,12 @@ module Git
             # check if its a git repo
             if FS.folder?(target_dir/".git")
                 # fetch master
-                system("git fetch origin master")
-                if $?.success?
-                    # force pull
-                    system("git reset --hard origin/master")
+                FS.in_dir(target_dir) do
+                    system("git fetch origin master")
+                    if $?.success?
+                        # force pull
+                        system("git reset --hard origin/master")
+                    end
                 end
                 return
             else
