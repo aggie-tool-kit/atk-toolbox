@@ -136,11 +136,21 @@ module Atk
                     # temporairly set the dir to be the same as the info.yaml 
                     FS.in_dir(Info.folder()) do
                         if command.is_a?(String)
-                            -(command+' '+command_args.join(' '))
+                            result = system(command+' '+command_args.join(' '))
                         elsif command.is_a?(Code)
-                            command.run(*command_args)
+                            result = command.run(*command_args)
                         elsif command == nil
                             puts "I don't think that command is in the info.yaml file"
+                        end
+                        
+                        # if command resulted in error then raise an error
+                        if not result
+                            colored_command_name = command_name.color_as :key_term
+                            raise <<-HEREDOC.remove_indent
+                                
+                                When running: #{"project execute ".color_as :code}#{colored_command_name}
+                                The script for #{colored_command_name} hit an error and had an exit code of: #{$?.exitstatus}
+                            HEREDOC
                         end
                     end
                 # 
