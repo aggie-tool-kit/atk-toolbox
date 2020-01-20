@@ -4,12 +4,30 @@ require_relative "../console_colors.rb"
 # easy access to the commandline
 class String
     # add a - operator to strings that makes it behave like a system() call 
-    # but it returns a success value for chaining commands with || or &&
     def -@
-        Process.wait(Process.spawn(self))
-        return $?.success?
+        return system(self)
     end
 end
+
+class CommandResult
+    def initialize(io_object)
+        @io_object = io_object
+    end
+    
+    def read
+        if @read == nil && @io_object
+            @read = @io_object.read
+        end
+        return @read
+    end
+    
+    def exitcode
+        if !@io_object
+            return Errno::ENOENT.new
+        end
+    end
+end
+
 
 
 # 
@@ -72,6 +90,75 @@ Console = Class.new do
             @stdin = $stdin.read
         end
         return @stdin
+    end
+    
+    #
+    # returns the command object, ignores errors
+    #
+    def run!(command)
+        if command.is_a?(String)
+            # by default return a string with stderr included
+            begin
+                result = CommandResult.new(IO.popen(command, err: [:child, :out]))
+                puts result.read
+            rescue
+                result = CommandResult.new(nil)
+            end
+            return result
+        else
+            raise <<-HEREDOC.remove_indent
+                
+                
+                The argument for run!() must be a string
+                this restriction will be lifted in the future
+            HEREDOC
+        end
+    end
+
+    # 
+    # returns true if successful, false/nil on error
+    # 
+    def run?(command)
+        if command.is_a?(String)
+            return system(command)
+        else
+            raise <<-HEREDOC.remove_indent
+                
+                
+                The argument for run?() must be a string
+                this restriction will be lifted in the future
+            HEREDOC
+        end
+    end
+
+    # 
+    # returns process info if successful, raises error if command failed
+    # 
+    def run(command)
+        if command.is_a?(String)
+            # if the command failed
+            if !system(command)
+                # throw an error
+                raise <<-HEREDOC.remove_indent
+                    
+                    
+                    From run(command)
+                    The command: #{command.color_as :code}
+                    Failed with a exitcode of: #{$?.exitstatus}
+                    
+                    #{"This likely means the command could not be found" if $?.exitstatus == 127}
+                    #{"Hopefully there is additional error info above" if $?.exitstatus != 127}
+                HEREDOC
+            end
+            return $?
+        else
+            raise <<-HEREDOC.remove_indent
+                
+                
+                The argument for run() must be a string
+                this restriction will be lifted in the future
+            HEREDOC
+        end
     end
     
     def path_for(name_of_executable)
