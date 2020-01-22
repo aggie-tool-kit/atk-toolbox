@@ -177,7 +177,7 @@ module FileSystem
                     If you want to move the file, use FileSystem.move(from:nil, to:nil, new_name:"")
             HEREDOC
         end
-        to = path/new_name
+        to = FileSystem.dirname(path)/new_name
         # make sure the path is clear
         if force
             FileSystem.delete(to)
