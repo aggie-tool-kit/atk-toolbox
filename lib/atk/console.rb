@@ -1,5 +1,6 @@
 require_relative "./os.rb"
 require_relative "../console_colors.rb"
+require_relative "./remove_indent.rb"
 
 # easy access to the commandline
 class String
@@ -10,8 +11,9 @@ class String
 end
 
 class CommandResult
-    def initialize(io_object)
+    def initialize(io_object, process_object)
         @io_object = io_object
+        @process_object = process_object
     end
     
     def read
@@ -24,6 +26,19 @@ class CommandResult
     def exitcode
         if !@io_object
             return Errno::ENOENT.new
+        end
+    end
+    
+    class Error < Exception
+        attr_accessor :command_result, :message
+        
+        def initialize(message, command_result)
+            @message = message
+            @command_result = command_result
+        end
+        
+        def to_s
+            return @message
         end
     end
 end
@@ -99,10 +114,14 @@ Console = Class.new do
         if command.is_a?(String)
             # by default return a string with stderr included
             begin
-                result = CommandResult.new(IO.popen(command, err: [:child, :out]))
+                command_info = IO.popen(command, err: [:child, :out])
+                Process.wait(command_info.pid)
+                process_info = $?
+                result = CommandResult.new(command_info, process_info)
                 puts result.read
             rescue
-                result = CommandResult.new(nil)
+                process_info = $?
+                result = CommandResult.new(nil, process_info)
             end
             return result
         else
@@ -136,21 +155,32 @@ Console = Class.new do
     # 
     def run(command)
         if command.is_a?(String)
-            # if the command failed
-            if !system(command)
-                # throw an error
-                raise <<-HEREDOC.remove_indent
+            # by default return a string with stderr included
+            begin
+                command_info = IO.popen(command, err: [:child, :out])
+                Process.wait(command_info.pid)
+                process_info = $?
+                result = CommandResult.new(command_info, process_info)
+                puts result.read
+            rescue
+                process_info = $?
+                result = CommandResult.new(nil, process_info)
+            end
+            # if ended with error
+            if !process_info.success?
+                # then raise an error
+                raise CommandResult::Error.new(<<-HEREDOC.remove_indent, result)
                     
                     
                     From run(command)
                     The command: #{command.color_as :code}
-                    Failed with a exitcode of: #{$?.exitstatus}
+                    Failed with a exitcode of: #{process_info.exitstatus}
                     
-                    #{"This likely means the command could not be found" if $?.exitstatus == 127}
-                    #{"Hopefully there is additional error info above" if $?.exitstatus != 127}
+                    #{"This likely means the command could not be found" if process_info.exitstatus == 127}
+                    #{"Hopefully there is additional error info above" if process_info.exitstatus != 127}
                 HEREDOC
             end
-            return $?
+            return result
         else
             raise <<-HEREDOC.remove_indent
                 
