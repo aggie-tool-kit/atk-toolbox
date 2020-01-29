@@ -110,7 +110,7 @@ Console = Class.new do
     #
     # returns the command object, ignores errors
     #
-    def run!(command)
+    def run!(command, **keyword_arguments)
         if command.is_a?(String)
             # by default return a string with stderr included
             begin
@@ -118,7 +118,9 @@ Console = Class.new do
                 Process.wait(command_info.pid)
                 process_info = $?
                 result = CommandResult.new(command_info, process_info)
-                puts result.read
+                if keyword_arguments[:silent] != true
+                    puts result.read
+                end
             rescue
                 process_info = $?
                 result = CommandResult.new(nil, process_info)
@@ -137,7 +139,7 @@ Console = Class.new do
     # 
     # returns true if successful, false/nil on error
     # 
-    def run?(command)
+    def run?(command, **keyword_arguments)
         if command.is_a?(String)
             return system(command)
         else
@@ -153,7 +155,7 @@ Console = Class.new do
     # 
     # returns process info if successful, raises error if command failed
     # 
-    def run(command)
+    def run(command, **keyword_arguments)
         if command.is_a?(String)
             # by default return a string with stderr included
             begin
@@ -161,7 +163,9 @@ Console = Class.new do
                 Process.wait(command_info.pid)
                 process_info = $?
                 result = CommandResult.new(command_info, process_info)
-                puts result.read
+                if keyword_arguments[:silent] != true
+                    puts result.read
+                end
             rescue
                 process_info = $?
                 result = CommandResult.new(nil, process_info)
