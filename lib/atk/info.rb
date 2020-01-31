@@ -118,6 +118,7 @@ class Info
         # 
         begin
             @path = Info.path
+            @folder = FS.dirname(@path)
         rescue
             raise YamlFileDoesntExist, <<-HEREDOC.remove_indent
                 
@@ -204,6 +205,9 @@ class Info
         end
     end
 
+    def folder()
+        return @folder
+    end
     def self.folder()
         folder = Dir.pwd
         loop do
@@ -228,12 +232,18 @@ class Info
         end
     end
     
+    def path()
+        return @path
+    end
     def self.path()
         return FileSystem.join( self.folder(), "info.yaml")
     end
     
     def version()
         return @version
+    end
+    def self.version()
+        return (Info.new).version
     end
     
     def parser_version_1_1(data)

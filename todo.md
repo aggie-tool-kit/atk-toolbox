@@ -1,5 +1,7 @@
 ### Current Plan
 
+- make Info more efficient by checking the Digest::MD5.file('filename').hexdigest to see if there are any changes to the file (and if not, do nothing)
+
 - switch stager to use chocolaty instead of scoop
 
 - add YARD documentation
