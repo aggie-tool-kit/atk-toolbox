@@ -136,7 +136,7 @@ module Atk
                     # temporairly set the dir to be the same as the info.yaml 
                     FS.in_dir(Info.folder()) do
                         if command.is_a?(String)
-                            result = system(command+' '+command_args.join(' '))
+                            result = system(command+' '+Console.make_arguments_appendable(command_args))
                         elsif command.is_a?(Code)
                             result = command.run(*command_args)
                         elsif command == nil
