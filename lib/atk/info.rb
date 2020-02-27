@@ -152,6 +152,7 @@ class Info
         rescue => exception
             # if no version, then don't worry about parsing
         end
+
         if @version.is_a?(Version)
             begin
                 if @version <= Version.new("1.0.0")

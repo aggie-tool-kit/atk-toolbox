@@ -1,6 +1,9 @@
 require_relative '../atk_info'
 
 module Atk
+    class ExecFailed < Exception
+    end
+    
     def self.project(args)
         # 
         # no arguments
@@ -146,7 +149,7 @@ module Atk
                         # if command resulted in error then raise an error
                         if not result
                             colored_command_name = command_name.color_as :key_term
-                            raise <<-HEREDOC.remove_indent
+                            raise ExecFailed, <<-HEREDOC.remove_indent
                                 
                                 When running: #{"project execute ".color_as :code}#{colored_command_name}
                                 The script for #{colored_command_name} hit an error and had an exit code of: #{$?.exitstatus}

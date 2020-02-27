@@ -4,5 +4,10 @@ if ARGV.size == 0
     puts "avalible commands:"
     Atk.project(["commands"])
 else
-    Atk.project(["execute", *ARGV])
+    begin
+        Atk.project(["execute", *ARGV])
+    # if there was an error from the command, the only it to show its error output
+    rescue Atk::ExecFailed => exception
+        exit(1)
+    end
 end
