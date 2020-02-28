@@ -4,6 +4,9 @@ module Atk
     class ExecFailed < Exception
     end
     
+    class NoSuchCommand < Exception
+    end
+    
     def self.project(args)
         # 
         # no arguments
@@ -143,7 +146,7 @@ module Atk
                         elsif command.is_a?(Code)
                             result = command.run(*command_args)
                         elsif command == nil
-                            puts "I don't think that command is in the info.yaml file"
+                            raise NoSuchCommand
                         end
                         
                         # if command resulted in error then raise an error
