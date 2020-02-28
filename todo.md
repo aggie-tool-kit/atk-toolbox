@@ -1,5 +1,34 @@
 ### Current Plan
 
+- project pivot:
+  - create an atk docker, put it on docker hub:
+    - have git inside it
+    - have ruby 2.5
+    - *** consider the possibility of 
+      - system calls
+      - pathing
+      - bash_profile
+      - git ssh keys
+        - other ssh keys\
+  - change the installer script:
+    - to check for docker
+    - pull in the docker image
+    - create a project bin/exe: 
+      - have it written as a .bat/.sh
+      - have it find the closest parent info.yaml
+      - have it create a docker container:
+        - mount project to the directory with the info.yaml
+        - mount the home directory to the user's home dir for things like github keys
+      - have it call the ruby project function with all the commandline args
+      - have the script return the correct error code
+    - add project manager term
+      - setup --source= (collaboration on existing project)
+      - create-from --source= (template) 
+      - duplicate --source= (full ownership of duplicate project)
+      - fork --source= (PR cotribution)
+      - create-empty
+
+
 - make Info more efficient by checking the Digest::MD5.file('filename').hexdigest to see if there are any changes to the file (and if not, do nothing)
 
 - switch stager to use chocolaty instead of scoop
