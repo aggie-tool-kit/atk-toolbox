@@ -1,7 +1,7 @@
 require 'atk_toolbox'
 
 previous_version = Console.args[0]
-puts "previous_version is: #{previous_version} "
+# TODO: previous_version is currently always null
 
 # helper function
 download_and_install_command = ->(command) do
