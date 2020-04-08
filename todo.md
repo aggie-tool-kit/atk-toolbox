@@ -28,6 +28,7 @@
       - fork --source= (PR cotribution)
       - create-empty
 
+- add alias to zsh, fish, and bash to override other aliases
 
 - make Info more efficient by checking the Digest::MD5.file('filename').hexdigest to see if there are any changes to the file (and if not, do nothing)
 
