@@ -14,27 +14,26 @@ module Atk
     # 
     # zsh autocomplete
     # 
-        #     _atk()
+        #compdef _
+
+        # _atk()
         # {
+        #     orig_words=( ${words[@]} )
         #     local comp_words="${COMP_WORDS[1]}"
         #     local comp_cword="${COMP_CWORD}"
         #     local mylist="$( ruby -e  '
         #                         require "yaml"
         #                         class Nil ; def [](); end; end;
-        #                         if ARGV[1] == "1"
-        #                             puts YAML.load_file("./info.yaml")["(project)"]["(commands)"].keys.select { |each| each if each.start_with?(ARGV[0]) }
+        #                         if ARGV.length == 2
+        #                             puts YAML.load_file("./info.yaml")["(project)"]["(commands)"].keys.map{|each| each.inspect}
         #                         else
-        #                             puts `ls`
+        #                             # puts `ls`
         #                         end
-        #                     ' $comp_words $comp_cword
+        #                     ' $orig_words
         #     )"
         #     COMPREPLY=($(compgen -W $mylist) )
-        #     # compadd $mylist
-        #     _alternative "arguments:custom arg:((test_gym test_thing))"
+        #     _alternative "arguments:custom arg:(($mylist))"
         # }
-
-        # # autoload -U predict-on
-        # # zle -C _expand_word .complete-word _atk
 
         # complete -F _atk _
         # compdef _atk _
