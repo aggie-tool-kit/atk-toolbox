@@ -8,9 +8,15 @@ else
         Atk.project(["execute", *ARGV])
     # if there was an error from the command, the only it to show its error output
     rescue Atk::ExecFailed => exception
-        exit_code = $?.exitstatus
-        puts "That command failed with an exit code of: #{exit_code}"
-        exit(exit_code)
+        if $?.exited?
+            exit_code = $?.exitstatus
+            puts "That command failed with an exit code of: #{exit_code}"
+            exit(exit_code)
+        else
+            termination_signal = $?.termsig
+            puts "That command failed with an termiation signal of: #{termination_signal}"
+            exit(termination_signal)
+        end
     rescue Atk::NoSuchCommand => exception
         puts "I don't think that command is in the info.yaml file"
         exit(1)
