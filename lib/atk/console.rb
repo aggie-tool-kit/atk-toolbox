@@ -63,7 +63,7 @@ Console = Class.new do
         CACHE::prompt = TTY::Prompt.new
     end
     # generate interface for TTY prompt with lazy require
-    for each in [ :ask, :keypress, :multiline, :mask, :yes?, :no?, :select, :multi_select, :enum_select, :expand, :collect, :suggest, :slider, :say, :ok, :warn, :error, :on ]
+    for each in [ :ask, :keypress, :multiline, :mask, :yes?, :no?, :select, :multi_select, :enum_select, :expand, :collect, :suggest, :slider, :say, :warn, :error ]
         eval(<<-HEREDOC)
             def #{each}(*args, **kwargs)
                 self._load_prompt() if CACHE::prompt == nil
@@ -78,6 +78,11 @@ Console = Class.new do
         HEREDOC
     end
     
+    def ok(message)
+        puts message.green + "\n[press enter to continue]".light_black
+        gets
+    end
+    alias :ok? :ok
     
     attr_accessor :verbose
     

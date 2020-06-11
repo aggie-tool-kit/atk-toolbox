@@ -64,7 +64,7 @@ class String
     end
     
     def unstyle
-        self.gsub!(/\e\[([;0-9]+)m/,"")
+        self.gsub!(/\e\[([;0-9]+)m/,"") || self
     end
     
     def self.color_samples

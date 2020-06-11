@@ -141,6 +141,52 @@ module FileSystem
         return output
     end
     
+    def self.merge(from, into: nil, force: true)
+        to = into
+        if !FS.exist?(from)
+            raise <<~HEREDOC
+                
+                
+                When calling FileSystem.merge(#{from.inspect}, into: #{into.inspect})
+                The path: #{from.inspect}
+                Doesn't exist
+            HEREDOC
+        end
+        
+        # recursive case (folder)
+        if FS.is_folder(from)
+            # if theres a target file in the way
+            if FS.exist?(to) && ( !FS.is_folder(to) )
+                if force
+                    # remove it
+                    FS.delete(to)
+                else
+                    # continue with the process
+                    return
+                end
+            end
+            # create a folder if needed
+            if !FS.exist?(to)
+                FS.touch_dir(to)
+            end
+            # become recursive for all contents
+            for each in FS.ls(from)
+                FS.merge(from/each, into: to/each, force: force)
+            end
+        # base case (file)
+        else
+            if FS.exist?(to)
+                if force
+                    FS.delete(to)
+                else
+                    # do nothing
+                    return
+                end
+            end
+            FS.copy(from: from, to: FS.dirname(to), new_name: nil)
+        end
+    end
+    
     def self.copy(from:nil, to:nil, new_name:"", force: true, preserve: false, dereference_root: false)
         if new_name == ""
             raise "\n\nFileSystem.copy() needs a new_name: argument\nset new_name:nil if you wish the file/folder to keep the same name\ne.g. FileSystem.copy(from:'place/thing', to:'place', new_name:nil)"
