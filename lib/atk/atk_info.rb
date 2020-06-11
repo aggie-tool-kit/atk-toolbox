@@ -103,7 +103,7 @@ module Atk
         errors = {}
         
         # make sure ruby is the corrct version
-        if VERSION_OF_RUBY >= Version.new("3.0.0")
+        if VERSION_OF_RUBY >= Version.new("2.6.0")
             errors[:ruby_version_too_high] = true
         elsif VERSION_OF_RUBY < Version.new("2.5")
             errors[:ruby_version_too_low] = true
@@ -138,7 +138,10 @@ module Atk
         # 
         # TODO: talk about any found errors
         # 
-        
+        if errors.include?[:ruby_version_too_high]
+            puts "It looks like your ruby version is too high for ATK"
+            puts "some parts of ATK might still work, however expect it to be broken"
+        end
     end
     
     def self.setup(package_name, arguments)
@@ -398,25 +401,25 @@ class AtkPackage
             
             if @dont_exist[:yaml_file]
                 custom_message += <<-HEREDOC.remove_indent
-                    #{bad("there was no info.yaml for that package")}
+                    #{bad["there was no info.yaml for that package"]}
                     and an info.yaml is the location for defining a run action 
                     
                 HEREDOC
             elsif @dont_exist[:correctly_formatted_yaml_file]
                 custom_message += <<-HEREDOC.remove_indent
-                    #{good("there was a info.yaml for that package")}
-                    #{bad("the info.yaml is not parseable")}
+                    #{good["there was a info.yaml for that package"]}
+                    #{bad["the info.yaml is not parseable"]}
                     and an info.yaml is the location for defining a run action
                     
                 HEREDOC
             elsif @dont_exist[:using_atk_version]
                 custom_message += <<-HEREDOC.remove_indent
-                    #{good("there was a info.yaml for that package")}
-                    #{good("the info.yaml was parseable")}
-                    #{@dont_exist[:using_atk_version] && bad("the info.yaml didn't have a (using_atk_version) key")}
-                    #{@dont_exist[:package_info]      && bad("the info.yaml didn't have a (package_info) key")}
-                    #{@dont_exist[:actions]           && bad("the info.yaml didn't have a (package_info): (actions) key")}
-                    #{@dont_exist[:run_action]        && bad("the info.yaml didn't have a (package_info): (actions): (run) key")}
+                    #{good["there was a info.yaml for that package"]}
+                    #{good["the info.yaml was parseable"]}
+                    #{@dont_exist[:using_atk_version] && bad["the info.yaml didn't have a (using_atk_version) key"]}
+                    #{@dont_exist[:package_info]      && bad["the info.yaml didn't have a (package_info) key"]}
+                    #{@dont_exist[:actions]           && bad["the info.yaml didn't have a (package_info): (actions) key"]}
+                    #{@dont_exist[:run_action]        && bad["the info.yaml didn't have a (package_info): (actions): (run) key"]}
                 HEREDOC
             end
             

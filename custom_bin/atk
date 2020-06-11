@@ -1,4 +1,5 @@
 require 'atk_toolbox'
+require 'ruby2_keywords'
 
 def help_command()
     puts <<-HEREDOC.remove_indent

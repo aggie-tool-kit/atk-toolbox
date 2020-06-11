@@ -1,3 +1,4 @@
+require 'ruby2_keywords'
 # only require the project command, not the entire Atk toolbox
 require File.dirname(Gem.find_latest_files('atk_toolbox')[0])+"/atk/commands/project"
 if ARGV.size == 0

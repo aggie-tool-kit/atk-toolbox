@@ -1,4 +1,6 @@
 ### Current Plan
+- have the exact version of windows-ruby picked instead of using the global command
+  - C:\Users\user\scoop\apps\ruby25\current\bin\ruby.exe
 
 - project pivot:
   - create an atk docker, put it on docker hub:
