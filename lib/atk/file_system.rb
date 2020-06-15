@@ -7,7 +7,7 @@ require_relative './remove_indent'
 if OS.is?("unix")
     HOME = Etc.getpwuid.dir
 else # windows
-    HOME = `echo %HOMEPATH%`.chomp
+    HOME = "C:"+`echo %HOMEPATH%`.chomp
 end
 
 class String
@@ -298,7 +298,7 @@ module FileSystem
         Dir.children(path)
     end
     def self.pwd
-        Dir.pwd
+        FS.join(Dir.pwd, "")
     end
     def self.cd(*args, verbose: false)
         if args.size == 0
