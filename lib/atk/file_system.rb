@@ -224,12 +224,15 @@ module FileSystem
             HEREDOC
         end
         to = FileSystem.dirname(path)/new_name
-        # make sure the path is clear
-        if force
-            FileSystem.delete(to)
+        # if they are different
+        if FS.absolute_path(to) != FS.absolute_path(path)
+            # make sure the path is clear
+            if force
+                FileSystem.delete(to)
+            end
+            # perform the rename
+            return File.rename(path, to)
         end
-        # perform the rename
-        File.rename(path, to)
     end
     
     def self.touch(path)

@@ -210,7 +210,7 @@ class Info
         return @folder
     end
     def self.folder()
-        folder = Dir.pwd
+        folder = FileSystem.join(Dir.pwd, "") # join with nothing to fix windows pathing
         loop do
             # if the info.yaml exists in that folder
             if FileSystem.file?( FileSystem.join(folder, "info.yaml"))
