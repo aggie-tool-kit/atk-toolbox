@@ -39,6 +39,7 @@ downloads_path = HOME/"Downloads"
 #### Cross-Platform Command Chaining
 This uses the negative operator for strings to run a commandline command. It returns true/false based on the exit code of the process.
 ```ruby
+using Atk
 -"npm run bulid" && -"npm run serve" || -"npm run cleanup-error"
 ```
 

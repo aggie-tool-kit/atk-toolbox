@@ -3,10 +3,12 @@ require_relative "../console_colors.rb"
 require_relative "./remove_indent.rb"
 
 # easy access to the commandline
-class String
-    # add a - operator to strings that makes it behave like a system() call 
-    def -@
-        return system(self)
+module Atk
+    refine class String
+        # add a - operator to strings that makes it behave like a system() call 
+        def -@
+            return system(self)
+        end
     end
 end
 

@@ -11,6 +11,7 @@ Gem::Specification.new do |spec|
     spec.has_rdoc          = false
     spec.license           = "CC-BY-ND-4.0"
     spec.add_runtime_dependency 'tty-prompt', '~> 0.19.0', '>= 0.19.0'
+    spec.add_runtime_dependency 'ruby2_keywords', '~> 0.0.2', '>= 0.0.2'
 
     spec.require_paths = ['./lib']
     
