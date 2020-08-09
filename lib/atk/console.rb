@@ -4,7 +4,7 @@ require_relative "./remove_indent.rb"
 
 # easy access to the commandline
 module Atk
-    refine class String
+    refine String do
         # add a - operator to strings that makes it behave like a system() call 
         def -@
             return system(self)

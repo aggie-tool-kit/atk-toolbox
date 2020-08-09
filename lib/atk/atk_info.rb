@@ -33,7 +33,11 @@ class AtkPaths
                 end
                 return ruby_path
             when 'gem'
-                # FUTURE: this should eventually  link to a specific version of ruby instead of the global version
+                gem_path = AtkPaths["ruby"].sub(/\/ruby$/,"\/gem")
+                if FS.file?(gem_path)
+                    return gem_path
+                end
+                # FUTURE: this should eventually have better error handling
                 return OS.path_for_executable("gem")
             when 'repos'
                 return HOME/"atk"/"repos"
