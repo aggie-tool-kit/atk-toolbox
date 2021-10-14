@@ -2,7 +2,6 @@ require 'etc'
 require 'fileutils'
 require 'pathname'
 require_relative './os'
-require_relative './remove_indent'
 
 if OS.is?("unix")
     HOME = Etc.getpwuid.dir
@@ -73,7 +72,7 @@ module FileSystem
                 # this is like calling `value.to_json`, `value.to_yaml`, or `value.to_csv` but programatically
                 string_value = value.public_send(conversion_method_name)
                 if not string_value.is_a?(String)
-                    raise <<-HEREDOC.remove_indent
+                    raise <<~HEREDOC
                     
                     
                         The FileSystem.save(value, to: #{to.inspect}, as: #{as.inspect}) had a problem.
@@ -86,7 +85,7 @@ module FileSystem
                 end
                 FS.write(string_value, to:to)
             else
-                raise <<-HEREDOC.remove_indent
+                raise <<~HEREDOC
                 
                 
                     The FileSystem.save(value, to: #{to.inspect}, as: #{as.inspect}) had a problem.
@@ -213,7 +212,7 @@ module FileSystem
     
     def self.rename(path, new_name:nil, force: true)
         if File.dirname(new_name) != "."
-            raise <<-HEREDOC.remove_indent
+            raise <<~HEREDOC
                 
                 
                 When using FileSystem.rename(path, new_name)
@@ -464,7 +463,7 @@ module FileSystem
         def initialize(unqiue_id)
             function_def = "ProfileHelper.new(unqiue_id)"
             if unqiue_id =~ /\n/
-                raise <<-HEREDOC.remove_indent
+                raise <<~HEREDOC
                     
                     
                     Inside the #{function_def.color_as :code}
@@ -477,7 +476,7 @@ module FileSystem
                 HEREDOC
             end
             if "#{unqiue_id}".size < 5 
-                raise <<-HEREDOC.remove_indent
+                raise <<~HEREDOC
                     
                     
                     Inside the #{function_def.color_as :code}
